@@ -1,0 +1,55 @@
+{# templates/ListCat.html.twig #}
+{% extends 'backoff.html.twig' %}
+
+
+
+{% block title %}Liste des Catégories{% endblock %}
+
+{% block body %}
+<div style="margin-top: 90px;">
+    <div class="container">
+        <h2 class="mb-4 text-center">Liste des Catégories</h2>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nom</th>
+                    <th>Description</th>
+                    <th>Image</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cat in categories %}
+                    <tr>
+                        <td>{{ cat.idCategorie }}</td>
+                        <td>{{ cat.nomCategorie }}</td>
+                        <td>{{ cat.description }}</td>
+                        <td>
+                            {% if cat.image %}
+                                <img src="{{ asset('uploads/' ~ cat.image) }}" alt="Image" width="100">
+                            {% else %}
+                                <em>Pas d'image</em>
+                            {% endif %}
+                        </td>
+                        <td>
+    <a href="{{ path('supprimer_categorie', {'id': cat.idCategorie}) }}"
+       class="btn btn-danger btn-sm"
+       onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?');"
+       title="Supprimer">
+        🗑️
+    </a>
+</td>
+
+                    </tr>
+                    
+                {% else %}
+                    <tr>
+                        <td colspan="4" class="text-center">Aucune catégorie trouvée.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
