@@ -33,6 +33,10 @@
                             {% endif %}
                         </td>
                         <td>
+                        <a href="{{ path('modifier_categorie', {'id': cat.idCategorie}) }}"
+       class="btn btn-primary btn-sm" title="Modifier">
+        ✏️
+           </a>
     <a href="{{ path('supprimer_categorie', {'id': cat.idCategorie}) }}"
        class="btn btn-danger btn-sm"
        onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?');"

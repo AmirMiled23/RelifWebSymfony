@@ -133,9 +133,16 @@ class __TwigTemplate_e5f6d5c30139f775ba2b20bffa729bf5 extends Template
             // line 34
             yield "                        </td>
                         <td>
-    <a href=\"";
+                        <a href=\"";
             // line 36
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("supprimer_categorie", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["cat"], "idCategorie", [], "any", false, false, false, 36)]), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("modifier_categorie", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["cat"], "idCategorie", [], "any", false, false, false, 36)]), "html", null, true);
+            yield "\"
+       class=\"btn btn-primary btn-sm\" title=\"Modifier\">
+        ✏️
+           </a>
+    <a href=\"";
+            // line 40
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("supprimer_categorie", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["cat"], "idCategorie", [], "any", false, false, false, 40)]), "html", null, true);
             yield "\"
        class=\"btn btn-danger btn-sm\"
        onclick=\"return confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?');\"
@@ -149,9 +156,9 @@ class __TwigTemplate_e5f6d5c30139f775ba2b20bffa729bf5 extends Template
                 ";
             $context['_iterated'] = true;
         }
-        // line 46
+        // line 50
         if (!$context['_iterated']) {
-            // line 47
+            // line 51
             yield "                    <tr>
                         <td colspan=\"4\" class=\"text-center\">Aucune catégorie trouvée.</td>
                     </tr>
@@ -160,7 +167,7 @@ class __TwigTemplate_e5f6d5c30139f775ba2b20bffa729bf5 extends Template
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['cat'], $context['_parent'], $context['_iterated']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 51
+        // line 55
         yield "            </tbody>
         </table>
     </div>
@@ -193,7 +200,7 @@ class __TwigTemplate_e5f6d5c30139f775ba2b20bffa729bf5 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  164 => 51,  155 => 47,  153 => 46,  138 => 36,  134 => 34,  130 => 32,  124 => 30,  122 => 29,  117 => 27,  113 => 26,  109 => 25,  106 => 24,  101 => 23,  85 => 9,  75 => 8,  58 => 6,  41 => 2,);
+        return array (  171 => 55,  162 => 51,  160 => 50,  145 => 40,  138 => 36,  134 => 34,  130 => 32,  124 => 30,  122 => 29,  117 => 27,  113 => 26,  109 => 25,  106 => 24,  101 => 23,  85 => 9,  75 => 8,  58 => 6,  41 => 2,);
     }
 
     public function getSourceContext(): Source
@@ -233,6 +240,10 @@ class __TwigTemplate_e5f6d5c30139f775ba2b20bffa729bf5 extends Template
                             {% endif %}
                         </td>
                         <td>
+                        <a href=\"{{ path('modifier_categorie', {'id': cat.idCategorie}) }}\"
+       class=\"btn btn-primary btn-sm\" title=\"Modifier\">
+        ✏️
+           </a>
     <a href=\"{{ path('supprimer_categorie', {'id': cat.idCategorie}) }}\"
        class=\"btn btn-danger btn-sm\"
        onclick=\"return confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?');\"
@@ -253,6 +264,6 @@ class __TwigTemplate_e5f6d5c30139f775ba2b20bffa729bf5 extends Template
     </div>
 </div>
 {% endblock %}
-", "listCat.html.twig", "C:\\Users\\amirm\\Desktop\\PI WORKSHOPS\\piNFnlCOP\\Pi\\Pi\\templates\\ListCat.html.twig");
+", "listCat.html.twig", "C:\\Users\\amirm\\Desktop\\PI WORKSHOPS\\PIRelifFinal\\templates\\ListCat.html.twig");
     }
 }

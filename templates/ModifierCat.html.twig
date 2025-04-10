@@ -1,0 +1,25 @@
+{% extends 'backoff.html.twig' %}
+
+{% block title %}Modifier Catégorie{% endblock %}
+
+{% block body %}
+<div style="margin-top: 90px;">
+    <div class="container">
+        <h2 class="mb-4 text-center">Modifier la Catégorie</h2>
+
+        {{ form_start(form) }}
+            <div class="mb-3">
+                {{ form_row(form.nomCategorie) }}
+            </div>
+            <div class="mb-3">
+                {{ form_row(form.description) }}
+            </div>
+            <div class="mb-3">
+                {{ form_row(form.image) }}
+            </div>
+            <button type="submit" class="btn btn-success">Confirmer les modifications</button>
+            <a href="{{ path('liste_categories') }}" class="btn btn-secondary">Annuler</a>
+        {{ form_end(form) }}
+    </div>
+</div>
+{% endblock %}

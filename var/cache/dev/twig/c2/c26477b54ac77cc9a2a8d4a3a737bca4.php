@@ -180,6 +180,6 @@ class __TwigTemplate_3410a10b9c3e348b61c7417a8cf9bd0f extends Template
         {%- endfor -%}
     </pre>
 {% endif %}
-", "@Doctrine/Collector/explain.html.twig", "C:\\Users\\amirm\\Desktop\\PI WORKSHOPS\\piNFnlCOP\\Pi\\Pi\\vendor\\doctrine\\doctrine-bundle\\templates\\Collector\\explain.html.twig");
+", "@Doctrine/Collector/explain.html.twig", "C:\\Users\\amirm\\Desktop\\PI WORKSHOPS\\PIRelifFinal\\vendor\\doctrine\\doctrine-bundle\\templates\\Collector\\explain.html.twig");
     }
 }

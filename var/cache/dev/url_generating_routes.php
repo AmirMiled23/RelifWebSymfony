@@ -7,9 +7,11 @@ return [
     'ajout_event' => [[], ['_controller' => 'App\\Controller\\CategorieEventController::ajouterCategorie'], [], [['text', '/ajouter-evenement']], [], [], []],
     'liste_categories' => [[], ['_controller' => 'App\\Controller\\CategorieEventController::listeCategories'], [], [['text', '/liste-categories']], [], [], []],
     'supprimer_categorie' => [['id'], ['_controller' => 'App\\Controller\\CategorieEventController::supprimerCategorie'], [], [['variable', '/', '[^/]++', 'id', true], ['text', '/supprimer-categorie']], [], [], []],
+    'modifier_categorie' => [['id'], ['_controller' => 'App\\Controller\\CategorieEventController::modifierCategorie'], [], [['variable', '/', '[^/]++', 'id', true], ['text', '/modifier-categorie']], [], [], []],
     'app_home_controll' => [[], ['_controller' => 'App\\Controller\\HomeControllController::index'], [], [['text', '/']], [], [], []],
     'App\Controller\CategorieEventController::ajouterCategorie' => [[], ['_controller' => 'App\\Controller\\CategorieEventController::ajouterCategorie'], [], [['text', '/ajouter-evenement']], [], [], []],
     'App\Controller\CategorieEventController::listeCategories' => [[], ['_controller' => 'App\\Controller\\CategorieEventController::listeCategories'], [], [['text', '/liste-categories']], [], [], []],
     'App\Controller\CategorieEventController::supprimerCategorie' => [['id'], ['_controller' => 'App\\Controller\\CategorieEventController::supprimerCategorie'], [], [['variable', '/', '[^/]++', 'id', true], ['text', '/supprimer-categorie']], [], [], []],
+    'App\Controller\CategorieEventController::modifierCategorie' => [['id'], ['_controller' => 'App\\Controller\\CategorieEventController::modifierCategorie'], [], [['variable', '/', '[^/]++', 'id', true], ['text', '/modifier-categorie']], [], [], []],
     'App\Controller\HomeControllController::index' => [[], ['_controller' => 'App\\Controller\\HomeControllController::index'], [], [['text', '/']], [], [], []],
 ];

@@ -69,5 +69,46 @@ public function supprimerCategorie(CategorieEvent $categorie, EntityManagerInter
     return $this->redirectToRoute('liste_categories');
 }
 
+#[Route('/modifier-categorie/{id}', name: 'modifier_categorie')]
+public function modifierCategorie(
+    CategorieEvent $categorie,
+    Request $request,
+    EntityManagerInterface $em,
+    SluggerInterface $slugger
+): Response {
+    $form = $this->createForm(CategorieEventType::class, $categorie);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $request->isMethod('POST') && $form->isValid()) {
+        $imageFile = $form->get('image')->getData();
+
+        if ($imageFile) {
+            $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+            $safeFilename = $slugger->slug($originalFilename);
+            $newFilename = $safeFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
+
+            $imageFile->move(
+                $this->getParameter('categorie_images_directory'),
+                $newFilename
+            );
+
+            $categorie->setImage($newFilename);
+        }
+
+        $em->flush();
+
+        $this->addFlash('success', 'Catégorie modifiée avec succès !');
+        return $this->redirectToRoute('liste_categories');
+    }
+
+    return $this->render('AjoutCat.html.twig', [
+        'form' => $form->createView(),
+        'editMode' => true
+    ]);
+}
+
+
+
+
 
 }

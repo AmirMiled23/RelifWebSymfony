@@ -16,12 +16,14 @@ return [
         0 => '{^(?'
                 .'|/_error/(\\d+)(?:\\.([^/]++))?(*:35)'
                 .'|/supprimer\\-categorie/([^/]++)(*:72)'
+                .'|/modifier\\-categorie/([^/]++)(*:108)'
             .')/?$}sDu',
     ],
     [ // $dynamicRoutes
         35 => [[['_route' => '_preview_error', '_controller' => 'error_controller::preview', '_format' => 'html'], ['code', '_format'], null, null, false, true, null]],
-        72 => [
-            [['_route' => 'supprimer_categorie', '_controller' => 'App\\Controller\\CategorieEventController::supprimerCategorie'], ['id'], null, null, false, true, null],
+        72 => [[['_route' => 'supprimer_categorie', '_controller' => 'App\\Controller\\CategorieEventController::supprimerCategorie'], ['id'], null, null, false, true, null]],
+        108 => [
+            [['_route' => 'modifier_categorie', '_controller' => 'App\\Controller\\CategorieEventController::modifierCategorie'], ['id'], null, null, false, true, null],
             [null, null, null, null, false, false, 0],
         ],
     ],
