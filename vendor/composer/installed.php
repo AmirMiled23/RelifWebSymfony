@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => '__root__',
-        'pretty_version' => 'dev-master',
-        'version' => 'dev-master',
-        'reference' => '51468760e2e7b9dc7e2a483d1b893340c3e905eb',
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
+        'reference' => 'c9655a067da2b83fda347c53dd3630fd7ac5d69e',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         '__root__' => array(
-            'pretty_version' => 'dev-master',
-            'version' => 'dev-master',
-            'reference' => '51468760e2e7b9dc7e2a483d1b893340c3e905eb',
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'reference' => 'c9655a067da2b83fda347c53dd3630fd7ac5d69e',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -430,6 +430,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'symfony/password-hasher' => array(
+            'pretty_version' => 'v7.2.0',
+            'version' => '7.2.0.0',
+            'reference' => 'd8bd3d66d074c0acba1214a0d42f5941a8e1e94d',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../symfony/password-hasher',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'symfony/polyfill-ctype' => array(
             'dev_requirement' => false,
             'replaced' => array(
@@ -583,6 +592,24 @@
             'reference' => '8e8d09bd69b7f6c0260dd3d58f37bd4fbdeab5ad',
             'type' => 'composer-plugin',
             'install_path' => __DIR__ . '/../symfony/runtime',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'symfony/security-core' => array(
+            'pretty_version' => 'v7.2.3',
+            'version' => '7.2.3.0',
+            'reference' => '466784ffcd0b5a16e05394335897f790b17d07e4',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../symfony/security-core',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'symfony/security-csrf' => array(
+            'pretty_version' => 'v7.2.3',
+            'version' => '7.2.3.0',
+            'reference' => '2b4b0c46c901729e4e90719eacd980381f53e0a3',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../symfony/security-csrf',
             'aliases' => array(),
             'dev_requirement' => false,
         ),

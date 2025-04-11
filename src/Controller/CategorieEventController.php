@@ -101,9 +101,9 @@ public function modifierCategorie(
         return $this->redirectToRoute('liste_categories');
     }
 
-    return $this->render('AjoutCat.html.twig', [
+    return $this->render('ModifierCat.html.twig', [
         'form' => $form->createView(),
-        'editMode' => true
+        
     ]);
 }
 

@@ -6,6 +6,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 use App\Repository\EventRepository;
 
@@ -30,6 +31,15 @@ class Event
     }
 
     #[ORM\Column(type: 'string', nullable: false)]
+    #[Assert\NotBlank(message: "Le nom de l'événement est obligatoire.")]
+    #[Assert\Length(
+        min: 5,
+        minMessage: "Le nom doit contenir au moins {{ limit }} caractères."
+    )]
+    #[Assert\Regex(
+        pattern: "/^[^\d]/",
+        message: "Le nom ne doit pas commencer par un chiffre."
+    )]
     private ?string $nom_event = null;
 
     public function getNom_event(): ?string
@@ -43,7 +53,9 @@ class Event
         return $this;
     }
 
-    #[ORM\Column(type: 'date', nullable: true)]
+    #[ORM\Column(type: 'date', nullable: false)]
+    #[Assert\NotNull(message: "La date de l'événement est obligatoire.")]
+    #[Assert\GreaterThanOrEqual("today", message: "Pas une date au passé.")]
     private ?\DateTimeInterface $date_event = null;
 
     public function getDate_event(): ?\DateTimeInterface
@@ -58,6 +70,7 @@ class Event
     }
 
     #[ORM\Column(type: 'string', nullable: false)]
+    #[Assert\NotBlank(message: "L'adresse de l'événement est obligatoire.")]
     private ?string $adresse_event = null;
 
     public function getAdresse_event(): ?string
@@ -71,7 +84,8 @@ class Event
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(type: 'string', length:50)]
+    #[Assert\NotBlank(message: "La ville est obligatoire.")]
     private ?string $villes = null;
 
     public function getVilles(): ?string
@@ -79,13 +93,22 @@ class Event
         return $this->villes;
     }
 
-    public function setVilles(string $villes): self
+    public function setVilles(?string $villes): self
     {
         $this->villes = $villes;
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: true)]
+    #[ORM\Column(type: 'string', nullable: false)]
+    #[Assert\NotBlank(message: "La description est obligatoire.")]
+    #[Assert\Length(
+        min: 5,
+        minMessage: "La description doit contenir au moins {{ limit }} caractères."
+    )]
+    #[Assert\Regex(
+        pattern: "/^[^\d]/",
+        message: "La description ne doit pas commencer par un chiffre."
+    )]
     private ?string $description_event = null;
 
     public function getDescription_event(): ?string
@@ -99,7 +122,8 @@ class Event
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: true)]
+    #[ORM\Column(type: 'string', length:20)]
+    #[Assert\NotBlank(message: "Le statut est obligatoire.")]
     private ?string $status_event = null;
 
     public function getStatus_event(): ?string
@@ -113,7 +137,8 @@ class Event
         return $this;
     }
 
-    #[ORM\Column(type: 'integer', nullable: true)]
+    #[ORM\Column(type: 'integer', nullable: false)]
+    #[Assert\NotNull(message: "Le nombre maximal de participants est obligatoire.")]
     private ?int $nb_participant_max = null;
 
     public function getNb_participant_max(): ?int
@@ -129,6 +154,7 @@ class Event
 
     #[ORM\ManyToOne(targetEntity: CategorieEvent::class, inversedBy: 'events')]
     #[ORM\JoinColumn(name: 'id_categorie', referencedColumnName: 'id_categorie')]
+    #[Assert\NotNull(message: "La catégorie est obligatoire.")]
     private ?CategorieEvent $categorieEvent = null;
 
     public function getCategorieEvent(): ?CategorieEvent
