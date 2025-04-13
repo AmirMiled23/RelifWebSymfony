@@ -5,20 +5,21 @@
 
 {% block body %}
 <div style="margin-top: 90px;">
-    <h1>Event index</h1>
+    <h1 style="text-align: center;">Liste des evenements</h1>
+
 
     <table class="table">
         <thead>
             <tr>
               
-                <th>Nom_event</th>
-                <th>Date_event</th>
+                <th>Nom de l'evenement</th>
+                <th>Date</th>
                 
                 <th>Villes</th>
                 
-                <th>Status_event</th>
-                <th>Nb_participant_max</th>
-                <th>CATEGORIE</th>
+                <th>Status</th>
+                <th>Nb des participants</th>
+                <th>Categorie</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -53,7 +54,5 @@
         {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ path('app_event_new') }}">Create new</a>
 </div>   
 {% endblock %}

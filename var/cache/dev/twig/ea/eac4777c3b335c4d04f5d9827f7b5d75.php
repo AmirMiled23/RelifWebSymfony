@@ -83,70 +83,71 @@ class __TwigTemplate_848cfde903cabb128441ad8ef10b2ab4 extends Template
 
         // line 7
         yield "<div style=\"margin-top: 90px;\">
-    <h1>Event index</h1>
+    <h1 style=\"text-align: center;\">Liste des evenements</h1>
+
 
     <table class=\"table\">
         <thead>
             <tr>
               
-                <th>Nom_event</th>
-                <th>Date_event</th>
+                <th>Nom de l'evenement</th>
+                <th>Date</th>
                 
                 <th>Villes</th>
                 
-                <th>Status_event</th>
-                <th>Nb_participant_max</th>
-                <th>CATEGORIE</th>
+                <th>Status</th>
+                <th>Nb des participants</th>
+                <th>Categorie</th>
                 <th>actions</th>
             </tr>
         </thead>
         <tbody>
         ";
-        // line 26
+        // line 27
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["events"]) || array_key_exists("events", $context) ? $context["events"] : (function () { throw new RuntimeError('Variable "events" does not exist.', 26, $this->source); })()));
+        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["events"]) || array_key_exists("events", $context) ? $context["events"] : (function () { throw new RuntimeError('Variable "events" does not exist.', 27, $this->source); })()));
         $context['_iterated'] = false;
         foreach ($context['_seq'] as $context["_key"] => $context["event"]) {
-            // line 27
+            // line 28
             yield "            <tr>
                
                 <td>";
-            // line 29
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "nomEvent", [], "any", false, false, false, 29), "html", null, true);
-            yield "</td>
-                <td>";
             // line 30
-            yield ((CoreExtension::getAttribute($this->env, $this->source, $context["event"], "dateEvent", [], "any", false, false, false, 30)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "dateEvent", [], "any", false, false, false, 30), "Y-m-d"), "html", null, true)) : (""));
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "nomEvent", [], "any", false, false, false, 30), "html", null, true);
+            yield "</td>
+                <td>";
+            // line 31
+            yield ((CoreExtension::getAttribute($this->env, $this->source, $context["event"], "dateEvent", [], "any", false, false, false, 31)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "dateEvent", [], "any", false, false, false, 31), "Y-m-d"), "html", null, true)) : (""));
             yield "</td>
                 
                 <td>";
-            // line 32
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "villes", [], "any", false, false, false, 32), "html", null, true);
+            // line 33
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "villes", [], "any", false, false, false, 33), "html", null, true);
             yield "</td>
                 
-                <td>";
-            // line 34
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "statusEvent", [], "any", false, false, false, 34), "html", null, true);
-            yield "</td>
                 <td>";
             // line 35
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "nbParticipantMax", [], "any", false, false, false, 35), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "statusEvent", [], "any", false, false, false, 35), "html", null, true);
             yield "</td>
                 <td>";
             // line 36
-            yield ((CoreExtension::getAttribute($this->env, $this->source, $context["event"], "categorieEvent", [], "any", false, false, false, 36)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["event"], "categorieEvent", [], "any", false, false, false, 36), "nom_categorie", [], "any", false, false, false, 36), "html", null, true)) : ("N/A"));
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "nbParticipantMax", [], "any", false, false, false, 36), "html", null, true);
+            yield "</td>
+                <td>";
+            // line 37
+            yield ((CoreExtension::getAttribute($this->env, $this->source, $context["event"], "categorieEvent", [], "any", false, false, false, 37)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["event"], "categorieEvent", [], "any", false, false, false, 37), "nom_categorie", [], "any", false, false, false, 37), "html", null, true)) : ("N/A"));
             yield "</td>
                 <td>
     <div class=\"d-flex gap-2\">
         <a href=\"";
-            // line 39
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_event_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["event"], "id_event", [], "any", false, false, false, 39)]), "html", null, true);
+            // line 40
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_event_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["event"], "id_event", [], "any", false, false, false, 40)]), "html", null, true);
             yield "\" class=\"btn btn-light btn-sm text-dark\" title=\"Voir\">
             <i class=\"fas fa-eye me-1\"></i> Show
         </a>
         <a href=\"";
-            // line 42
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_event_edit", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["event"], "id_event", [], "any", false, false, false, 42)]), "html", null, true);
+            // line 43
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_event_edit", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["event"], "id_event", [], "any", false, false, false, 43)]), "html", null, true);
             yield "\" class=\"btn btn-light btn-sm text-dark\" title=\"Modifier\">
             <i class=\"fas fa-edit me-1\"></i> Edit
         </a>
@@ -157,9 +158,9 @@ class __TwigTemplate_848cfde903cabb128441ad8ef10b2ab4 extends Template
         ";
             $context['_iterated'] = true;
         }
-        // line 49
+        // line 50
         if (!$context['_iterated']) {
-            // line 50
+            // line 51
             yield "            <tr>
                 <td colspan=\"9\">no records found</td>
             </tr>
@@ -168,14 +169,9 @@ class __TwigTemplate_848cfde903cabb128441ad8ef10b2ab4 extends Template
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['event'], $context['_parent'], $context['_iterated']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 54
+        // line 55
         yield "        </tbody>
     </table>
-
-    <a href=\"";
-        // line 57
-        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_event_new");
-        yield "\">Create new</a>
 </div>   
 ";
         
@@ -205,7 +201,7 @@ class __TwigTemplate_848cfde903cabb128441ad8ef10b2ab4 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  177 => 57,  172 => 54,  163 => 50,  161 => 49,  149 => 42,  143 => 39,  137 => 36,  133 => 35,  129 => 34,  124 => 32,  119 => 30,  115 => 29,  111 => 27,  106 => 26,  85 => 7,  75 => 6,  58 => 4,  41 => 1,);
+        return array (  173 => 55,  164 => 51,  162 => 50,  150 => 43,  144 => 40,  138 => 37,  134 => 36,  130 => 35,  125 => 33,  120 => 31,  116 => 30,  112 => 28,  107 => 27,  85 => 7,  75 => 6,  58 => 4,  41 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -217,20 +213,21 @@ class __TwigTemplate_848cfde903cabb128441ad8ef10b2ab4 extends Template
 
 {% block body %}
 <div style=\"margin-top: 90px;\">
-    <h1>Event index</h1>
+    <h1 style=\"text-align: center;\">Liste des evenements</h1>
+
 
     <table class=\"table\">
         <thead>
             <tr>
               
-                <th>Nom_event</th>
-                <th>Date_event</th>
+                <th>Nom de l'evenement</th>
+                <th>Date</th>
                 
                 <th>Villes</th>
                 
-                <th>Status_event</th>
-                <th>Nb_participant_max</th>
-                <th>CATEGORIE</th>
+                <th>Status</th>
+                <th>Nb des participants</th>
+                <th>Categorie</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -265,8 +262,6 @@ class __TwigTemplate_848cfde903cabb128441ad8ef10b2ab4 extends Template
         {% endfor %}
         </tbody>
     </table>
-
-    <a href=\"{{ path('app_event_new') }}\">Create new</a>
 </div>   
 {% endblock %}
 ", "event/index.html.twig", "C:\\Users\\amirm\\Desktop\\PI WORKSHOPS\\PIRelifFinal\\templates\\event\\index.html.twig");
