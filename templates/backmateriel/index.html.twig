@@ -1,0 +1,39 @@
+{% extends 'Baseback.html.twig' %}
+
+{% block title %}Materiel index{% endblock %}
+
+{% block body %}
+    <h1>Materiel index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id_materiel</th>
+                <th>Nom_materiel</th>
+                <th>Description</th>
+                <th>Quantite_dispo</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for materiel in materiels %}
+            <tr>
+                <td>{{ materiel.idMateriel }}</td>
+                <td>{{ materiel.nomMateriel }}</td>
+                <td>{{ materiel.description }}</td>
+                <td>{{ materiel.quantiteDispo }}</td>
+                <td>
+                    <a href="{{ path('app_backmateriel_show', {'id_materiel': materiel.id_materiel}) }}">show</a>
+                    <a href="{{ path('app_backmateriel_edit', {'id_materiel': materiel.id_materiel}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_backmateriel_new') }}">Create new</a>
+{% endblock %}

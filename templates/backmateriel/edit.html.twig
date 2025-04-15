@@ -1,0 +1,13 @@
+{% extends 'Baseback.html.twig' %}
+
+{% block title %}Edit Materiel{% endblock %}
+
+{% block body %}
+    <h1>Edit Materiel</h1>
+
+    {{ include('backmateriel/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_backmateriel_index') }}">back to list</a>
+
+    {{ include('backmateriel/_delete_form.html.twig') }}
+{% endblock %}
