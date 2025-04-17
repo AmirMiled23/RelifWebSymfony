@@ -66,9 +66,9 @@ class __TwigTemplate_b740d8eb1c1e3b716ca88f7afebd651e extends Template
         yield "    ";
         yield from $this->unwrap()->yieldBlock('css', $context, $blocks);
         // line 23
-        yield "    ";
+        yield "    
+    <script src=\"";
         // line 24
-        yield "    <script src=\"";
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("assets/back/js/plugin/webfont/webfont.min.js"), "html", null, true);
         yield "\"></script>
     <script>
@@ -877,7 +877,7 @@ class __TwigTemplate_b740d8eb1c1e3b716ca88f7afebd651e extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  812 => 622,  803 => 616,  796 => 612,  789 => 608,  782 => 604,  775 => 600,  768 => 596,  763 => 594,  759 => 593,  754 => 592,  744 => 591,  728 => 586,  720 => 587,  717 => 586,  707 => 585,  697 => 21,  693 => 20,  688 => 19,  678 => 18,  666 => 662,  663 => 591,  659 => 588,  656 => 585,  193 => 124,  185 => 119,  177 => 114,  169 => 109,  109 => 52,  104 => 50,  86 => 35,  71 => 24,  69 => 23,  66 => 18,  49 => 2,);
+        return array (  812 => 622,  803 => 616,  796 => 612,  789 => 608,  782 => 604,  775 => 600,  768 => 596,  763 => 594,  759 => 593,  754 => 592,  744 => 591,  728 => 586,  720 => 587,  717 => 586,  707 => 585,  697 => 21,  693 => 20,  688 => 19,  678 => 18,  666 => 662,  663 => 591,  659 => 588,  656 => 585,  193 => 124,  185 => 119,  177 => 114,  169 => 109,  109 => 52,  104 => 50,  86 => 35,  72 => 24,  69 => 23,  66 => 18,  49 => 2,);
     }
 
     public function getSourceContext(): Source
@@ -904,7 +904,7 @@ class __TwigTemplate_b740d8eb1c1e3b716ca88f7afebd651e extends Template
         <link rel=\"stylesheet\" href=\"{{ asset('assets/back/css/plugins.min.css') }}\">
         <link rel=\"stylesheet\" href=\"{{ asset('assets/back/css/kaiadmin.min.css') }}\">
     {% endblock %}
-    {# POLICES ET ICONES #}
+    
     <script src=\"{{ asset('assets/back/js/plugin/webfont/webfont.min.js') }}\"></script>
     <script>
       WebFont.load({

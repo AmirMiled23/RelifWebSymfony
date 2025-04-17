@@ -7,6 +7,7 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 
 class CategorieEventType extends AbstractType
@@ -20,6 +21,9 @@ class CategorieEventType extends AbstractType
                 'mapped' => false, 
                 'required' => true,
                 'constraints' => [
+                    new NotBlank([
+                        'message' => 'L\'image est obligatoire',
+                    ]),
                     new File([
                         
                         'mimeTypes' => [

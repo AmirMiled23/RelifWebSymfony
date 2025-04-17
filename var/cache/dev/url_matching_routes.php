@@ -23,6 +23,7 @@ return [
                     .'|([^/]++)(*:134)'
                     .'|event/([^/]++)/edit(*:161)'
                     .'|([^/]++)(*:177)'
+                    .'|public\\-events(*:199)'
                 .')'
             .')/?$}sDu',
     ],
@@ -32,8 +33,9 @@ return [
         108 => [[['_route' => 'modifier_categorie', '_controller' => 'App\\Controller\\CategorieEventController::modifierCategorie'], ['id'], null, null, false, true, null]],
         134 => [[['_route' => 'app_event_show', '_controller' => 'App\\Controller\\EventController::show'], ['id'], ['GET' => 0], null, false, true, null]],
         161 => [[['_route' => 'app_event_edit', '_controller' => 'App\\Controller\\EventController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        177 => [
-            [['_route' => 'app_event_delete', '_controller' => 'App\\Controller\\EventController::delete'], ['id'], ['POST' => 0], null, false, true, null],
+        177 => [[['_route' => 'app_event_delete', '_controller' => 'App\\Controller\\EventController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        199 => [
+            [['_route' => 'app_event_public', '_controller' => 'App\\Controller\\EventController::publicRaw'], [], ['GET' => 0], null, false, false, null],
             [null, null, null, null, false, false, 0],
         ],
     ],

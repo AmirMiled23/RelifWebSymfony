@@ -14,7 +14,7 @@ use Twig\Source;
 use Twig\Template;
 use Twig\TemplateWrapper;
 
-/* listCat.html.twig */
+/* ListCat.html.twig */
 class __TwigTemplate_0bca20b556312ee2cf557e36e847e92d extends Template
 {
     private Source $source;
@@ -45,9 +45,9 @@ class __TwigTemplate_0bca20b556312ee2cf557e36e847e92d extends Template
     {
         $macros = $this->macros;
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
-        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "listCat.html.twig"));
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "ListCat.html.twig"));
 
-        $this->parent = $this->loadTemplate("backoff.html.twig", "listCat.html.twig", 2);
+        $this->parent = $this->loadTemplate("backoff.html.twig", "ListCat.html.twig", 2);
         yield from $this->parent->unwrap()->yield($context, array_merge($this->blocks, $blocks));
         
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
@@ -185,7 +185,7 @@ class __TwigTemplate_0bca20b556312ee2cf557e36e847e92d extends Template
      */
     public function getTemplateName(): string
     {
-        return "listCat.html.twig";
+        return "ListCat.html.twig";
     }
 
     /**
@@ -266,6 +266,6 @@ class __TwigTemplate_0bca20b556312ee2cf557e36e847e92d extends Template
     </div>
 </div>
 {% endblock %}
-", "listCat.html.twig", "C:\\Users\\amirm\\Desktop\\PI WORKSHOPS\\PIRelifFinal\\templates\\ListCat.html.twig");
+", "ListCat.html.twig", "C:\\Users\\amirm\\Desktop\\PI WORKSHOPS\\PIRelifFinal\\templates\\ListCat.html.twig");
     }
 }

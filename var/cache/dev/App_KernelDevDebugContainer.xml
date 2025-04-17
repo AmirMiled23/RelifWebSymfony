@@ -247,7 +247,7 @@
     </service>
     <service id="argument_resolver.service" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
       <tag priority="-50" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">controller.argument_value_resolver</tag>
-      <argument type="service" id=".service_locator.sUy4u.2"/>
+      <argument type="service" id=".service_locator.NScngkZ"/>
     </service>
     <service id="argument_resolver.default" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">
       <tag priority="-100" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">controller.argument_value_resolver</tag>
@@ -1447,7 +1447,7 @@
     </service>
     <service id="argument_resolver.not_tagged_controller" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
       <tag name="controller.argument_value_resolver" priority="-200"/>
-      <argument type="service" id=".service_locator.sUy4u.2"/>
+      <argument type="service" id=".service_locator.NScngkZ"/>
     </service>
     <service id="routing.resolver" class="Symfony\Component\Config\Loader\LoaderResolver">
       <call method="addLoader">
@@ -3931,7 +3931,13 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.H64Kpxq" method="withContext"/>
     </service>
-    <service id=".service_locator.sUy4u.2" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.wxPd78M.App\Controller\EventController::publicRaw()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\EventController::publicRaw()"/>
+      <argument>App\Controller\EventController::publicRaw()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.wxPd78M" method="withContext"/>
+    </service>
+    <service id=".service_locator.NScngkZ" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.zHyJIs5.kernel::registerContainerConfiguration()"/>
@@ -3947,6 +3953,7 @@
         <argument key="App\Controller\EventController::show" type="service_closure" id=".service_locator.uOCv2n7.App\Controller\EventController::show()"/>
         <argument key="App\Controller\EventController::edit" type="service_closure" id=".service_locator.H64Kpxq.App\Controller\EventController::edit()"/>
         <argument key="App\Controller\EventController::delete" type="service_closure" id=".service_locator.H64Kpxq.App\Controller\EventController::delete()"/>
+        <argument key="App\Controller\EventController::publicRaw" type="service_closure" id=".service_locator.wxPd78M.App\Controller\EventController::publicRaw()"/>
         <argument key="kernel:registerContainerConfiguration" type="service_closure" id=".service_locator.zHyJIs5.kernel::registerContainerConfiguration()"/>
         <argument key="kernel:loadRoutes" type="service_closure" id=".service_locator.zHyJIs5.kernel::loadRoutes()"/>
         <argument key="App\Controller\CategorieEventController:ajouterCategorie" type="service_closure" id=".service_locator.zuLlZtR.App\Controller\CategorieEventController::ajouterCategorie()"/>
@@ -3958,6 +3965,7 @@
         <argument key="App\Controller\EventController:show" type="service_closure" id=".service_locator.uOCv2n7.App\Controller\EventController::show()"/>
         <argument key="App\Controller\EventController:edit" type="service_closure" id=".service_locator.H64Kpxq.App\Controller\EventController::edit()"/>
         <argument key="App\Controller\EventController:delete" type="service_closure" id=".service_locator.H64Kpxq.App\Controller\EventController::delete()"/>
+        <argument key="App\Controller\EventController:publicRaw" type="service_closure" id=".service_locator.wxPd78M.App\Controller\EventController::publicRaw()"/>
       </argument>
     </service>
     <service id=".service_locator.JuRh477" class="Symfony\Component\DependencyInjection\ServiceLocator">
@@ -5054,7 +5062,7 @@
     <service id="doctrine.migrations.metadata_storage" alias="doctrine.migrations.storage.table_storage"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.pRu6x_4" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.sUy4u.2"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.NScngkZ"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.BxSdgVt"/>
     <service id="Psr\Log\LoggerInterface" alias="logger"/>

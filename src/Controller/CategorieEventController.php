@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\HttpFoundation\File\File;
 
 class CategorieEventController extends AbstractController
 {
@@ -23,7 +24,7 @@ class CategorieEventController extends AbstractController
     $form->handleRequest($request);
 
     if ($form->isSubmitted() && $form->isValid()) {
-        /** @var UploadedFile $imageFile */
+        
         $imageFile = $form->get('image')->getData();
 
         if ($imageFile) {
@@ -76,10 +77,17 @@ public function modifierCategorie(
     EntityManagerInterface $em,
     SluggerInterface $slugger
 ): Response {
+
+    if ($categorie->getImage()) {
+        $categorie->setImage(
+            new File($this->getParameter('categorie_images_directory') . '/' . $categorie->getImage())
+        );
+    }
+
     $form = $this->createForm(CategorieEventType::class, $categorie);
     $form->handleRequest($request);
 
-    if ($form->isSubmitted() && $request->isMethod('POST') && $form->isValid()) {
+    if ($form->isSubmitted() && $form->isValid()) {
         $imageFile = $form->get('image')->getData();
 
         if ($imageFile) {

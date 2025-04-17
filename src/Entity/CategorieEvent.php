@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
 
+
 use App\Repository\CategorieEventRepository;
 
 #[ORM\Entity(repositoryClass: CategorieEventRepository::class)]
@@ -63,7 +64,7 @@ class CategorieEvent
         return $this->image;
     }
 
-    public function setImage(string $image): self
+    public function setImage($image): self
     {
         $this->image = $image;
         return $this;
@@ -100,9 +101,7 @@ class CategorieEvent
         $this->events = new ArrayCollection();
     }
 
-    /**
-     * @return Collection<int, Event>
-     */
+  
     public function getEvents(): Collection
     {
         if (!$this->events instanceof Collection) {

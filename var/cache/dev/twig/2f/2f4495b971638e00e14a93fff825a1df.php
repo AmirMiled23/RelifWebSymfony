@@ -67,10 +67,10 @@ class __TwigTemplate_2e231bdbda01e2e3bf4aa304c3a314f2 extends Template
   ";
         // line 21
         yield from $this->unwrap()->yieldBlock('body', $context, $blocks);
-        // line 355
+        // line 356
         yield " ";
         yield from $this->unwrap()->yieldBlock('js', $context, $blocks);
-        // line 376
+        // line 377
         yield "  
 </body>
 
@@ -199,7 +199,11 @@ class __TwigTemplate_2e231bdbda01e2e3bf4aa304c3a314f2 extends Template
                 <a class=\"nav-link\" href=\"about.html\">About Us</a>
               </li>  
               <li class=\"nav-item\">
-                <a class=\"nav-link\" href=\"services.html\">Nos evenements</a>
+                <a class=\"nav-link\" href=\"";
+        // line 68
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_event_public");
+        yield "\">Nos évènements</a>
+
               </li>                          
               <li class=\"nav-item\">
                 <a class=\"nav-link\" href=\"contact.html\">Contact Us</a>
@@ -220,11 +224,11 @@ class __TwigTemplate_2e231bdbda01e2e3bf4aa304c3a314f2 extends Template
       <!-- Slide Items -->
       <div class=\"item item-1\">
         <div class=\"img-fill\">
-          
+          <div class=\"text-content\">
             <h6>Welcome to Finance Business</h6>
             <h4>We help you<br>Grow your business</h4>
             <a href=\"#\" class=\"filled-button\">Contact Us</a>
-          
+          </div>
         </div>
       </div>
       <!-- Add more slides here -->
@@ -337,7 +341,7 @@ class __TwigTemplate_2e231bdbda01e2e3bf4aa304c3a314f2 extends Template
               <div class=\"col-md-6\">
                 <div class=\"left-image\">
                   <img src=\"";
-        // line 205
+        // line 206
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("assets/images/more-info.jpg"), "html", null, true);
         yield "\" alt=\"\">
                 </div>
@@ -425,7 +429,7 @@ class __TwigTemplate_2e231bdbda01e2e3bf4aa304c3a314f2 extends Template
       <div class=\"owl-partners owl-carousel\">
         <div class=\"partner-item\">
           <img src=\"";
-        // line 290
+        // line 291
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("assets/images/client-01.png"), "html", null, true);
         yield "\" title=\"1\" alt=\"1\">
         </div>
@@ -498,7 +502,7 @@ class __TwigTemplate_2e231bdbda01e2e3bf4aa304c3a314f2 extends Template
         yield from [];
     }
 
-    // line 355
+    // line 356
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -508,34 +512,34 @@ class __TwigTemplate_2e231bdbda01e2e3bf4aa304c3a314f2 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "js"));
 
-        // line 356
+        // line 357
         yield "  <!-- JS Files -->
   <script src=\"";
-        // line 357
+        // line 358
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("vendor/jquery/jquery.min.js"), "html", null, true);
         yield "\"></script>
   <script src=\"";
-        // line 358
+        // line 359
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("vendor/bootstrap/js/bootstrap.bundle.min.js"), "html", null, true);
         yield "\"></script>
   <script src=\"";
-        // line 359
+        // line 360
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("assets/js/custom.js"), "html", null, true);
         yield "\"></script>
   <script src=\"";
-        // line 360
+        // line 361
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("assets/js/owl.js"), "html", null, true);
         yield "\"></script>
   <script src=\"";
-        // line 361
+        // line 362
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("assets/js/jquery.singlePageNav.min.js"), "html", null, true);
         yield "\"></script>
   <script src=\"";
-        // line 362
+        // line 363
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("assets/js/slick.js"), "html", null, true);
         yield "\"></script>
   <script src=\"";
-        // line 363
+        // line 364
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("assets/js/accordions.js"), "html", null, true);
         yield "\"></script>
 
@@ -569,7 +573,7 @@ class __TwigTemplate_2e231bdbda01e2e3bf4aa304c3a314f2 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  539 => 363,  535 => 362,  531 => 361,  527 => 360,  523 => 359,  519 => 358,  515 => 357,  512 => 356,  502 => 355,  429 => 290,  341 => 205,  183 => 50,  153 => 22,  143 => 21,  132 => 15,  128 => 14,  124 => 13,  120 => 12,  116 => 11,  113 => 10,  103 => 9,  86 => 8,  74 => 376,  71 => 355,  69 => 21,  64 => 18,  62 => 9,  58 => 8,  49 => 1,);
+        return array (  543 => 364,  539 => 363,  535 => 362,  531 => 361,  527 => 360,  523 => 359,  519 => 358,  516 => 357,  506 => 356,  433 => 291,  345 => 206,  204 => 68,  183 => 50,  153 => 22,  143 => 21,  132 => 15,  128 => 14,  124 => 13,  120 => 12,  116 => 11,  113 => 10,  103 => 9,  86 => 8,  74 => 377,  71 => 356,  69 => 21,  64 => 18,  62 => 9,  58 => 8,  49 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -641,7 +645,8 @@ class __TwigTemplate_2e231bdbda01e2e3bf4aa304c3a314f2 extends Template
                 <a class=\"nav-link\" href=\"about.html\">About Us</a>
               </li>  
               <li class=\"nav-item\">
-                <a class=\"nav-link\" href=\"services.html\">Nos evenements</a>
+                <a class=\"nav-link\" href=\"{{ path('app_event_public') }}\">Nos évènements</a>
+
               </li>                          
               <li class=\"nav-item\">
                 <a class=\"nav-link\" href=\"contact.html\">Contact Us</a>
@@ -662,11 +667,11 @@ class __TwigTemplate_2e231bdbda01e2e3bf4aa304c3a314f2 extends Template
       <!-- Slide Items -->
       <div class=\"item item-1\">
         <div class=\"img-fill\">
-          
+          <div class=\"text-content\">
             <h6>Welcome to Finance Business</h6>
             <h4>We help you<br>Grow your business</h4>
             <a href=\"#\" class=\"filled-button\">Contact Us</a>
-          
+          </div>
         </div>
       </div>
       <!-- Add more slides here -->

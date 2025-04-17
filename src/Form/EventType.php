@@ -9,6 +9,13 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+
+
 
 
 class EventType extends AbstractType
@@ -16,11 +23,17 @@ class EventType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('nom_event')
+            ->add('nom_event', TextType::class, [
+                'empty_data' => '',
+                'required' => true,
+            ])
             ->add('date_event', null, [
                 'widget' => 'single_text'
             ])
-            ->add('adresse_event')
+            ->add('adresse_event', TextType::class, [
+                'empty_data' => '',
+                'required' => true,
+            ])
             ->add('villes',choiceType::class, [
                 'choices' => [
                     'Zaghouan' => 'Zaghouan',
@@ -50,8 +63,12 @@ class EventType extends AbstractType
                 ],
                 'placeholder' => 'Choisissez une ville',
                 'required' => true,
+                'empty_data' => '',
             ])
-            ->add('description_event')
+            ->add('description_event', TextareaType::class, [
+                'empty_data' => '',
+                'required' => true,
+            ])
             ->add('status_event', ChoiceType::class, [
                 'choices' => [
                     'En cours' => 'en_cours',
@@ -60,6 +77,8 @@ class EventType extends AbstractType
                     '' => '',
                 ],
                 'placeholder' => 'Sélectionnez un statut',
+                'required' => true,
+            'empty_data' => '',
             ])
             ->add('nb_participant_max')
             ->add('categorieEvent', EntityType::class, [
