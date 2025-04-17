@@ -32,10 +32,10 @@
                                 <td class="py-3 px-4 align-middle font-weight-bold">{{ secteur.nom }}</td>
                                 <td class="py-3 px-4 align-middle">{{ secteur.description }}</td>
                                 <td class="py-3 px-4 align-middle text-center">
-                                    <a href="#" class="btn btn-sm btn-outline-primary mr-2">
+                                    <a href="{{ path('secteur_edit', {id: secteur.id}) }}" class="btn btn-sm btn-outline-primary mr-2">
                                         <i class="ti ti-edit"></i> Modifier
                                     </a>
-                                    <a hhref="#" class="btn btn-sm btn-outline-danger">
+                                    <a href="{{ path('secteur_delete', {id: secteur.id}) }}"class="btn btn-sm btn-outline-danger">
                                         <i class="ti ti-trash"></i> Supprimer
                                     </a>
                                 </td>

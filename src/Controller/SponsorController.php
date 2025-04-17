@@ -40,6 +40,20 @@ final class SponsorController extends AbstractController{
     ]);}
 
 
+
+    #[Route('/Sponsorlistuser', name: 'sponsor_list_user', methods:['GET'])]
+    public function SponsorList1(): Response
+    {
+ 
+    $sponsors = $this->SponsorRepo->findAll(); 
+
+
+return $this->render('sponsor/frontlist.html.twig', [
+    'sponsors' => $sponsors,
+]);}
+
+
+
     #[Route('/sponsor', name: 'app_sponsor')]
     public function index(): Response
     {

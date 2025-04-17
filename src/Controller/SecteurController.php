@@ -35,7 +35,19 @@ public function SecteurList(): Response
         'secteurs' => $secteurs,
     ]);
 }
-    #[Route('/secteur', name: 'app_secteur')]
+  
+#[Route('/secteurlist2', name: 'secteur_list2', methods:['GET'])]
+public function SecteurList2(): Response
+{
+    // Récupérer la liste des auteurs
+    $secteurs = $this->SecteurRepo->findAll(); 
+
+    // Rendre la vue avec la liste des auteurs
+    return $this->render('secteur/secteurslist.html.twig', [
+        'secteurs' => $secteurs,
+    ]);
+}
+#[Route('/secteur', name: 'app_secteur')]
     public function index(): Response
     {
         return $this->render('secteur/index.html.twig', [
@@ -59,6 +71,40 @@ public function SecteurList(): Response
     }
     return $this->render('secteur/AddSecteu.html.twig', [
         'form' => $form->createView(),
+    ]);
+}
+#[Route('/secteur/delete/{id}', name: 'secteur_delete', methods: ['GET', 'DELETE'])]
+public function delete(Secteur $secteur): Response
+{
+    // Optionnel : vérifier si des sponsors sont associés
+    if (!$secteur->getSponsors()->isEmpty()) {
+        $this->addFlash('error', 'Impossible de supprimer ce secteur car des sponsors y sont associés.');
+        return $this->redirectToRoute('secteur_list'); // à adapter selon ta route
+    }
+
+    $this->entityManager->remove($secteur);
+    $this->entityManager->flush();
+
+    $this->addFlash('success', 'Secteur supprimé avec succès.');
+    return $this->redirectToRoute('secteur_list'); // à adapter selon ta route
+}
+
+#[Route('/secteur/edit/{id}', name: 'secteur_edit', methods: ['GET', 'POST'])]
+public function edit(Request $request, Secteur $secteur): Response
+{
+    $form = $this->createForm(SecteurType::class, $secteur);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        $this->entityManager->flush();
+
+        $this->addFlash('success', 'Secteur mis à jour avec succès.');
+        return $this->redirectToRoute('secteur_list'); // à adapter selon ta route
+    }
+
+    return $this->render('secteur/edit.html.twig', [
+        'form' => $form->createView(),
+        'secteur' => $secteur,
     ]);
 }
 }
