@@ -1,4 +1,26 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
+<form method="post" novalidate>
+    {{ form_start(form) }}
+    <div>
+        {{ form_label(form.nom_materiel) }}
+        {{ form_widget(form.nom_materiel) }}
+        <div class="error-message">
+            {{ form_errors(form.nom_materiel) }}
+        </div>
+    </div>
+    <div>
+        {{ form_label(form.description) }}
+        {{ form_widget(form.description) }}
+        <div class="error-message">
+            {{ form_errors(form.description) }}
+        </div>
+    </div>
+    <div>
+        {{ form_label(form.quantite_dispo) }}
+        {{ form_widget(form.quantite_dispo) }}
+        <div class="error-message">
+            {{ form_errors(form.quantite_dispo) }}
+        </div>
+    </div>
     <button class="btn">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
+    {{ form_end(form) }}
+</form>

@@ -6,6 +6,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 use App\Repository\ReservationMaterielRepository;
 
@@ -18,6 +19,11 @@ class ReservationMateriel
     #[ORM\Column(type: 'integer')]
     private ?int $id_reservation = null;
 
+    public function __construct()
+    {
+        $this->date_debut = new \DateTime(); // Initialise avec la date actuelle
+    }
+
     public function getId_reservation(): ?int
     {
         return $this->id_reservation;
@@ -29,7 +35,12 @@ class ReservationMateriel
         return $this;
     }
 
-    #[ORM\Column(type: 'date', nullable: false)]
+    #[ORM\Column(type: 'date', nullable: false, options: ['default' => 'CURRENT_DATE'])]
+    #[Assert\NotBlank(message: "La date de début est obligatoire.")]
+    #[Assert\GreaterThanOrEqual(
+        value: "today",
+        message: "La date de début doit être aujourd'hui ou dans le futur."
+    )]
     private ?\DateTimeInterface $date_debut = null;
 
     public function getDate_debut(): ?\DateTimeInterface
@@ -44,6 +55,8 @@ class ReservationMateriel
     }
 
     #[ORM\Column(type: 'date', nullable: false)]
+    #[Assert\NotBlank(message: "La date de fin est obligatoire.")]
+    #[Assert\GreaterThan(propertyPath: "date_debut", message: "La date de fin doit être après la date de début.")]
     private ?\DateTimeInterface $date_fin = null;
 
     public function getDate_fin(): ?\DateTimeInterface
@@ -58,6 +71,8 @@ class ReservationMateriel
     }
 
     #[ORM\Column(type: 'integer', nullable: false)]
+    #[Assert\NotBlank(message: "La quantité réservée est obligatoire.")]
+    #[Assert\Positive(message: "La quantité réservée doit être un nombre positif.")]
     private ?int $quantite_reservee = null;
 
     public function getQuantite_reservee(): ?int
@@ -125,6 +140,11 @@ class ReservationMateriel
         $this->quantite_reservee = $quantite_reservee;
 
         return $this;
+    }
+
+    public function getQuantite(): ?int
+    {
+        return $this->quantite_reservee;
     }
 
 }

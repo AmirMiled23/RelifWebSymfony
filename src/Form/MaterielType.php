@@ -14,8 +14,7 @@ class MaterielType extends AbstractType
         $builder
             ->add('nom_materiel')
             ->add('description')
-            ->add('quantite_dispo')
-        ;
+            ->add('quantite_dispo');
     }
 
     public function configureOptions(OptionsResolver $resolver): void

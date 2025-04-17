@@ -5,7 +5,25 @@
 {% block body %}
     <h1>Edit Materiel</h1>
 
-    {{ include('materiel/_form.html.twig', {'button_label': 'Update'}) }}
+    {% if app.flashes('success') is not empty %}
+        <div class="validation-message success" style="color: #3c763d; background-color: #dff0d8; border: 1px solid #d6e9c6; padding: 10px; border-radius: 5px;">
+            {% for message in app.flashes('success') %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if app.flashes('error') is not empty %}
+        <div class="validation-message" style="color: #d9534f; background-color: #f2dede; border: 1px solid #ebccd1; padding: 10px; border-radius: 5px;">
+            {% for message in app.flashes('error') %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div style="margin-top: 60px;">
+        {{ include('materiel/_form.html.twig', {'button_label': 'Update'}) }}
+    </div>
 
     <a href="{{ path('app_materiel_index') }}">back to list</a>
 

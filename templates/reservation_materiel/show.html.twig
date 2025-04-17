@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ReservationMateriel{% endblock %}
+
+{% block body %}
+    <h1>Reservation Materiel</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id_reservation</th>
+                <td>{{ reservation_materiel.idReservation }}</td>
+            </tr>
+            <tr>
+                <th>Date_debut</th>
+                <td>{{ reservation_materiel.dateDebut ? reservation_materiel.dateDebut|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Date_fin</th>
+                <td>{{ reservation_materiel.dateFin ? reservation_materiel.dateFin|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Quantite_reservee</th>
+                <td>{{ reservation_materiel.quantiteReservee }}</td>
+            </tr>
+            <tr>
+                <th>Nom du matériel</th>
+                <td>{{ reservation_materiel.materiel ? reservation_materiel.materiel.nomMateriel : 'Non spécifié' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_reservation_materiel_index') }}">back to list</a>
+
+    <a href="{{ path('app_reservation_materiel_edit', {'id_reservation': reservation_materiel.id_reservation}) }}">edit</a>
+
+    {{ include('reservation_materiel/_delete_form.html.twig') }}
+{% endblock %}

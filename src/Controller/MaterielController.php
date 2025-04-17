@@ -33,7 +33,11 @@ final class MaterielController extends AbstractController
             $entityManager->persist($materiel);
             $entityManager->flush();
 
+            $this->addFlash('success', 'Le matériel a été ajouté avec succès.');
+
             return $this->redirectToRoute('app_materiel_index', [], Response::HTTP_SEE_OTHER);
+        } else if ($form->isSubmitted()) {
+            $this->addFlash('error', 'Veuillez corriger les erreurs dans le formulaire.');
         }
 
         return $this->render('materiel/new.html.twig', [

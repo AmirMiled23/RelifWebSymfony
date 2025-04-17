@@ -1,0 +1,41 @@
+{% extends 'Baseback.html.twig' %}
+
+{% block title %}ReservationMateriel index{% endblock %}
+
+{% block body %}
+    <h1>Liste des reservations materiels</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id_reservation</th>
+                <th>Date_debut</th>
+                <th>Date_fin</th>
+                <th>Quantite_reservee</th>
+                <th>Nom du matériel</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for reservation_materiel in reservation_materiels %}
+            <tr>
+                <td>{{ reservation_materiel.idReservation }}</td>
+                <td>{{ reservation_materiel.dateDebut ? reservation_materiel.dateDebut|date('Y-m-d') : '' }}</td>
+                <td>{{ reservation_materiel.dateFin ? reservation_materiel.dateFin|date('Y-m-d') : '' }}</td>
+                <td>{{ reservation_materiel.quantiteReservee }}</td>
+                <td>{{ reservation_materiel.materiel ? reservation_materiel.materiel.nomMateriel : 'Non spécifié' }}</td>
+                <td>
+                    <a href="{{ path('app_back_reservation_show', {'id_reservation': reservation_materiel.id_reservation}) }}">show</a>
+                    <a href="{{ path('app_back_reservation_edit', {'id_reservation': reservation_materiel.id_reservation}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_back_reservation_new') }}">Create new</a>
+{% endblock %}

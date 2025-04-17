@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 use App\Repository\MaterielRepository;
 
@@ -21,6 +22,10 @@ class Materiel
     {
         return $this->id_materiel;
     }
+    public function getId(): ?int
+    {
+        return $this->id_materiel;
+    }
 
     public function setId_materiel(int $id_materiel): self
     {
@@ -29,6 +34,11 @@ class Materiel
     }
 
     #[ORM\Column(type: 'string', nullable: false)]
+    #[Assert\NotBlank(message: "Le nom du matériel est obligatoire.")]
+    #[Assert\Regex(
+        pattern: '/^[^\d]*$/',
+        message: 'Le nom du matériel ne doit pas contenir de chiffres.'
+    )]
     private ?string $nom_materiel = null;
 
     public function getNom_materiel(): ?string
@@ -43,6 +53,7 @@ class Materiel
     }
 
     #[ORM\Column(type: 'string', nullable: false)]
+    #[Assert\NotBlank(message: "La description est obligatoire.")]
     private ?string $description = null;
 
     public function getDescription(): ?string
@@ -57,6 +68,7 @@ class Materiel
     }
 
     #[ORM\Column(type: 'integer', nullable: false)]
+    #[Assert\Positive(message: "La quantité disponible doit être un nombre positif.")]
     private ?int $quantite_dispo = null;
 
     public function getQuantite_dispo(): ?int
@@ -132,4 +144,55 @@ class Materiel
         return $this;
     }
 
+    public function isAvailableForReservation(\DateTimeInterface $dateDebut, \DateTimeInterface $dateFin, int $quantite): bool
+    {
+        $quantiteReservee = 0;
+
+        foreach ($this->getReservationMateriels() as $reservation) {
+            if (
+                ($dateDebut < $reservation->getDateFin() && $dateFin > $reservation->getDateDebut()) // Vérifie le chevauchement des périodes
+            ) {
+                $quantiteReservee += $reservation->getQuantiteReservee();
+            }
+        }
+
+        return ($quantiteReservee + $quantite) <= $this->getQuantiteDispo();
+    }
+
+    public function getAvailableQuantityForPeriod(\DateTimeInterface $dateDebut, \DateTimeInterface $dateFin): int
+    {
+        $quantiteReservee = 0;
+
+        foreach ($this->getReservationMateriels() as $reservation) {
+            if (
+                ($dateDebut < $reservation->getDateFin() && $dateFin > $reservation->getDateDebut()) // Vérifie le chevauchement des périodes
+            ) {
+                $quantiteReservee += $reservation->getQuantiteReservee();
+            }
+        }
+
+        return max(0, $this->getQuantiteDispo() - $quantiteReservee);
+    }
+
+    public function getNextAvailableDateForFullQuantity(\DateTimeInterface $dateDebut, \DateTimeInterface $dateFin): ?\DateTimeInterface
+    {
+        $latestEndDate = null;
+
+        foreach ($this->getReservationMateriels() as $reservation) {
+            if (
+                ($dateDebut < $reservation->getDateFin() && $dateFin > $reservation->getDateDebut()) // Vérifie le chevauchement des périodes
+            ) {
+                if ($latestEndDate === null || $reservation->getDateFin() > $latestEndDate) {
+                    $latestEndDate = $reservation->getDateFin();
+                }
+            }
+        }
+
+        return $latestEndDate ? (clone $latestEndDate)->modify('+1 day') : null;
+    }
+
+    public function getQuantiteDisponible(\DateTimeInterface $dateDebut, \DateTimeInterface $dateFin): int
+    {
+        return $this->getAvailableQuantityForPeriod($dateDebut, $dateFin);
+    }
 }

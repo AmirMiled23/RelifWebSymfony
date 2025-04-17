@@ -1,0 +1,17 @@
+{% extends 'Baseback.html.twig' %}
+
+{% block title %}New ReservationMateriel{% endblock %}
+
+{% block body %}
+    <h1>Ajouter une nouvelle reservation materiel</h1>
+
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    {{ include('back_reservation/_form.html.twig') }}
+
+    <a href="{{ path('app_back_reservation_index') }}">back to list</a>
+{% endblock %}
