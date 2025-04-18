@@ -1,19 +1,73 @@
 {% extends 'baseBack.html.twig' %}
 
-{% block title %}Edit User{% endblock %}
+{% block title %}Modifier un utilisateur{% endblock %}
 
 {% block body %}
-<div class="container mt-5">
-    <h1 class="mb-4">Edit User</h1>
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ path('app_back_user_index') }}">Utilisateurs</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Modifier un utilisateur</li>
+        </ol>
+    </nav>
 
-    {{ form_start(form) }}
-        {{ form_row(form.nom_user) }}
-        {{ form_row(form.prenom_user) }}
-        {{ form_row(form.email_user) }}
-        {{ form_row(form.pw_user) }}
-        <button class="btn btn-primary">Save</button>
-    {{ form_end(form) }}
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h4><i class="fas fa-user-edit"></i> Modifier un utilisateur</h4>
+        </div>
 
-    <a class="btn btn-secondary mt-3" href="{{ path('app_back_user_index') }}">Back to list</a>
+        <div class="card-body">
+            {% for message in app.flashes('error') %}
+                <div class="alert alert-danger">
+                    {{ message }}
+                </div>
+            {% endfor %}
+
+            {{ form_start(form) }}
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            {{ form_label(form.nom_user, 'Nom', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.nom_user, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.nom_user) }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            {{ form_label(form.prenom_user, 'Prénom', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.prenom_user, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.prenom_user) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            {{ form_label(form.email_user, 'Email', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.email_user, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.email_user) }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            {{ form_label(form.pw_user, 'Mot de passe', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.pw_user, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.pw_user) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save"></i> Enregistrer
+                    </button>
+                    <a href="{{ path('app_back_user_index') }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Retour
+                    </a>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
 </div>
 {% endblock %}

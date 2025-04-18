@@ -56,12 +56,8 @@ class UserType extends AbstractType
             ])
             ->add('roles', ChoiceType::class, [
                 'choices' => [
-                    'Admin' => 'ROLE_ADMIN',
-                    'Patient' => 'ROLE_PATIENT',
-                    'Doctor' => 'ROLE_MEDECIN',
-                    'Infirmier' => 'ROLE_Infirmier',
-                    'Réceptionniste' => 'ROLE_RECEPT',
-                    'Pharmacien' => 'ROLE_PHARMACIEN',
+                    'Utilisateur' => 'ROLE_USER',
+                    'Organisateur' => 'ROLE_ORGANISATEUR',
                 ],
                 'multiple' => true,
                 'expanded' => true,

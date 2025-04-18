@@ -6,50 +6,67 @@
 <div class="container mt-5">
     <h1 class="mb-4">User index</h1>
 
-    <table class="table table-bordered table-striped">
-        <thead class="thead-dark">
-            <tr>
-                <th>Id</th>
-                <th>Nom</th>
-                <th>Prénom</th>
-                <th>Email</th>
-                <th>Numéro</th>
-                <th>Adresse</th>
-                <th>Âge</th>
-                <th>Points</th>
-                <th>Mot de passe</th>
-                <th>Date d'inscription</th>
-                <th>Code de réinitialisation</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for user in users %}
-            <tr>
-                <td>{{ user.idUser }}</td>
-                <td>{{ user.nomUser }}</td>
-                <td>{{ user.prenomUser }}</td>
-                <td>{{ user.emailUser }}</td>
-                <td>{{ user.numUser }}</td>
-                <td>{{ user.adresseUser }}</td>
-                <td>{{ user.ageUser }}</td>
-                <td>{{ user.pointUser }}</td>
-                <td>{{ user.pwUser }}</td>
-                <td>{{ user.dateInscri ? user.dateInscri|date('Y-m-d') : '' }}</td>
-                <td>{{ user.resetCode }}</td>
-                <td>
-                    <a class="btn btn-primary btn-sm" href="{{ path('app_back_user_show', {'id': user.idUser}) }}">Show</a>
-                    <a class="btn btn-warning btn-sm" href="{{ path('app_back_user_edit', {'id': user.idUser}) }}">Edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="12">No records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table id="user-datatables" class="table table-bordered table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Id</th>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Email</th>
+                    <th>Numéro</th>
+                    <th>Adresse</th>
+                    <th>Âge</th>
+                    <th>Points</th>
+                    <th>Mot de passe</th>
+                    <th>Date d'inscription</th>
+                    <th>Code de réinitialisation</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.idUser }}</td>
+                    <td>{{ user.nomUser }}</td>
+                    <td>{{ user.prenomUser }}</td>
+                    <td>{{ user.emailUser }}</td>
+                    <td>{{ user.numUser }}</td>
+                    <td>{{ user.adresseUser }}</td>
+                    <td>{{ user.ageUser }}</td>
+                    <td>{{ user.pointUser }}</td>
+                    <td>{{ user.pwUser }}</td>
+                    <td>{{ user.dateInscri ? user.dateInscri|date('Y-m-d') : '' }}</td>
+                    <td>{{ user.resetCode }}</td>
+                    <td>
+                        <a class="btn btn-primary btn-sm" href="{{ path('app_back_user_show', {'id': user.idUser}) }}">Show</a>
+                        <a class="btn btn-warning btn-sm" href="{{ path('app_back_user_edit', {'id': user.idUser}) }}">Edit</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="12">No records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
     <a class="btn btn-success" href="{{ path('app_back_user_new') }}">Create new</a>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function () {
+            $('#user-datatables').DataTable({
+                pageLength: 10,
+                responsive: true,
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.11.5/i18n/French.json' // Traduction en français (optionnel)
+                }
+            });
+        });
+    </script>
 {% endblock %}
