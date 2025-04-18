@@ -6,7 +6,13 @@
 <div class="container mt-5">
     <h1 class="mb-4">Edit User</h1>
 
-    {{ include('user/_form.html.twig', {'button_label': 'Update'}) }}
+    {{ form_start(form) }}
+        {{ form_row(form.nom_user) }}
+        {{ form_row(form.prenom_user) }}
+        {{ form_row(form.email_user) }}
+        {{ form_row(form.pw_user) }}
+        <button class="btn btn-primary">Save</button>
+    {{ form_end(form) }}
 
     <a class="btn btn-secondary" href="{{ path('app_user_index') }}">Back to list</a>
 

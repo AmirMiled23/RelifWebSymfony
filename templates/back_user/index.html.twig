@@ -9,17 +9,17 @@
     <table class="table table-bordered table-striped">
         <thead class="thead-dark">
             <tr>
-                <th>Id_user</th>
-                <th>Nom_user</th>
-                <th>Prenom_user</th>
-                <th>Email_user</th>
-                <th>Num_user</th>
-                <th>Adresse_user</th>
-                <th>Age_user</th>
-                <th>Point_user</th>
-                <th>Pw_user</th>
-                <th>Date_inscri</th>
-                <th>Reset_code</th>
+                <th>Id</th>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Email</th>
+                <th>Numéro</th>
+                <th>Adresse</th>
+                <th>Âge</th>
+                <th>Points</th>
+                <th>Mot de passe</th>
+                <th>Date d'inscription</th>
+                <th>Code de réinitialisation</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -38,8 +38,8 @@
                 <td>{{ user.dateInscri ? user.dateInscri|date('Y-m-d') : '' }}</td>
                 <td>{{ user.resetCode }}</td>
                 <td>
-                    <a class="btn btn-primary btn-sm" href="{{ path('app_back_user_show', {'id_user': user.id_user}) }}">Show</a>
-                    <a class="btn btn-warning btn-sm" href="{{ path('app_back_user_edit', {'id_user': user.id_user}) }}">Edit</a>
+                    <a class="btn btn-primary btn-sm" href="{{ path('app_back_user_show', {'id': user.idUser}) }}">Show</a>
+                    <a class="btn btn-warning btn-sm" href="{{ path('app_back_user_edit', {'id': user.idUser}) }}">Edit</a>
                 </td>
             </tr>
         {% else %}

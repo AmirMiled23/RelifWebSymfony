@@ -9,54 +9,54 @@
     <table class="table table-bordered">
         <tbody>
             <tr>
-                <th>Id_user</th>
+                <th>Id</th>
                 <td>{{ user.idUser }}</td>
             </tr>
             <tr>
-                <th>Nom_user</th>
+                <th>Nom</th>
                 <td>{{ user.nomUser }}</td>
             </tr>
             <tr>
-                <th>Prenom_user</th>
+                <th>Prénom</th>
                 <td>{{ user.prenomUser }}</td>
             </tr>
             <tr>
-                <th>Email_user</th>
+                <th>Email</th>
                 <td>{{ user.emailUser }}</td>
             </tr>
             <tr>
-                <th>Num_user</th>
+                <th>Numéro</th>
                 <td>{{ user.numUser }}</td>
             </tr>
             <tr>
-                <th>Adresse_user</th>
+                <th>Adresse</th>
                 <td>{{ user.adresseUser }}</td>
             </tr>
             <tr>
-                <th>Age_user</th>
+                <th>Âge</th>
                 <td>{{ user.ageUser }}</td>
             </tr>
             <tr>
-                <th>Point_user</th>
+                <th>Points</th>
                 <td>{{ user.pointUser }}</td>
             </tr>
             <tr>
-                <th>Pw_user</th>
+                <th>Mot de passe</th>
                 <td>{{ user.pwUser }}</td>
             </tr>
             <tr>
-                <th>Date_inscri</th>
+                <th>Date d'inscription</th>
                 <td>{{ user.dateInscri ? user.dateInscri|date('Y-m-d') : '' }}</td>
             </tr>
             <tr>
-                <th>Reset_code</th>
+                <th>Code de réinitialisation</th>
                 <td>{{ user.resetCode }}</td>
             </tr>
         </tbody>
     </table>
 
     <a class="btn btn-secondary" href="{{ path('app_back_user_index') }}">Back to list</a>
-    <a class="btn btn-warning" href="{{ path('app_back_user_edit', {'id_user': user.id_user}) }}">Edit</a>
+    <a class="btn btn-warning" href="{{ path('app_back_user_edit', {'id': user.idUser}) }}">Edit</a>
 
     {{ include('back_user/_delete_form.html.twig') }}
 </div>

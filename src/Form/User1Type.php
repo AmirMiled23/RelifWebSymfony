@@ -4,27 +4,34 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use App\Form\User1Type;
 
 class User1Type extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('nom_user')
-            ->add('prenom_user')
-            ->add('email_user')
-            ->add('num_user')
-            ->add('adresse_user')
-            ->add('age_user')
-            ->add('point_user')
-            ->add('pw_user')
-            ->add('date_inscri', null, [
-                'widget' => 'single_text',
+            ->add('nom_user', TextType::class, [
+                'label' => 'Nom',
+                'required' => true,
             ])
-            ->add('reset_code')
-        ;
+            ->add('prenom_user', TextType::class, [
+                'label' => 'Prénom',
+                'required' => true,
+            ])
+            ->add('email_user', EmailType::class, [
+                'label' => 'Email',
+                'required' => true,
+            ])
+            ->add('pw_user', PasswordType::class, [
+                'label' => 'Mot de passe',
+                'required' => true,
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -34,3 +41,5 @@ class User1Type extends AbstractType
         ]);
     }
 }
+
+

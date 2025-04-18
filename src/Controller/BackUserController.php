@@ -42,7 +42,7 @@ final class BackUserController extends AbstractController
         ]);
     }
 
-    #[Route('/{id_user}', name: 'app_back_user_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'app_back_user_show', methods: ['GET'])]
     public function show(User $user): Response
     {
         return $this->render('back_user/show.html.twig', [
@@ -50,7 +50,7 @@ final class BackUserController extends AbstractController
         ]);
     }
 
-    #[Route('/{id_user}/edit', name: 'app_back_user_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'app_back_user_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(User1Type::class, $user);
@@ -59,23 +59,23 @@ final class BackUserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_back_user_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_back_user_index');
         }
 
         return $this->render('back_user/edit.html.twig', [
             'user' => $user,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
-    #[Route('/{id_user}', name: 'app_back_user_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'app_back_user_delete', methods: ['POST'])]
     public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$user->getId_user(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $user->getIdUser(), $request->request->get('_token'))) {
             $entityManager->remove($user);
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_back_user_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_back_user_index');
     }
 }

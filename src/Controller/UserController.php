@@ -9,48 +9,70 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[Route('/user')]
-final class UserController extends AbstractController
+class UserController extends AbstractController
 {
-    #[Route(name: 'app_user_index', methods: ['GET'])]
-    public function index(UserRepository $userRepository): Response
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+        private readonly UserRepository $userRepository,
+        private readonly UserPasswordHasherInterface $passwordHasher
+    ) {}
+
+    #[Route('/', name: 'app_user_index', methods: ['GET'])]
+    public function index(): Response
     {
+        $users = $this->userRepository->findAll();
+
         return $this->render('user/index.html.twig', [
-            'users' => $userRepository->findAll(),
+            'users' => $users,
         ]);
     }
 
     #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request): Response 
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($user);
-            $entityManager->flush();
+            // Hash the password based on pwUser field
+            $hashedPassword = $this->passwordHasher->hashPassword(
+                $user,
+                $user->getPwUser()
+            );
+            $user->setPwUser($hashedPassword);
 
-            return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
+
+            $this->addFlash('success', 'Utilisateur ajouté avec succès.');
+            return $this->redirectToRoute('app_user_index');
         }
 
         return $this->render('user/new.html.twig', [
-            'user' => $user,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
-    #[Route('/{id_user}', name: 'app_user_show', methods: ['GET'])]
-    public function show(User $user): Response
+    #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
+    public function show(int $id): Response
     {
+        $user = $this->userRepository->find($id);
+
+        if (!$user) {
+            throw $this->createNotFoundException('Utilisateur non trouvé.');
+        }
+
         return $this->render('user/show.html.twig', [
             'user' => $user,
         ]);
     }
 
-    #[Route('/{id_user}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(UserType::class, $user);
@@ -64,18 +86,25 @@ final class UserController extends AbstractController
 
         return $this->render('user/edit.html.twig', [
             'user' => $user,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
-    #[Route('/{id_user}', name: 'app_user_delete', methods: ['POST'])]
-    public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
+    #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
+    public function delete(Request $request, int $id): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$user->getId_user(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($user);
-            $entityManager->flush();
+        $user = $this->userRepository->find($id);
+
+        if (!$user) {
+            throw $this->createNotFoundException('Utilisateur non trouvé.');
         }
 
-        return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+        if ($this->isCsrfTokenValid('delete' . $user->getIdUser(), $request->request->get('_token'))) {
+            $this->entityManager->remove($user);
+            $this->entityManager->flush();
+            $this->addFlash('success', 'Utilisateur supprimé avec succès.');
+        }
+
+        return $this->redirectToRoute('app_user_index');
     }
 }
