@@ -1,0 +1,75 @@
+{% extends 'backbase.html.twig' %}
+
+{% block title %}Conference index{% endblock %}
+
+{% block body %}
+    <style>
+        .nature-table thead th {
+            background: linear-gradient(90deg, #e8f5e9 0%, #c8e6c9 100%);
+            color: #2e7d32;
+        }
+        .nature-table tbody tr:nth-child(odd) {
+            background: #f8f9fa;
+        }
+        .nature-table tbody tr:nth-child(even) {
+            background: #e0f2f1;
+        }
+        .nature-table td.pistach {
+            background: #b2dfdb;
+            color: #33691e;
+            font-weight: 600;
+        }
+        .nature-table td.gray {
+            background: #ececec;
+            color: #424242;
+        }
+        .nature-table td.white {
+            background: #fff;
+        }
+    </style>
+    <h1>Conference index</h1>
+
+    <table class="table nature-table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th class="pistach">Titre</th>
+                <th>Date_conference</th>
+                <th>Presenteur</th>
+                <th class="gray">Lieu</th>
+                <th>Nb_place</th>
+                <th class="pistach">Prix</th>
+                <th class="gray">Theme</th>
+                <th>Status</th>
+                <th class="white">Resource</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for conference in conferences %}
+            <tr>
+                <td>{{ conference.id }}</td>
+                <td class="pistach">{{ conference.titre }}</td>
+                <td>{{ conference.dateConference ? conference.dateConference|date('Y-m-d') : '' }}</td>
+                <td>{{ conference.presenteur }}</td>
+                <td class="gray">{{ conference.lieu }}</td>
+                <td>{{ conference.nbPlace }}</td>
+                <td class="pistach">{{ conference.prix }}</td>
+                <td class="gray">{{ conference.theme }}</td>
+                <td>{{ conference.status }}</td>
+                <td class="white">{{ conference.resource }}</td>
+                <td>
+                    <a href="{{ path('app_conference_back_show', {'id': conference.id}) }}" class="btn btn-info btn-sm">show</a>
+                    <a href="{{ path('app_conference_back_edit', {'id': conference.id}) }}" class="btn btn-warning btn-sm">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="11">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_conference_back_new') }}" class="btn btn-success mt-3">Create new</a>
+{% endblock %}

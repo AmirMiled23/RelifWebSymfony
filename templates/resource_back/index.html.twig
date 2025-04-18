@@ -1,0 +1,63 @@
+{% extends 'backbase.html.twig' %}
+
+{% block title %}Resource index{% endblock %}
+
+{% block body %}
+<style>
+    .resource-table-back thead th {
+        background: linear-gradient(90deg, #e8f5e9 0%, #c8e6c9 100%);
+        color: #2e7d32;
+    }
+    .resource-table-back tbody tr:nth-child(odd) {
+        background: #f8f9fa;
+    }
+    .resource-table-back tbody tr:nth-child(even) {
+        background: #e0f2f1;
+    }
+    .resource-table-back td.pistach {
+        background: #b2dfdb;
+        color: #33691e;
+        font-weight: 600;
+    }
+    .resource-table-back td.gray {
+        background: #ececec;
+        color: #424242;
+    }
+    .resource-table-back td.white {
+        background: #fff;
+    }
+</style>
+    <h1>Resource index</h1>
+
+    <table class="table resource-table-back">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th class="pistach">Type</th>
+                <th class="gray">Url</th>
+                <th class="white">Description</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for resource in resources %}
+            <tr>
+                <td>{{ resource.id }}</td>
+                <td class="pistach">{{ resource.type }}</td>
+                <td class="gray">{{ resource.url }}</td>
+                <td class="white">{{ resource.description }}</td>
+                <td>
+                    <a href="{{ path('app_resource_back_show', {'id': resource.id}) }}" class="btn btn-info btn-sm">show</a>
+                    <a href="{{ path('app_resource_back_edit', {'id': resource.id}) }}" class="btn btn-warning btn-sm">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_resource_back_new') }}" class="btn btn-success mt-3">Create new</a>
+{% endblock %}

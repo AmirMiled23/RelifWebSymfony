@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Resource{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .resource-form {
+            margin-bottom: 2rem;
+        }
+        .conference-resources {
+            margin-top: 1.5rem;
+        }
+        .select2-container {
+            width: 100% !important;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <h1>Edit Resource</h1>
+
+    <div class="resource-form">
+        {{ include('resource/_form.html.twig', {'button_label': 'Update'}) }}
+    </div>
+
+    <div class="card conference-resources">
+        <div class="card-header">
+            <h5>Associated Conference Resources</h5>
+        </div>
+        <div class="card-body">
+            <div class="form-group">
+                <label for="conferenceResources">Select Conference Resources</label>
+                <select class="form-control resource-select" id="conferenceResources" multiple>
+                    {% if resource.conference is defined and resource.conference is not null %}
+                        {% for res in resource.conference.resources %}
+                            <option value="{{ res.id }}" {% if res.id == resource.id %}selected{% endif %}>
+                                {{ res.name }} ({{ res.type }})
+                            </option>
+                        {% endfor %}
+                    {% endif %}
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a href="{{ path('app_resource_index') }}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back to list</a>
+        {{ include('resource/_delete_form.html.twig') }}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.resource-select').select2({
+                placeholder: "Select associated resources",
+                allowClear: true,
+                theme: "bootstrap4"
+            });
+            
+            // Make the select readonly if needed
+            {% if resource.conference is defined and resource.conference is not null %}
+            // Keep the select enabled to allow viewing the relations
+            {% else %}
+            $('#conferenceResources').prop('disabled', true);
+            {% endif %}
+        });
+    </script>
+{% endblock %}

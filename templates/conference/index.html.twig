@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Conferences{% endblock %}
+
+{% block body %}
+<h1 class="mb-4">Conferences</h1>
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    {% for conference in conferences %}
+        <div class="col">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ conference.titre }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ conference.theme }}</h6>
+                    <ul class="list-group list-group-flush mb-3">
+                        <li class="list-group-item"><strong>Date:</strong> {{ conference.dateConference ? conference.dateConference|date('Y-m-d') : 'N/A' }}</li>
+                        <li class="list-group-item"><strong>Presenter:</strong> {{ conference.presenteur }}</li>
+                        <li class="list-group-item"><strong>Location:</strong> {{ conference.lieu }}</li>
+                        <li class="list-group-item"><strong>Places:</strong> {{ conference.nbPlace }}</li>
+                        <li class="list-group-item"><strong>Price:</strong> {{ conference.prix }} TND</li>
+                        <li class="list-group-item"><strong>Status:</strong> {{ conference.status }}</li>
+                    </ul>
+                    <div class="mt-auto d-flex flex-column gap-2">
+                        <a href="{{ path('app_conference_show', {'id': conference.id}) }}" class="btn btn-outline-primary w-100">View Details</a>
+                        <form method="post" action="{{ path('app_inscription_new') }}" onsubmit="return confirm('Are you sure you want to register for this conference?');">
+                            <input type="hidden" name="conference_id" value="{{ conference.id }}">
+                            <button type="submit" class="btn btn-success w-100">Inscrit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="col-12">
+            <div class="alert alert-info text-center">No conferences found.</div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

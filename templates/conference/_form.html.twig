@@ -1,0 +1,32 @@
+{{ form_start(form) }}
+    {{ form_errors(form) }}
+    
+    {# Render other form fields #}
+    {% for field in form %}
+        {% if field.vars.name != 'resources' %}
+            {{ form_row(field) }}
+        {% endif %}
+    {% endfor %}
+    
+    {# Resources field as combo box #}
+    <div class="mb-3">
+        <label for="{{ form.resources.vars.id }}" class="form-label">{{ form.resources.vars.label }}</label>
+        {{ form_widget(form.resources) }}
+        <div class="form-text">Select one or more resources for this conference</div>
+        {{ form_errors(form.resources) }}
+    </div>
+    
+    <button class="btn btn-primary">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}
+
+{% block javascripts %}
+<script>
+    $(document).ready(function() {
+        $('.resource-select').select2({
+            theme: 'bootstrap4',
+            placeholder: $(this).data('placeholder'),
+            allowClear: true
+        });
+    });
+</script>
+{% endblock %}
