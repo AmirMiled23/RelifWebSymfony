@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon compte{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="mb-4">Mon compte</h1>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Id</th>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Email</th>
+                    <th>Téléphone</th>
+                    <th>Adresse</th>
+                    <th>Âge</th>
+                    <th>Points</th>
+                    <th>Date Inscription</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td>{{ user.idUser }}</td>
+                        <td>{{ user.nomUser }}</td>
+                        <td>{{ user.prenomUser }}</td>
+                        <td>{{ user.emailUser }}</td>
+                        <td>{{ user.numUser }}</td>
+                        <td>{{ user.adresseUser }}</td>
+                        <td>{{ user.ageUser }}</td>
+                        <td>{{ user.pointUser }}</td>
+                        <td>{{ user.dateInscri ? user.dateInscri|date('Y-m-d') : '' }}</td>
+                        <td>
+                            <a href="{{ path('app_user_edit', {'id': user.idUser}) }}" class="btn btn-warning btn-sm">Modifier</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="10" class="text-center">Aucun utilisateur trouvé</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
