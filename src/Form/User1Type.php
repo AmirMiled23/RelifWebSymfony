@@ -52,26 +52,15 @@ class User1Type extends AbstractType
                 'html5' => true,
                 'label' => 'Date d\'inscription',
             ])
-            ->add('reset_code', HiddenType::class, [
-                'required' => false
-            ])
             ->add('roles', ChoiceType::class, [
                 'choices' => [
                     'Utilisateur' => 'ROLE_USER',
                     'Organisateur' => 'ROLE_ORGANISATEUR',
+                    'Administrateur' => 'ROLE_ADMIN',
                 ],
                 'multiple' => true,
                 'expanded' => true,
-                'label' => 'Sélectionnez le rôle',
-            ])
-            ->add('agreeTerms', CheckboxType::class, [
-                'mapped' => false,
-                'constraints' => [
-                    new IsTrue([
-                        'message' => 'Vous devez accepter les conditions d\'utilisation.',
-                    ]),
-                ],
-                'label' => 'Accepter les conditions'
+                'label' => 'Rôles',
             ]);
     }
 

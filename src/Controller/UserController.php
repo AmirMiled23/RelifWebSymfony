@@ -24,10 +24,15 @@ class UserController extends AbstractController
     #[Route('/', name: 'app_user_index', methods: ['GET'])]
     public function index(): Response
     {
-        $users = $this->userRepository->findAll();
+        // Récupérer l'utilisateur connecté
+        $user = $this->getUser();
+
+        if (!$user) {
+            throw $this->createAccessDeniedException('Vous devez être connecté pour accéder à cette page.');
+        }
 
         return $this->render('user/index.html.twig', [
-            'users' => $users,
+            'users' => [$user], // On passe uniquement l'utilisateur connecté
         ]);
     }
 
