@@ -30,6 +30,10 @@ final class ReservationMaterielController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($reservationMateriel->getDateFin() === null) {
+                $reservationMateriel->setDateFin(new \DateTime()); // Set a default value for date_fin
+            }
+
             $materiel = $reservationMateriel->getMateriel();
             $dateDebut = $reservationMateriel->getDateDebut();
             $dateFin = $reservationMateriel->getDateFin();
@@ -73,14 +77,14 @@ final class ReservationMaterielController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
+            $entityManager->flush(); // Use injected EntityManagerInterface to flush changes
 
-            return $this->redirectToRoute('app_reservation_materiel_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_reservation_materiel_index');
         }
 
         return $this->render('reservation_materiel/edit.html.twig', [
-            'reservation_materiel' => $reservationMateriel,
-            'form' => $form,
+            'reservation_materiel' => $reservationMateriel, // Use lowercase naming to match the template
+            'form' => $form->createView(),
         ]);
     }
 

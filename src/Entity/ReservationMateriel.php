@@ -41,6 +41,8 @@ class ReservationMateriel
         value: "today",
         message: "La date de début doit être aujourd'hui ou dans le futur."
     )]
+    #[Assert\NotBlank(message: "The start date cannot be blank.")]
+    #[Assert\Type("\DateTimeInterface")]
     private ?\DateTimeInterface $date_debut = null;
 
     public function getDate_debut(): ?\DateTimeInterface
@@ -56,7 +58,10 @@ class ReservationMateriel
 
     #[ORM\Column(type: 'date', nullable: false)]
     #[Assert\NotBlank(message: "La date de fin est obligatoire.")]
+    #[Assert\NotNull(message: "The end date cannot be null.")]
+    #[Assert\Type("\DateTimeInterface")]
     #[Assert\GreaterThan(propertyPath: "date_debut", message: "La date de fin doit être après la date de début.")]
+    #[Assert\NotBlank(message: "The end date cannot be blank.")]
     private ?\DateTimeInterface $date_fin = null;
 
     public function getDate_fin(): ?\DateTimeInterface
@@ -146,5 +151,6 @@ class ReservationMateriel
     {
         return $this->quantite_reservee;
     }
+    
 
 }

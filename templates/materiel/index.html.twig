@@ -3,12 +3,13 @@
 {% block title %}Materiel index{% endblock %}
 
 {% block body %}
-    <h1>Liste des materiels </h1>
+    <h1 class="mb-4">Liste des materiels</h1>
+
+    <a class="btn btn-secondary mb-3" href="{{ path('app_reservation_materiel_index') }}">Liste des réservations</a>
 
     <table class="table">
         <thead>
             <tr>
-                <th>Id_materiel</th>
                 <th>Nom_materiel</th>
                 <th>Description</th>
                 <th>Quantite_dispo</th>
@@ -18,7 +19,6 @@
         <tbody>
         {% for materiel in materiels %}
             <tr>
-                <td>{{ materiel.idMateriel }}</td>
                 <td>{{ materiel.nomMateriel }}</td>
                 <td>{{ materiel.description }}</td>
                 <td>{{ materiel.quantiteDispo }}</td>
@@ -29,7 +29,7 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="5">no records found</td>
+                <td colspan="4">no records found</td>
             </tr>
         {% endfor %}
         </tbody>

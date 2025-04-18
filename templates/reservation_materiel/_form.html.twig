@@ -8,11 +8,8 @@
         </div>
     </div>
     <div>
-        {{ form_label(form.date_fin) }}
-        {{ form_widget(form.date_fin) }}
-        <div class="error-message">
-            {{ form_errors(form.date_fin) }}
-        </div>
+        <label for="date_fin">End Date</label>
+        <input type="datetime-local" id="date_fin" name="date_fin" value="{{ reservation_materiel.dateFin ? reservation_materiel.dateFin|date('Y-m-d\TH:i') : '' }}" required>
     </div>
     <div>
         {{ form_label(form.quantite_reservee) }}
