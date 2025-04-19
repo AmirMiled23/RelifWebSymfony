@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -39,6 +41,7 @@ class Avi
     public function setId_materiel(?int $id_materiel): self
     {
         $this->id_materiel = $id_materiel;
+
         return $this;
     }
 
@@ -81,6 +84,7 @@ class Avi
     public function setDate(\DateTimeInterface $date): self
     {
         $this->date = $date;
+
         return $this;
     }
 

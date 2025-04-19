@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
 
+
 use App\Repository\EventRepository;
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
@@ -40,6 +41,7 @@ class Event
         pattern: "/^[^\d]/",
         message: "Le nom ne doit pas commencer par un chiffre."
     )]
+
     private ?string $nom_event = null;
 
     public function getNom_event(): ?string
@@ -56,6 +58,7 @@ class Event
     #[ORM\Column(type: 'date', nullable: false)]
     #[Assert\NotNull(message: "La date de l'événement est obligatoire.")]
     #[Assert\GreaterThanOrEqual("today", message: "Pas une date au passé.")]
+
     private ?\DateTimeInterface $date_event = null;
 
     public function getDate_event(): ?\DateTimeInterface
@@ -71,6 +74,7 @@ class Event
 
     #[ORM\Column(type: 'string', nullable: false)]
     #[Assert\NotBlank(message: "L'adresse de l'événement est obligatoire.")]
+
     private ?string $adresse_event = null;
 
     public function getAdresse_event(): ?string
@@ -86,6 +90,7 @@ class Event
 
     #[ORM\Column(type: 'string', length:50)]
     #[Assert\NotBlank(message: "La ville est obligatoire.")]
+
     private ?string $villes = null;
 
     public function getVilles(): ?string
@@ -94,6 +99,7 @@ class Event
     }
 
     public function setVilles(?string $villes): self
+
     {
         $this->villes = $villes;
         return $this;
@@ -109,6 +115,7 @@ class Event
         pattern: "/^[^\d]/",
         message: "La description ne doit pas commencer par un chiffre."
     )]
+
     private ?string $description_event = null;
 
     public function getDescription_event(): ?string
@@ -122,8 +129,10 @@ class Event
         return $this;
     }
 
+
     #[ORM\Column(type: 'string', length:20)]
     #[Assert\NotBlank(message: "Le statut est obligatoire.")]
+
     private ?string $status_event = null;
 
     public function getStatus_event(): ?string
@@ -139,6 +148,7 @@ class Event
 
     #[ORM\Column(type: 'integer', nullable: false)]
     #[Assert\NotNull(message: "Le nombre maximal de participants est obligatoire.")]
+
     private ?int $nb_participant_max = null;
 
     public function getNb_participant_max(): ?int
@@ -191,6 +201,7 @@ class Event
     {
         if (!$this->getAvisss()->contains($aviss)) {
             $this->getAvisss()->add($aviss);
+
         }
         return $this;
     }
@@ -198,6 +209,7 @@ class Event
     public function removeAviss(Aviss $aviss): self
     {
         $this->getAvisss()->removeElement($aviss);
+
         return $this;
     }
 
@@ -299,5 +311,6 @@ class Event
 
         return $this;
     }
+
 
 }
