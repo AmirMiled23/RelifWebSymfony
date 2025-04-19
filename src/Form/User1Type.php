@@ -33,20 +33,6 @@ class User1Type extends AbstractType
             ->add('point_user', HiddenType::class, [
                 'empty_data' => 0
             ])
-            ->add('pw_user', PasswordType::class, [
-                'mapped' => true,
-                'attr' => ['autocomplete' => 'new-password'],
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Veuillez saisir un mot de passe.',
-                    ]),
-                    new Length([
-                        'min' => 6,
-                        'minMessage' => 'Votre mot de passe doit contenir au moins {{ limit }} caractères.',
-                        'max' => 4096,
-                    ]),
-                ],
-            ])
             ->add('date_inscri', DateType::class, [
                 'widget' => 'single_text',
                 'html5' => true,
@@ -62,12 +48,31 @@ class User1Type extends AbstractType
                 'expanded' => true,
                 'label' => 'Rôles',
             ]);
+
+        // Ajouter le champ `pw_user` uniquement si ce n'est pas une édition
+        if (!$options['is_edit']) {
+            $builder->add('pw_user', PasswordType::class, [
+                'mapped' => true,
+                'attr' => ['autocomplete' => 'new-password'],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Veuillez saisir un mot de passe.',
+                    ]),
+                    new Length([
+                        'min' => 6,
+                        'minMessage' => 'Votre mot de passe doit contenir au moins {{ limit }} caractères.',
+                        'max' => 4096,
+                    ]),
+                ],
+            ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            'is_edit' => false, // Par défaut, ce n'est pas une édition
         ]);
     }
 }

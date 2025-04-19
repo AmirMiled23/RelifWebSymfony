@@ -21,7 +21,7 @@ security:
             form_login:
                 login_path: app_login
                 check_path: app_login
-                username_parameter: email
+                username_parameter: email_user
                 password_parameter: password
                 enable_csrf: true
                 default_target_path: app_user_index

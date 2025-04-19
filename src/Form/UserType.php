@@ -32,27 +32,10 @@ class UserType extends AbstractType
             ->add('point_user', HiddenType::class, [
                 'empty_data' => 0
             ])
-            ->add('pw_user', PasswordType::class, [
-                'mapped' => true,
-                'attr' => ['autocomplete' => 'new-password'],
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Veuillez saisir un mot de passe.',
-                    ]),
-                    new Length([
-                        'min' => 6,
-                        'minMessage' => 'Votre mot de passe doit contenir au moins {{ limit }} caractères.',
-                        'max' => 4096,
-                    ]),
-                ],
-            ])
             ->add('date_inscri', DateType::class, [
                 'widget' => 'single_text',
                 'html5' => true,
                 'label' => 'Date d\'inscription',
-            ])
-            ->add('reset_code', HiddenType::class, [
-                'required' => false
             ])
             ->add('roles', ChoiceType::class, [
                 'choices' => [
@@ -62,22 +45,30 @@ class UserType extends AbstractType
                 'multiple' => true,
                 'expanded' => true,
                 'label' => 'Sélectionnez le rôle',
-            ])
-            ->add('agreeTerms', CheckboxType::class, [
-                'mapped' => false,
-                'constraints' => [
-                    new IsTrue([
-                        'message' => 'Vous devez accepter les conditions d\'utilisation.',
-                    ]),
-                ],
-                'label' => 'Accepter les conditions'
             ]);
+
+        if (!$options['is_edit']) {
+            $builder->add('pw_user', PasswordType::class, [
+                'mapped' => true,
+                'required' => true,
+                'constraints' => [
+                    new NotBlank(['message' => 'Le mot de passe est obligatoire.']),
+                    new Length(['min' => 6, 'minMessage' => 'Le mot de passe doit contenir au moins {{ limit }} caractères.']),
+                ],
+            ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            'is_edit' => false, // Par défaut, ce n'est pas une édition
         ]);
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email_user;
     }
 }

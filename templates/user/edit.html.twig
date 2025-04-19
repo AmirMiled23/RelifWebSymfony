@@ -38,11 +38,13 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="mb-3">
-                            {{ form_label(form.pw_user, 'Mot de passe', {'label_attr': {'class': 'form-label'}}) }}
-                            {{ form_widget(form.pw_user, {'attr': {'class': 'form-control'}}) }}
-                            {{ form_errors(form.pw_user) }}
-                        </div>
+                        {% if form.pw_user is defined %}
+                            <div class="mb-3">
+                                {{ form_label(form.pw_user, 'Mot de passe', {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.pw_user, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.pw_user) }}
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
 

@@ -18,20 +18,27 @@
                     <form method="post">
                         <div class="form-group">
                             <label for="inputEmail">Email</label>
-                            <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
+                            <input type="email" value="{{ last_username }}" name="email_user" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
                         </div>
                         <div class="form-group">
                             <label for="inputPassword">Mot de passe</label>
                             <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
                         </div>
-                        <input type="hidden" name="_csrf_token"
-                               value="{{ csrf_token('authenticate') }}"
-                        >
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
                         <button class="btn btn-lg btn-primary mt-3" type="submit">
                             Se connecter
                         </button>
                     </form>
+
+                    <hr>
+
+                    <div class="text-center mt-3">
+                        <p>Vous n'avez pas de compte ?</p>
+                        <a href="{{ path('app_user_new') }}" class="btn btn-secondary">
+                            <i class="fas fa-user-plus"></i> Créer un compte
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

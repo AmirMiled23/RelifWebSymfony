@@ -10,10 +10,18 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[Route('/back/user')]
 final class BackUserController extends AbstractController
 {
+    private UserPasswordHasherInterface $passwordHasher;
+
+    public function __construct(UserPasswordHasherInterface $passwordHasher)
+    {
+        $this->passwordHasher = $passwordHasher;
+    }
+
     #[Route(name: 'app_back_user_index', methods: ['GET'])]
     public function index(UserRepository $userRepository): Response
     {
@@ -30,8 +38,17 @@ final class BackUserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Hachage du mot de passe
+            $hashedPassword = $this->passwordHasher->hashPassword(
+                $user,
+                $user->getPwUser()
+            );
+            $user->setPwUser($hashedPassword);
+
             $entityManager->persist($user);
             $entityManager->flush();
+
+            $this->addFlash('success', 'Utilisateur créé avec succès.');
 
             return $this->redirectToRoute('app_back_user_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -53,17 +70,27 @@ final class BackUserController extends AbstractController
     #[Route('/{id}/edit', name: 'app_back_user_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(User1Type::class, $user);
+        $form = $this->createForm(User1Type::class, $user, ['is_edit' => true]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Hachage du mot de passe uniquement si un nouveau mot de passe est défini
+            if ($user->getPwUser()) {
+                $hashedPassword = $this->passwordHasher->hashPassword(
+                    $user,
+                    $user->getPwUser()
+                );
+                $user->setPwUser($hashedPassword);
+            }
+
             $entityManager->flush();
+
+            $this->addFlash('success', 'Utilisateur mis à jour avec succès.');
 
             return $this->redirectToRoute('app_back_user_index');
         }
 
         return $this->render('back_user/edit.html.twig', [
-            'user' => $user,
             'form' => $form->createView(),
         ]);
     }
