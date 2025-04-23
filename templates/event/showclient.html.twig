@@ -1,0 +1,52 @@
+{% extends 'homepage.html.twig' %}
+
+{% block title %}Event{% endblock %}
+
+{% block body %}
+<div style="margin-top: 90px;">
+    <h1>Event</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id_event</th>
+                <td>{{ event.idEvent }}</td>
+            </tr>
+            <tr>
+                <th>Nom_event</th>
+                <td>{{ event.nomEvent }}</td>
+            </tr>
+            <tr>
+                <th>Date_event</th>
+                <td>{{ event.dateEvent ? event.dateEvent|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Adresse_event</th>
+                <td>{{ event.adresseEvent }}</td>
+            </tr>
+            <tr>
+                <th>Villes</th>
+                <td>{{ event.villes }}</td>
+            </tr>
+            <tr>
+                <th>Description_event</th>
+                <td>{{ event.descriptionEvent }}</td>
+            </tr>
+            <tr>
+                <th>Status_event</th>
+                <td>{{ event.statusEvent }}</td>
+            </tr>
+            <tr>
+                <th>Nb_participant_max</th>
+                <td>{{ event.nbParticipantMax }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+   <div class="d-flex gap-2 mt-3">
+    <a href="{{ path('app_event_public') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left me-1"></i> Revenir à la liste
+    </a>
+
+</div>
+{% endblock %}

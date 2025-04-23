@@ -77,15 +77,22 @@ final class EventController extends AbstractController{
 
         return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
     }
-    #[Route('/public-events', name: 'app_event_public', methods: ['GET'])]
-public function publicRaw(EventRepository $eventRepository): Response
-{
-    
-
-    return $this->render('event/public.html.twig', [
-       'events' => $eventRepository->findAll(),
+    #[Route('/event/showclient',name: 'app_event_public', methods: ['GET'])]
+    public function list(EventRepository $eventRepository): Response
+    {
+    return $this->render('event/homeevenement.html.twig', [
+        'events' => $eventRepository->findAll(),
     ]);
-}
+    }
+
+    #[Route('/event/showEvent/{id}', name: 'event_show', methods: ['GET'])]
+    public function showevent(Event $event): Response
+    {
+        return $this->render('event/showclient.html.twig', [
+            'event' => $event,
+        ]);
+    }
+
 
 
 

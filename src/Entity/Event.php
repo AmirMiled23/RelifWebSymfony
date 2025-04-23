@@ -291,7 +291,7 @@ class Event
     public function removeAvisss(Aviss $avisss): static
     {
         if ($this->avisss->removeElement($avisss)) {
-            // set the owning side to null (unless already changed)
+           
             if ($avisss->getEvent() === $this) {
                 $avisss->setEvent(null);
             }

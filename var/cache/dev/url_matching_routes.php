@@ -12,6 +12,7 @@ return [
         '/liste-categories' => [[['_route' => 'liste_categories', '_controller' => 'App\\Controller\\CategorieEventController::listeCategories'], null, null, null, false, false, null]],
         '/event' => [[['_route' => 'app_event_index', '_controller' => 'App\\Controller\\EventController::index'], null, ['GET' => 0], null, false, false, null]],
         '/event/new' => [[['_route' => 'app_event_new', '_controller' => 'App\\Controller\\EventController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        '/event/event/showclient' => [[['_route' => 'app_event_public', '_controller' => 'App\\Controller\\EventController::list'], null, ['GET' => 0], null, false, false, null]],
         '/' => [[['_route' => 'app_home_controll', '_controller' => 'App\\Controller\\HomeControllController::index'], null, null, null, false, false, null]],
     ],
     [ // $regexpList
@@ -23,7 +24,7 @@ return [
                     .'|([^/]++)(*:134)'
                     .'|event/([^/]++)/edit(*:161)'
                     .'|([^/]++)(*:177)'
-                    .'|public\\-events(*:199)'
+                    .'|event/showEvent/([^/]++)(*:209)'
                 .')'
             .')/?$}sDu',
     ],
@@ -34,8 +35,8 @@ return [
         134 => [[['_route' => 'app_event_show', '_controller' => 'App\\Controller\\EventController::show'], ['id'], ['GET' => 0], null, false, true, null]],
         161 => [[['_route' => 'app_event_edit', '_controller' => 'App\\Controller\\EventController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
         177 => [[['_route' => 'app_event_delete', '_controller' => 'App\\Controller\\EventController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        199 => [
-            [['_route' => 'app_event_public', '_controller' => 'App\\Controller\\EventController::publicRaw'], [], ['GET' => 0], null, false, false, null],
+        209 => [
+            [['_route' => 'event_show', '_controller' => 'App\\Controller\\EventController::showevent'], ['id'], ['GET' => 0], null, false, true, null],
             [null, null, null, null, false, false, 0],
         ],
     ],

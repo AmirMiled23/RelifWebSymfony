@@ -13,7 +13,8 @@ return [
     'app_event_show' => [['id'], ['_controller' => 'App\\Controller\\EventController::show'], [], [['variable', '/', '[^/]++', 'id', true], ['text', '/event']], [], [], []],
     'app_event_edit' => [['id'], ['_controller' => 'App\\Controller\\EventController::edit'], [], [['text', '/edit'], ['variable', '/', '[^/]++', 'id', true], ['text', '/event/event']], [], [], []],
     'app_event_delete' => [['id'], ['_controller' => 'App\\Controller\\EventController::delete'], [], [['variable', '/', '[^/]++', 'id', true], ['text', '/event']], [], [], []],
-    'app_event_public' => [[], ['_controller' => 'App\\Controller\\EventController::publicRaw'], [], [['text', '/event/public-events']], [], [], []],
+    'app_event_public' => [[], ['_controller' => 'App\\Controller\\EventController::list'], [], [['text', '/event/event/showclient']], [], [], []],
+    'event_show' => [['id'], ['_controller' => 'App\\Controller\\EventController::showevent'], [], [['variable', '/', '[^/]++', 'id', true], ['text', '/event/event/showEvent']], [], [], []],
     'app_home_controll' => [[], ['_controller' => 'App\\Controller\\HomeControllController::index'], [], [['text', '/']], [], [], []],
     'App\Controller\CategorieEventController::ajouterCategorie' => [[], ['_controller' => 'App\\Controller\\CategorieEventController::ajouterCategorie'], [], [['text', '/ajouter-evenement']], [], [], []],
     'App\Controller\CategorieEventController::listeCategories' => [[], ['_controller' => 'App\\Controller\\CategorieEventController::listeCategories'], [], [['text', '/liste-categories']], [], [], []],
@@ -24,6 +25,7 @@ return [
     'App\Controller\EventController::show' => [['id'], ['_controller' => 'App\\Controller\\EventController::show'], [], [['variable', '/', '[^/]++', 'id', true], ['text', '/event']], [], [], []],
     'App\Controller\EventController::edit' => [['id'], ['_controller' => 'App\\Controller\\EventController::edit'], [], [['text', '/edit'], ['variable', '/', '[^/]++', 'id', true], ['text', '/event/event']], [], [], []],
     'App\Controller\EventController::delete' => [['id'], ['_controller' => 'App\\Controller\\EventController::delete'], [], [['variable', '/', '[^/]++', 'id', true], ['text', '/event']], [], [], []],
-    'App\Controller\EventController::publicRaw' => [[], ['_controller' => 'App\\Controller\\EventController::publicRaw'], [], [['text', '/event/public-events']], [], [], []],
+    'App\Controller\EventController::list' => [[], ['_controller' => 'App\\Controller\\EventController::list'], [], [['text', '/event/event/showclient']], [], [], []],
+    'App\Controller\EventController::showevent' => [['id'], ['_controller' => 'App\\Controller\\EventController::showevent'], [], [['variable', '/', '[^/]++', 'id', true], ['text', '/event/event/showEvent']], [], [], []],
     'App\Controller\HomeControllController::index' => [[], ['_controller' => 'App\\Controller\\HomeControllController::index'], [], [['text', '/']], [], [], []],
 ];

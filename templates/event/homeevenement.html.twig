@@ -1,0 +1,57 @@
+
+{% extends 'homepage.html.twig' %}
+
+{% block title %}Nos évènements - RELIF{% endblock %}
+
+{% block body %}
+  <div class="container mt-5">
+    <h2 class="mb-4">Liste des Évènements</h2>
+    <div class="row">
+      <table class="table">
+        <thead>
+            <tr>
+              
+                <th>Nom de l'evenement</th>
+                <th>Date</th>
+                
+                <th>Villes</th>
+                
+                <th>Status</th>
+                <th>Nb des participants</th>
+                <th>Categorie</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for event in events %}
+            <tr>
+               
+                <td>{{ event.nomEvent }}</td>
+                <td>{{ event.dateEvent ? event.dateEvent|date('Y-m-d') : '' }}</td>
+                
+                <td>{{ event.villes }}</td>
+                
+                <td>{{ event.statusEvent }}</td>
+                <td>{{ event.nbParticipantMax }}</td>
+                <td>{{ event.categorieEvent ? event.categorieEvent.nom_categorie : 'N/A' }}</td>
+                <td>
+    <div class="d-flex gap-2">
+        <a href="{{ path('event_show', {'id': event.id_event}) }}" class="btn btn-light btn-sm text-dark" title="Voir">
+            <i class="fas fa-eye me-1"></i> Show
+        </a>
+        
+    </div>
+</td>
+
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="9">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    </div>
+  </div>
+{% endblock %}
