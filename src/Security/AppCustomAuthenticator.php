@@ -31,12 +31,6 @@ class AppCustomAuthenticator extends AbstractLoginFormAuthenticator
         $email = $request->request->get('email_user', null);
         $password = $request->request->get('password', null);
 
-        if ($email === null) {
-            $this->logger->error('Le champ email_user est manquant ou vide dans la requête.');
-        }
-
-        $this->logger->info('Authentification en cours', ['email_user' => $email]);
-
         $request->getSession()->set(Security::LAST_USERNAME, $email);
 
         return new Passport(

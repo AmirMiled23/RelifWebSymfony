@@ -74,19 +74,9 @@ final class BackUserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Hachage du mot de passe uniquement si un nouveau mot de passe est défini
-            if ($user->getPwUser()) {
-                $hashedPassword = $this->passwordHasher->hashPassword(
-                    $user,
-                    $user->getPwUser()
-                );
-                $user->setPwUser($hashedPassword);
-            }
-
-            $entityManager->flush();
-
+            $entityManager->flush(); 
             $this->addFlash('success', 'Utilisateur mis à jour avec succès.');
-
+        
             return $this->redirectToRoute('app_back_user_index');
         }
 
@@ -94,6 +84,7 @@ final class BackUserController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
 
     #[Route('/{id}', name: 'app_back_user_delete', methods: ['POST'])]
     public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response

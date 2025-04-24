@@ -44,13 +44,12 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Hash the password based on pwUser field
-            $hashedPassword = $this->passwordHasher->hashPassword(
-                $user,
-                $user->getPwUser()
-            );
-            $user->setPwUser($hashedPassword);
 
+            $hashedPassword = $this->passwordHasher->hashPassword(
+    $user,
+    $user->getPwUser()
+);
+$user->setPwUser($hashedPassword);
             $this->entityManager->persist($user);
             $this->entityManager->flush();
 

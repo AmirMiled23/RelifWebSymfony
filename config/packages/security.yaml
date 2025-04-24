@@ -11,10 +11,6 @@ security:
                 property: email_user
 
     firewalls:
-        dev:
-            pattern: ^/(_(profiler|wdt)|css|images|js)/
-            security: false
-
         main:
             lazy: true
             provider: app_user_provider
@@ -28,9 +24,3 @@ security:
             logout:
                 path: app_logout
                 target: app_login
-
-    access_control:
-        - { path: ^/login, roles: PUBLIC_ACCESS }
-        - { path: ^/register, roles: PUBLIC_ACCESS }
-        - { path: ^/, roles: ROLE_USER }
-        - { path: ^/user, roles: ROLE_USER }
