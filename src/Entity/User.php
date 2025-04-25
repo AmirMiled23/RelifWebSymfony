@@ -17,6 +17,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[UniqueEntity(fields: ['email_user'], message: "Il existe déjà un compte avec cet email.")]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -81,7 +82,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->point_user = 0;
     }
     
-    
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+private ?string $token = null;
+
+public function getToken(): ?string
+{
+    return $this->token;
+}
+
+public function setToken(?string $token): self
+{
+    $this->token = $token;
+    return $this;
+}
 
     public function getRoles(): array
     {
