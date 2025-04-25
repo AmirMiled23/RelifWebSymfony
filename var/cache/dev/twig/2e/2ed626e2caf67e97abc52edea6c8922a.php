@@ -143,12 +143,38 @@ class __TwigTemplate_5ae98583581e116b97a1aa3d5a6a0493 extends Template
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["event"]) || array_key_exists("event", $context) ? $context["event"] : (function () { throw new RuntimeError('Variable "event" does not exist.', 41, $this->source); })()), "nbParticipantMax", [], "any", false, false, false, 41), "html", null, true);
         yield "</td>
             </tr>
+           <h2>Météo d'aujourd'hui à Tunis</h2>
+
+";
+        // line 45
+        if (array_key_exists("currentTemp", $context)) {
+            // line 46
+            yield "    <p>Température actuelle : ";
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["currentTemp"]) || array_key_exists("currentTemp", $context) ? $context["currentTemp"] : (function () { throw new RuntimeError('Variable "currentTemp" does not exist.', 46, $this->source); })()), "html", null, true);
+            yield " °C</p>
+    <p>Humidité : ";
+            // line 47
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["currentHumidity"]) || array_key_exists("currentHumidity", $context) ? $context["currentHumidity"] : (function () { throw new RuntimeError('Variable "currentHumidity" does not exist.', 47, $this->source); })()), "html", null, true);
+            yield " %</p>
+    <p>Vent : ";
+            // line 48
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["currentWind"]) || array_key_exists("currentWind", $context) ? $context["currentWind"] : (function () { throw new RuntimeError('Variable "currentWind" does not exist.', 48, $this->source); })()), "html", null, true);
+            yield " km/h</p>
+";
+        } else {
+            // line 50
+            yield "    <p>Aucune donnée météo disponible.</p>
+";
+        }
+        // line 52
+        yield "
+
         </tbody>
     </table>
 
    <div class=\"d-flex gap-2 mt-3\">
     <a href=\"";
-        // line 47
+        // line 58
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_event_public");
         yield "\" class=\"btn btn-secondary\">
         <i class=\"fas fa-arrow-left me-1\"></i> Revenir à la liste
@@ -183,7 +209,7 @@ class __TwigTemplate_5ae98583581e116b97a1aa3d5a6a0493 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  152 => 47,  143 => 41,  136 => 37,  129 => 33,  122 => 29,  115 => 25,  108 => 21,  101 => 17,  94 => 13,  85 => 6,  75 => 5,  58 => 3,  41 => 1,);
+        return array (  178 => 58,  170 => 52,  166 => 50,  161 => 48,  157 => 47,  152 => 46,  150 => 45,  143 => 41,  136 => 37,  129 => 33,  122 => 29,  115 => 25,  108 => 21,  101 => 17,  94 => 13,  85 => 6,  75 => 5,  58 => 3,  41 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -230,6 +256,17 @@ class __TwigTemplate_5ae98583581e116b97a1aa3d5a6a0493 extends Template
                 <th>Nb_participant_max</th>
                 <td>{{ event.nbParticipantMax }}</td>
             </tr>
+           <h2>Météo d'aujourd'hui à Tunis</h2>
+
+{% if currentTemp is defined %}
+    <p>Température actuelle : {{ currentTemp }} °C</p>
+    <p>Humidité : {{ currentHumidity }} %</p>
+    <p>Vent : {{ currentWind }} km/h</p>
+{% else %}
+    <p>Aucune donnée météo disponible.</p>
+{% endif %}
+
+
         </tbody>
     </table>
 

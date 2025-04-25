@@ -4,12 +4,14 @@ namespace App\Controller;
 
 use App\Entity\Event;
 use App\Form\EventType;
+use App\Service\WeatherService;
 use App\Repository\EventRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 #[Route('/event')]
 final class EventController extends AbstractController{
@@ -41,6 +43,13 @@ final class EventController extends AbstractController{
         ]);
     }
 
+    private HttpClientInterface $client;
+
+   
+    public function __construct(HttpClientInterface $client)
+    {
+        $this->client = $client;
+    }
     #[Route('/{id}', name: 'app_event_show', methods: ['GET'])]
     public function show(Event $event): Response
     {
@@ -78,18 +87,71 @@ final class EventController extends AbstractController{
         return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
     }
     #[Route('/event/showclient',name: 'app_event_public', methods: ['GET'])]
-    public function list(EventRepository $eventRepository): Response
+    public function list(EventRepository $eventRepository, Request $request): Response
     {
+        $titre = $request->query->get('titre');
+        $ville = $request->query->get('ville');
+    
+        $events = $eventRepository->createQueryBuilder('e');
+    
+        if ($titre) {
+            $events->andWhere('e.nom_event LIKE :titre')
+                   ->setParameter('titre', '%' . $titre . '%');
+        }
+    
+        if ($ville) {
+            $events->andWhere('e.villes LIKE :ville')
+                   ->setParameter('ville', '%' . $ville . '%');
+        }
+    
+        $result = $events->getQuery()->getResult();
+
     return $this->render('event/homeevenement.html.twig', [
-        'events' => $eventRepository->findAll(),
+        'events' => $result,
     ]);
     }
 
     #[Route('/event/showEvent/{id}', name: 'event_show', methods: ['GET'])]
     public function showevent(Event $event): Response
     {
+        $ville = $event->getVilles();
+        $geoResponse = $this->client->request('GET', 'https://geocoding-api.open-meteo.com/v1/search', [
+            'query' => [
+                'name' => $ville,
+                'count' => 1, 
+            ]
+        ]);
+
+        $geoData = $geoResponse->toArray();
+        $lat = $geoData['results'][0]['latitude'];
+    $lng = $geoData['results'][0]['longitude'];
+       
+        $response = $this->client->request('GET', 'https://api.open-meteo.com/v1/forecast', [
+            'query' => [
+                'latitude' => $lat,
+                'longitude' => $lng,
+                'current_weather' => 'true',
+                'hourly' => 'relative_humidity_2m',
+                'timezone' => 'Europe/Paris',
+            ]
+        ]);
+        $weather = $response->toArray();
+
+      
+        $currentTemp = $weather['current_weather']['temperature'];
+        $currentWind = $weather['current_weather']['windspeed'];
+    
+        
+        $now = (new \DateTime())->format('Y-m-d\TH:00');
+        $hourIndex = array_search($now, $weather['hourly']['time']);
+        $currentHumidity = $hourIndex !== false ? $weather['hourly']['relative_humidity_2m'][$hourIndex] : null;
+    
+       
         return $this->render('event/showclient.html.twig', [
             'event' => $event,
+            'currentTemp' => $currentTemp,
+        'currentWind' => $currentWind,
+        'currentHumidity' => $currentHumidity,
         ]);
     }
 

@@ -7,6 +7,20 @@
   <div class="container mt-5">
     <h2 class="mb-4">Liste des Évènements</h2>
     <div class="row">
+    <form method="get" action="" class="mb-4">
+  <div class="row">
+    <div class="col-md-5">
+      <input type="text" name="titre" value="{{ app.request.get('titre') }}" class="form-control" placeholder="Rechercher par titre">
+    </div>
+    <div class="col-md-5">
+      <input type="text" name="ville" value="{{ app.request.get('ville') }}" class="form-control" placeholder="Rechercher par ville">
+    </div>
+    <div class="col-md-2">
+      <button type="submit" class="btn btn-primary w-100">Filtrer</button>
+    </div>
+  </div>
+</form>
+
       <table class="table">
         <thead>
             <tr>
@@ -18,8 +32,11 @@
                 
                 <th>Status</th>
                 <th>Nb des participants</th>
+                <th>Début dans</th>
                 <th>Categorie</th>
+                 
                 <th>actions</th>
+               
             </tr>
         </thead>
         <tbody>
@@ -33,6 +50,9 @@
                 
                 <td>{{ event.statusEvent }}</td>
                 <td>{{ event.nbParticipantMax }}</td>
+                <td>
+                   <div class="countdown fw-bold" data-date="{{ event.dateEvent ? event.dateEvent|date('Y-m-d H:i:s') : '' }}"></div>
+                </td>
                 <td>{{ event.categorieEvent ? event.categorieEvent.nom_categorie : 'N/A' }}</td>
                 <td>
     <div class="d-flex gap-2">
@@ -46,7 +66,7 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="9">no records found</td>
+                <td colspan="9">Pas d'evennement</td>
             </tr>
         {% endfor %}
         </tbody>
@@ -54,4 +74,44 @@
 
     </div>
   </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const countdownElements = document.querySelectorAll(".countdown");
+
+        countdownElements.forEach(el => {
+            const targetDate = new Date(el.dataset.date).getTime();
+
+            const updateCountdown = () => {
+                const now = new Date().getTime();
+                const distance = targetDate - now;
+
+                if (distance <= 0) {
+                    el.innerHTML = " Démarré";
+                    el.classList.add("text-success");
+                    return;
+                }
+
+                const hoursRemaining = distance / (1000 * 60 * 60);
+
+                if (hoursRemaining <= 2) {
+                    el.innerHTML = "<strong class='text-warning'> Va débuter dans moins de 2 heures !</strong>";
+                    return;
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                el.innerHTML = `${days}j ${hours}h ${minutes}m ${seconds}s`;
+            };
+
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+        });
+    });
+</script>
+
+
 {% endblock %}

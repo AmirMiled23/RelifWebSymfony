@@ -40,6 +40,17 @@
                 <th>Nb_participant_max</th>
                 <td>{{ event.nbParticipantMax }}</td>
             </tr>
+           <h2>Météo d'aujourd'hui à Tunis</h2>
+
+{% if currentTemp is defined %}
+    <p>Température actuelle : {{ currentTemp }} °C</p>
+    <p>Humidité : {{ currentHumidity }} %</p>
+    <p>Vent : {{ currentWind }} km/h</p>
+{% else %}
+    <p>Aucune donnée météo disponible.</p>
+{% endif %}
+
+
         </tbody>
     </table>
 

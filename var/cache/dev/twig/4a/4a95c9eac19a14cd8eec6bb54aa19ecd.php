@@ -85,6 +85,26 @@ class __TwigTemplate_025b0faeb07023fe9a389a141910e87b extends Template
         yield "  <div class=\"container mt-5\">
     <h2 class=\"mb-4\">Liste des Évènements</h2>
     <div class=\"row\">
+    <form method=\"get\" action=\"\" class=\"mb-4\">
+  <div class=\"row\">
+    <div class=\"col-md-5\">
+      <input type=\"text\" name=\"titre\" value=\"";
+        // line 13
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 13, $this->source); })()), "request", [], "any", false, false, false, 13), "get", ["titre"], "method", false, false, false, 13), "html", null, true);
+        yield "\" class=\"form-control\" placeholder=\"Rechercher par titre\">
+    </div>
+    <div class=\"col-md-5\">
+      <input type=\"text\" name=\"ville\" value=\"";
+        // line 16
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 16, $this->source); })()), "request", [], "any", false, false, false, 16), "get", ["ville"], "method", false, false, false, 16), "html", null, true);
+        yield "\" class=\"form-control\" placeholder=\"Rechercher par ville\">
+    </div>
+    <div class=\"col-md-2\">
+      <button type=\"submit\" class=\"btn btn-primary w-100\">Filtrer</button>
+    </div>
+  </div>
+</form>
+
       <table class=\"table\">
         <thead>
             <tr>
@@ -96,51 +116,60 @@ class __TwigTemplate_025b0faeb07023fe9a389a141910e87b extends Template
                 
                 <th>Status</th>
                 <th>Nb des participants</th>
+                <th>Début dans</th>
                 <th>Categorie</th>
+                 
                 <th>actions</th>
+               
             </tr>
         </thead>
         <tbody>
         ";
-        // line 26
+        // line 43
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["events"]) || array_key_exists("events", $context) ? $context["events"] : (function () { throw new RuntimeError('Variable "events" does not exist.', 26, $this->source); })()));
+        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["events"]) || array_key_exists("events", $context) ? $context["events"] : (function () { throw new RuntimeError('Variable "events" does not exist.', 43, $this->source); })()));
         $context['_iterated'] = false;
         foreach ($context['_seq'] as $context["_key"] => $context["event"]) {
-            // line 27
+            // line 44
             yield "            <tr>
                
                 <td>";
-            // line 29
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "nomEvent", [], "any", false, false, false, 29), "html", null, true);
+            // line 46
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "nomEvent", [], "any", false, false, false, 46), "html", null, true);
             yield "</td>
                 <td>";
-            // line 30
-            yield ((CoreExtension::getAttribute($this->env, $this->source, $context["event"], "dateEvent", [], "any", false, false, false, 30)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "dateEvent", [], "any", false, false, false, 30), "Y-m-d"), "html", null, true)) : (""));
-            yield "</td>
-                
-                <td>";
-            // line 32
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "villes", [], "any", false, false, false, 32), "html", null, true);
+            // line 47
+            yield ((CoreExtension::getAttribute($this->env, $this->source, $context["event"], "dateEvent", [], "any", false, false, false, 47)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "dateEvent", [], "any", false, false, false, 47), "Y-m-d"), "html", null, true)) : (""));
             yield "</td>
                 
                 <td>";
-            // line 34
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "statusEvent", [], "any", false, false, false, 34), "html", null, true);
+            // line 49
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "villes", [], "any", false, false, false, 49), "html", null, true);
+            yield "</td>
+                
+                <td>";
+            // line 51
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "statusEvent", [], "any", false, false, false, 51), "html", null, true);
             yield "</td>
                 <td>";
-            // line 35
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "nbParticipantMax", [], "any", false, false, false, 35), "html", null, true);
+            // line 52
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "nbParticipantMax", [], "any", false, false, false, 52), "html", null, true);
             yield "</td>
+                <td>
+                   <div class=\"countdown fw-bold\" data-date=\"";
+            // line 54
+            yield ((CoreExtension::getAttribute($this->env, $this->source, $context["event"], "dateEvent", [], "any", false, false, false, 54)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, $context["event"], "dateEvent", [], "any", false, false, false, 54), "Y-m-d H:i:s"), "html", null, true)) : (""));
+            yield "\"></div>
+                </td>
                 <td>";
-            // line 36
-            yield ((CoreExtension::getAttribute($this->env, $this->source, $context["event"], "categorieEvent", [], "any", false, false, false, 36)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["event"], "categorieEvent", [], "any", false, false, false, 36), "nom_categorie", [], "any", false, false, false, 36), "html", null, true)) : ("N/A"));
+            // line 56
+            yield ((CoreExtension::getAttribute($this->env, $this->source, $context["event"], "categorieEvent", [], "any", false, false, false, 56)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["event"], "categorieEvent", [], "any", false, false, false, 56), "nom_categorie", [], "any", false, false, false, 56), "html", null, true)) : ("N/A"));
             yield "</td>
                 <td>
     <div class=\"d-flex gap-2\">
         <a href=\"";
-            // line 39
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("event_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["event"], "id_event", [], "any", false, false, false, 39)]), "html", null, true);
+            // line 59
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("event_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["event"], "id_event", [], "any", false, false, false, 59)]), "html", null, true);
             yield "\" class=\"btn btn-light btn-sm text-dark\" title=\"Voir\">
             <i class=\"fas fa-eye me-1\"></i> Show
         </a>
@@ -152,23 +181,63 @@ class __TwigTemplate_025b0faeb07023fe9a389a141910e87b extends Template
         ";
             $context['_iterated'] = true;
         }
-        // line 47
+        // line 67
         if (!$context['_iterated']) {
-            // line 48
+            // line 68
             yield "            <tr>
-                <td colspan=\"9\">no records found</td>
+                <td colspan=\"9\">Pas d'evennement</td>
             </tr>
         ";
         }
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['event'], $context['_parent'], $context['_iterated']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 52
+        // line 72
         yield "        </tbody>
     </table>
 
     </div>
   </div>
+
+  <script>
+    document.addEventListener(\"DOMContentLoaded\", function() {
+        const countdownElements = document.querySelectorAll(\".countdown\");
+
+        countdownElements.forEach(el => {
+            const targetDate = new Date(el.dataset.date).getTime();
+
+            const updateCountdown = () => {
+                const now = new Date().getTime();
+                const distance = targetDate - now;
+
+                if (distance <= 0) {
+                    el.innerHTML = \" Démarré\";
+                    el.classList.add(\"text-success\");
+                    return;
+                }
+
+                const hoursRemaining = distance / (1000 * 60 * 60);
+
+                if (hoursRemaining <= 2) {
+                    el.innerHTML = \"<strong class='text-warning'> Va débuter dans moins de 2 heures !</strong>\";
+                    return;
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                el.innerHTML = `\${days}j \${hours}h \${minutes}m \${seconds}s`;
+            };
+
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+        });
+    });
+</script>
+
+
 ";
         
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
@@ -197,7 +266,7 @@ class __TwigTemplate_025b0faeb07023fe9a389a141910e87b extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  167 => 52,  158 => 48,  156 => 47,  143 => 39,  137 => 36,  133 => 35,  129 => 34,  124 => 32,  119 => 30,  115 => 29,  111 => 27,  106 => 26,  85 => 7,  75 => 6,  58 => 4,  41 => 2,);
+        return array (  196 => 72,  187 => 68,  185 => 67,  172 => 59,  166 => 56,  161 => 54,  156 => 52,  152 => 51,  147 => 49,  142 => 47,  138 => 46,  134 => 44,  129 => 43,  99 => 16,  93 => 13,  85 => 7,  75 => 6,  58 => 4,  41 => 2,);
     }
 
     public function getSourceContext(): Source
@@ -211,6 +280,20 @@ class __TwigTemplate_025b0faeb07023fe9a389a141910e87b extends Template
   <div class=\"container mt-5\">
     <h2 class=\"mb-4\">Liste des Évènements</h2>
     <div class=\"row\">
+    <form method=\"get\" action=\"\" class=\"mb-4\">
+  <div class=\"row\">
+    <div class=\"col-md-5\">
+      <input type=\"text\" name=\"titre\" value=\"{{ app.request.get('titre') }}\" class=\"form-control\" placeholder=\"Rechercher par titre\">
+    </div>
+    <div class=\"col-md-5\">
+      <input type=\"text\" name=\"ville\" value=\"{{ app.request.get('ville') }}\" class=\"form-control\" placeholder=\"Rechercher par ville\">
+    </div>
+    <div class=\"col-md-2\">
+      <button type=\"submit\" class=\"btn btn-primary w-100\">Filtrer</button>
+    </div>
+  </div>
+</form>
+
       <table class=\"table\">
         <thead>
             <tr>
@@ -222,8 +305,11 @@ class __TwigTemplate_025b0faeb07023fe9a389a141910e87b extends Template
                 
                 <th>Status</th>
                 <th>Nb des participants</th>
+                <th>Début dans</th>
                 <th>Categorie</th>
+                 
                 <th>actions</th>
+               
             </tr>
         </thead>
         <tbody>
@@ -237,6 +323,9 @@ class __TwigTemplate_025b0faeb07023fe9a389a141910e87b extends Template
                 
                 <td>{{ event.statusEvent }}</td>
                 <td>{{ event.nbParticipantMax }}</td>
+                <td>
+                   <div class=\"countdown fw-bold\" data-date=\"{{ event.dateEvent ? event.dateEvent|date('Y-m-d H:i:s') : '' }}\"></div>
+                </td>
                 <td>{{ event.categorieEvent ? event.categorieEvent.nom_categorie : 'N/A' }}</td>
                 <td>
     <div class=\"d-flex gap-2\">
@@ -250,7 +339,7 @@ class __TwigTemplate_025b0faeb07023fe9a389a141910e87b extends Template
             </tr>
         {% else %}
             <tr>
-                <td colspan=\"9\">no records found</td>
+                <td colspan=\"9\">Pas d'evennement</td>
             </tr>
         {% endfor %}
         </tbody>
@@ -258,6 +347,46 @@ class __TwigTemplate_025b0faeb07023fe9a389a141910e87b extends Template
 
     </div>
   </div>
+
+  <script>
+    document.addEventListener(\"DOMContentLoaded\", function() {
+        const countdownElements = document.querySelectorAll(\".countdown\");
+
+        countdownElements.forEach(el => {
+            const targetDate = new Date(el.dataset.date).getTime();
+
+            const updateCountdown = () => {
+                const now = new Date().getTime();
+                const distance = targetDate - now;
+
+                if (distance <= 0) {
+                    el.innerHTML = \" Démarré\";
+                    el.classList.add(\"text-success\");
+                    return;
+                }
+
+                const hoursRemaining = distance / (1000 * 60 * 60);
+
+                if (hoursRemaining <= 2) {
+                    el.innerHTML = \"<strong class='text-warning'> Va débuter dans moins de 2 heures !</strong>\";
+                    return;
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                el.innerHTML = `\${days}j \${hours}h \${minutes}m \${seconds}s`;
+            };
+
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+        });
+    });
+</script>
+
+
 {% endblock %}
 ", "event/homeevenement.html.twig", "C:\\Users\\amirm\\Desktop\\PI WORKSHOPS\\PIRelifFinal\\templates\\event\\homeevenement.html.twig");
     }
