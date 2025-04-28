@@ -46,7 +46,26 @@ final class MaterielController extends AbstractController
         ]);
     }
 
-    #[Route('/{id_materiel}', name: 'app_materiel_show', methods: ['GET'])]
+    #[Route('/search', name: 'app_materiel_search', methods: ['GET'])]
+    public function search(Request $request, MaterielRepository $materielRepository): Response
+    {
+        $criteria = [
+            'nom' => $request->query->get('nom'),
+            'description' => $request->query->get('description'),
+            'quantiteMin' => $request->query->get('quantiteMin'),
+            'quantiteMax' => $request->query->get('quantiteMax'),
+        ];
+
+        $sort = $request->query->get('sort', 'asc'); // Par défaut, tri croissant
+
+        $materiels = $materielRepository->findByCriteria($criteria, $sort);
+
+        return $this->render('materiel/index.html.twig', [
+            'materiels' => $materiels,
+        ]);
+    }
+
+    #[Route('/{id}', name: 'app_materiel_show', methods: ['GET'])]
     public function show(Materiel $materiel): Response
     {
         return $this->render('materiel/show.html.twig', [
@@ -54,7 +73,7 @@ final class MaterielController extends AbstractController
         ]);
     }
 
-    #[Route('/{id_materiel}/edit', name: 'app_materiel_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'app_materiel_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Materiel $materiel, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(MaterielType::class, $materiel);
@@ -72,10 +91,10 @@ final class MaterielController extends AbstractController
         ]);
     }
 
-    #[Route('/{id_materiel}', name: 'app_materiel_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'app_materiel_delete', methods: ['POST'])]
     public function delete(Request $request, Materiel $materiel, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$materiel->getId_materiel(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$materiel->getId(), $request->get('_token'))) {
             $entityManager->remove($materiel);
             $entityManager->flush();
         }

@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
 
+
 use App\Repository\ReservationMaterielRepository;
 
 #[ORM\Entity(repositoryClass: ReservationMaterielRepository::class)]
@@ -92,7 +93,7 @@ class ReservationMateriel
     }
 
     #[ORM\ManyToOne(targetEntity: Materiel::class, inversedBy: 'reservationMateriels')]
-    #[ORM\JoinColumn(name: 'id_materiel', referencedColumnName: 'id_materiel')]
+    #[ORM\JoinColumn(name: 'id_materiel', referencedColumnName: 'id_materiel', nullable: true, onDelete: 'SET NULL')]
     private ?Materiel $materiel = null;
 
     public function getMateriel(): ?Materiel

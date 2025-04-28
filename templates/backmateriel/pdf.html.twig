@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des materiels</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>Liste des materiels</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Id_materiel</th>
+                <th>Nom_materiel</th>
+                <th>Description</th>
+                <th>Quantite_dispo</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for materiel in materiels %}
+            <tr>
+                <td>{{ materiel.id }}</td>
+                <td>{{ materiel.nomMateriel }}</td>
+                <td>{{ materiel.description }}</td>
+                <td>{{ materiel.quantiteDispo }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">Aucun matériel trouvé</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

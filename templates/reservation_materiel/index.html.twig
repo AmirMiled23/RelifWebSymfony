@@ -3,37 +3,66 @@
 {% block title %}ReservationMateriel index{% endblock %}
 
 {% block body %}
-    <h1 class="mb-4">Liste des reservations materiels</h1> {# Added margin-bottom to the heading #}
+    <h1 class="mb-4">Liste des réservations matériels</h1>
 
     <a class="btn btn-secondary mb-3" href="{{ path('app_materiel_index') }}">Liste des matériels</a>
+
+    <form method="get" action="{{ path('app_reservation_materiel_search') }}" class="mb-4">
+        <div class="row">
+            <div class="col">
+                <input type="text" name="nomMateriel" class="form-control" placeholder="Nom du matériel" value="{{ app.request.query.get('nomMateriel') }}">
+            </div>
+            <div class="col">
+                <input type="date" name="dateDebut" class="form-control" placeholder="Date début" value="{{ app.request.query.get('dateDebut') }}">
+            </div>
+            <div class="col">
+                <input type="date" name="dateFin" class="form-control" placeholder="Date fin" value="{{ app.request.query.get('dateFin') }}">
+            </div>
+            <div class="col">
+                <input type="number" name="quantiteMin" class="form-control" placeholder="Quantité min" value="{{ app.request.query.get('quantiteMin') }}">
+            </div>
+            <div class="col">
+                <input type="number" name="quantiteMax" class="form-control" placeholder="Quantité max" value="{{ app.request.query.get('quantiteMax') }}">
+            </div>
+            <div class="col">
+                <select name="sort" class="form-control">
+                    <option value="asc" {% if app.request.query.get('sort') == 'asc' %}selected{% endif %}>Date croissante</option>
+                    <option value="desc" {% if app.request.query.get('sort') == 'desc' %}selected{% endif %}>Date décroissante</option>
+                </select>
+            </div>
+            <div class="col">
+                <button type="submit" class="btn btn-primary">Rechercher</button>
+            </div>
+        </div>
+    </form>
 
     <table class="table">
         <thead>
             <tr>
-                <th>Date_debut</th>
-                <th>Date_fin</th>
-                <th>Quantite_reservee</th>
-                <th>actions</th>
+                <th>Nom du matériel</th>
+                <th>Date début</th>
+                <th>Date fin</th>
+                <th>Quantité réservée</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-        {% for reservation_materiel in reservation_materiels %}
+        {% for reservation in reservation_materiels %}
             <tr>
-                <td>{{ reservation_materiel.dateDebut ? reservation_materiel.dateDebut|date('Y-m-d') : '' }}</td>
-                <td>{{ reservation_materiel.dateFin ? reservation_materiel.dateFin|date('Y-m-d') : '' }}</td>
-                <td>{{ reservation_materiel.quantiteReservee }}</td>
+                <td>{{ reservation.materiel ? reservation.materiel.nomMateriel : 'Non spécifié' }}</td>
+                <td>{{ reservation.dateDebut ? reservation.dateDebut|date('Y-m-d') : '' }}</td>
+                <td>{{ reservation.dateFin ? reservation.dateFin|date('Y-m-d') : '' }}</td>
+                <td>{{ reservation.quantiteReservee }}</td>
                 <td>
-                    <a href="{{ path('app_reservation_materiel_show', {'id_reservation': reservation_materiel.id_reservation}) }}">show</a>
-                    <a href="{{ path('app_reservation_materiel_edit', {'id_reservation': reservation_materiel.id_reservation}) }}">edit</a>
+                    <a href="{{ path('app_reservation_materiel_show', {'id_reservation': reservation.idReservation}) }}">show</a>
+                    <a href="{{ path('app_reservation_materiel_edit', {'id_reservation': reservation.idReservation}) }}">edit</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="4">no records found</td>
+                <td colspan="5">Aucune réservation trouvée</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ path('app_reservation_materiel_new') }}">Create new</a>
 {% endblock %}

@@ -23,7 +23,7 @@
                     </div>
                 {% endfor %}
 
-                {{ form_start(form) }}
+                {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
@@ -45,7 +45,7 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 {{ form_label(form.materiel, 'Matériel', {'label_attr': {'class': 'form-label'}}) }}
-                                {{ form_widget(form.materiel, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_widget(form.materiel, {'attr': {'class': 'form-select form-select-lg'}}) }}
                                 {{ form_errors(form.materiel) }}
                             </div>
                         </div>

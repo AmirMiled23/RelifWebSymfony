@@ -16,6 +16,35 @@ class MaterielRepository extends ServiceEntityRepository
         parent::__construct($registry, Materiel::class);
     }
 
+    public function findByCriteria(array $criteria, string $sort = 'asc'): array
+    {
+        $qb = $this->createQueryBuilder('m');
+
+        if (!empty($criteria['nom'])) {
+            $qb->andWhere('m.nom_materiel LIKE :nom')
+               ->setParameter('nom', '%' . $criteria['nom'] . '%');
+        }
+
+        if (!empty($criteria['description'])) {
+            $qb->andWhere('m.description LIKE :description')
+               ->setParameter('description', '%' . $criteria['description'] . '%');
+        }
+
+        if (!empty($criteria['quantiteMin'])) {
+            $qb->andWhere('m.quantite_dispo >= :quantiteMin')
+               ->setParameter('quantiteMin', $criteria['quantiteMin']);
+        }
+
+        if (!empty($criteria['quantiteMax'])) {
+            $qb->andWhere('m.quantite_dispo <= :quantiteMax')
+               ->setParameter('quantiteMax', $criteria['quantiteMax']);
+        }
+
+        $qb->orderBy('m.quantite_dispo', $sort === 'desc' ? 'DESC' : 'ASC');
+
+        return $qb->getQuery()->getResult();
+    }
+
     //    /**
     //     * @return Materiel[] Returns an array of Materiel objects
     //     */

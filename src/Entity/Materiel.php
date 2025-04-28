@@ -18,11 +18,12 @@ class Materiel
     #[ORM\Column(type: 'integer')]
     private ?int $id_materiel = null;
 
-    public function getId_materiel(): ?int
+    public function getId(): ?int
     {
         return $this->id_materiel;
     }
-    public function getId(): ?int
+
+    public function getId_materiel(): ?int
     {
         return $this->id_materiel;
     }
@@ -31,6 +32,11 @@ class Materiel
     {
         $this->id_materiel = $id_materiel;
         return $this;
+    }
+
+    public function getIdMateriel(): ?int
+    {
+        return $this->id_materiel;
     }
 
     #[ORM\Column(type: 'string', nullable: false)]
@@ -113,11 +119,6 @@ class Materiel
     {
         $this->getReservationMateriels()->removeElement($reservationMateriel);
         return $this;
-    }
-
-    public function getIdMateriel(): ?int
-    {
-        return $this->id_materiel;
     }
 
     public function getNomMateriel(): ?string

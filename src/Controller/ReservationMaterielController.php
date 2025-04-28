@@ -30,8 +30,9 @@ final class ReservationMaterielController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($reservationMateriel->getDateFin() === null) {
-                $reservationMateriel->setDateFin(new \DateTime()); // Set a default value for date_fin
+            if (!$reservationMateriel->getMateriel()) {
+                $this->addFlash('error', 'Le matériel associé à cette réservation a été supprimé.');
+                return $this->redirectToRoute('app_reservation_materiel_index');
             }
 
             $materiel = $reservationMateriel->getMateriel();
@@ -52,6 +53,7 @@ final class ReservationMaterielController extends AbstractController
                 $entityManager->persist($reservationMateriel);
                 $entityManager->flush();
 
+                $this->addFlash('success', 'La réservation a été ajoutée avec succès.');
                 return $this->redirectToRoute('app_reservation_materiel_index', [], Response::HTTP_SEE_OTHER);
             }
         }
@@ -62,9 +64,15 @@ final class ReservationMaterielController extends AbstractController
         ]);
     }
 
-    #[Route('/{id_reservation}', name: 'app_reservation_materiel_show', methods: ['GET'])]
-    public function show(ReservationMateriel $reservationMateriel): Response
+    #[Route('/reservation_materiel/{id_reservation}', name: 'app_reservation_materiel_show')]
+    public function show(int $id_reservation, ReservationMaterielRepository $repository): Response
     {
+        $reservationMateriel = $repository->find($id_reservation);
+    
+        if (!$reservationMateriel) {
+            throw $this->createNotFoundException('Reservation not found');
+        }
+    
         return $this->render('reservation_materiel/show.html.twig', [
             'reservation_materiel' => $reservationMateriel,
         ]);
@@ -76,26 +84,84 @@ final class ReservationMaterielController extends AbstractController
         $form = $this->createForm(ReservationMaterielType::class, $reservationMateriel);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush(); // Use injected EntityManagerInterface to flush changes
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                if (!$reservationMateriel->getMateriel()) {
+                    $this->addFlash('error', 'Le matériel associé à cette réservation a été supprimé.');
+                    return $this->redirectToRoute('app_reservation_materiel_index');
+                }
 
-            return $this->redirectToRoute('app_reservation_materiel_index');
+                $materiel = $reservationMateriel->getMateriel();
+                $dateDebut = $reservationMateriel->getDateDebut();
+                $dateFin = $reservationMateriel->getDateFin();
+                $quantite = $reservationMateriel->getQuantiteReservee();
+
+                // Exclure la réservation actuelle des vérifications
+                $reservationsExistantes = $materiel->getReservationMateriels()->filter(function ($reservation) use ($reservationMateriel) {
+                    return $reservation->getIdReservation() !== $reservationMateriel->getIdReservation();
+                });
+
+                $quantiteReservee = 0;
+                foreach ($reservationsExistantes as $reservation) {
+                    if ($dateDebut < $reservation->getDateFin() && $dateFin > $reservation->getDateDebut()) {
+                        $quantiteReservee += $reservation->getQuantiteReservee();
+                    }
+                }
+
+                $quantiteDisponible = max(0, $materiel->getQuantiteDispo() - $quantiteReservee);
+
+                if ($quantite > $quantiteDisponible) {
+                    $this->addFlash('error', "La réservation dépasse la quantité disponible pour cette période. Quantité disponible : $quantiteDisponible.");
+                } else {
+                    $entityManager->flush();
+
+                    $this->addFlash('success', 'La réservation a été modifiée avec succès.');
+                    return $this->redirectToRoute('app_reservation_materiel_index', [], Response::HTTP_SEE_OTHER);
+                }
+            } else {
+                $this->addFlash('error', 'Veuillez corriger les erreurs dans le formulaire.');
+            }
         }
 
         return $this->render('reservation_materiel/edit.html.twig', [
-            'reservation_materiel' => $reservationMateriel, // Use lowercase naming to match the template
-            'form' => $form->createView(),
+            'reservation_materiel' => $reservationMateriel,
+            'form' => $form,
         ]);
     }
 
     #[Route('/{id_reservation}', name: 'app_reservation_materiel_delete', methods: ['POST'])]
     public function delete(Request $request, ReservationMateriel $reservationMateriel, EntityManagerInterface $entityManager): Response
     {
+        if (!$reservationMateriel->getMateriel()) {
+            $this->addFlash('error', 'Le matériel associé à cette réservation a été supprimé.');
+            return $this->redirectToRoute('app_reservation_materiel_index');
+        }
+
         if ($this->isCsrfTokenValid('delete'.$reservationMateriel->getId_reservation(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($reservationMateriel);
             $entityManager->flush();
         }
 
         return $this->redirectToRoute('app_reservation_materiel_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/search', name: 'app_reservation_materiel_search', methods: ['GET'])]
+    public function search(Request $request, ReservationMaterielRepository $reservationMaterielRepository): Response
+    {
+        $criteria = [
+            'nomMateriel' => $request->query->get('nomMateriel'),
+            'dateDebut' => $request->query->get('dateDebut'),
+            'dateFin' => $request->query->get('dateFin'),
+            'quantiteMin' => $request->query->get('quantiteMin'),
+            'quantiteMax' => $request->query->get('quantiteMax'),
+        ];
+
+        $sort = $request->query->get('sort', 'asc'); // Par défaut, tri croissant
+
+        $reservations = $reservationMaterielRepository->findByCriteria($criteria, $sort);
+
+        return $this->render('reservation_materiel/index.html.twig', [
+            'reservation_materiels' => $reservations,
+        ]);
     }
 }

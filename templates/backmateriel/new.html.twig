@@ -16,27 +16,31 @@
                     </div>
                 {% endfor %}
 
-                {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+                {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }} {# Désactivation de la validation HTML5 #}
 
                     <div class="mb-3">
                         {{ form_label(form.nom_materiel) }}
                         {{ form_widget(form.nom_materiel, {'attr': {'class': 'form-control'}}) }}
-                        {{ form_errors(form.nom_materiel) }}
+                        <div class="invalid-feedback d-block">
+                            {{ form_errors(form.nom_materiel) }}
+                        </div>
                     </div>
 
                     <div class="mb-3">
                         {{ form_label(form.description) }}
                         {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
-                        {{ form_errors(form.description) }}
+                        <div class="invalid-feedback d-block">
+                            {{ form_errors(form.description) }}
+                        </div>
                     </div>
 
                     <div class="mb-3">
                         {{ form_label(form.quantite_dispo) }}
                         {{ form_widget(form.quantite_dispo, {'attr': {'class': 'form-control'}}) }}
-                        {{ form_errors(form.quantite_dispo) }}
+                        <div class="invalid-feedback d-block">
+                            {{ form_errors(form.quantite_dispo) }}
+                        </div>
                     </div>
-
-                   
 
                     <div class="d-flex justify-content-between mt-4">
                         <button type="submit" class="btn btn-success">

@@ -40,4 +40,39 @@ class ReservationMaterielRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    public function findByCriteria(array $criteria, string $sort = 'asc'): array
+    {
+        $qb = $this->createQueryBuilder('r')
+            ->join('r.materiel', 'm');
+
+        if (!empty($criteria['nomMateriel'])) {
+            $qb->andWhere('m.nom_materiel LIKE :nomMateriel')
+               ->setParameter('nomMateriel', '%' . $criteria['nomMateriel'] . '%');
+        }
+
+        if (!empty($criteria['dateDebut'])) {
+            $qb->andWhere('r.date_debut >= :dateDebut')
+               ->setParameter('dateDebut', $criteria['dateDebut']);
+        }
+
+        if (!empty($criteria['dateFin'])) {
+            $qb->andWhere('r.date_fin <= :dateFin')
+               ->setParameter('dateFin', $criteria['dateFin']);
+        }
+
+        if (!empty($criteria['quantiteMin'])) {
+            $qb->andWhere('r.quantite_reservee >= :quantiteMin')
+               ->setParameter('quantiteMin', $criteria['quantiteMin']);
+        }
+
+        if (!empty($criteria['quantiteMax'])) {
+            $qb->andWhere('r.quantite_reservee <= :quantiteMax')
+               ->setParameter('quantiteMax', $criteria['quantiteMax']);
+        }
+
+        $qb->orderBy('r.date_debut', $sort === 'desc' ? 'DESC' : 'ASC');
+
+        return $qb->getQuery()->getResult();
+    }
 }

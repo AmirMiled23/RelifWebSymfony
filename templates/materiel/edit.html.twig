@@ -2,9 +2,70 @@
 
 {% block title %}Modifier un matériel{% endblock %}
 
-{% block stylesheets %}
-    {{ parent() }}
-    <style>
+
+    
+
+
+{% block body %}
+<div class="container mt-4">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ path('app_materiel_index') }}">Liste des matériels</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Modifier matériel</li>
+        </ol>
+    </nav>
+
+    <div class="card shadow-lg">
+        <div class="card-header text-white">
+            <h4 class="mb-0"><i class="fas fa-edit me-2"></i> Modifier le matériel</h4>
+        </div>
+        <div class="card-body">
+            {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        {{ form_label(form.nom_materiel, 'Nom du matériel', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.nom_materiel, {'attr': {'class': 'form-control'}}) }}
+                        <div class="invalid-feedback d-block">
+                            {{ form_errors(form.nom_materiel) }}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="form-group">
+                        {{ form_label(form.quantite_dispo, 'Quantité disponible', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.quantite_dispo, {'attr': {'class': 'form-control'}}) }}
+                        <div class="invalid-feedback d-block">
+                            {{ form_errors(form.quantite_dispo) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                {{ form_label(form.description, 'Description', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': 3}}) }}
+                <div class="invalid-feedback d-block">
+                    {{ form_errors(form.description) }}
+                </div>
+            </div>
+            
+            <div class="d-flex justify-content-between mt-4">
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-save me-2"></i> Enregistrer
+                </button>
+                <a href="{{ path('app_materiel_index') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-2"></i> Retour à la liste
+                </a>
+            </div>
+            
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+<style>
         .card {
             border: none;
             border-radius: 10px;
@@ -20,7 +81,7 @@
         
         .card-body {
             padding: 2rem;
-            background-color: #f8f9fa;
+            background-color:rgb(248, 248, 250);
         }
         
         .form-group {
@@ -30,7 +91,7 @@
         .form-control {
             border-radius: 5px;
             padding: 12px 15px;
-            border: 1px solid #ced4da;
+            border: 1px solid #4a6baf;
             transition: all 0.3s ease;
         }
         
@@ -94,7 +155,7 @@
         }
         
         .breadcrumb {
-            background-color: #f1f5f9;
+            background-color: #4a6baf;
             border-radius: 5px;
             padding: 0.75rem 1rem;
         }
@@ -104,66 +165,10 @@
             text-decoration: none;
             font-weight: 500;
         }
+        
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
     </style>
-{% endblock %}
-
-{% block body %}
-<div class="container mt-4">
-    <nav aria-label="breadcrumb" class="mb-4">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ path('app_materiel_index') }}">Liste des matériels</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Modifier matériel</li>
-        </ol>
-    </nav>
-
-    <div class="card shadow-lg">
-        <div class="card-header text-white">
-            <h4 class="mb-0"><i class="fas fa-edit me-2"></i> Modifier le matériel</h4>
-        </div>
-        <div class="card-body">
-            {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
-            
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        {{ form_label(form.nom_materiel, 'Nom du matériel', {'label_attr': {'class': 'form-label'}}) }}
-                        {{ form_widget(form.nom_materiel, {'attr': {'class': 'form-control'}}) }}
-                        <div class="invalid-feedback">
-                            {{ form_errors(form.nom_materiel) }}
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-md-6">
-                    <div class="form-group">
-                        {{ form_label(form.quantite_dispo, 'Quantité disponible', {'label_attr': {'class': 'form-label'}}) }}
-                        {{ form_widget(form.quantite_dispo, {'attr': {'class': 'form-control'}}) }}
-                        <div class="invalid-feedback">
-                            {{ form_errors(form.quantite_dispo) }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="form-group">
-                {{ form_label(form.description, 'Description', {'label_attr': {'class': 'form-label'}}) }}
-                {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': 3}}) }}
-                <div class="invalid-feedback">
-                    {{ form_errors(form.description) }}
-                </div>
-            </div>
-            
-            <div class="d-flex justify-content-between mt-4">
-                <button type="submit" class="btn btn-success">
-                    <i class="fas fa-save me-2"></i> Enregistrer
-                </button>
-                <a href="{{ path('app_materiel_index') }}" class="btn btn-secondary">
-                    <i class="fas fa-arrow-left me-2"></i> Retour à la liste
-                </a>
-            </div>
-            
-            {{ form_end(form) }}
-        </div>
-    </div>
-</div>
 {% endblock %}

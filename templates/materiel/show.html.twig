@@ -28,7 +28,7 @@
 
     <a href="{{ path('app_materiel_index') }}">back to list</a>
 
-    <a href="{{ path('app_materiel_edit', {'id_materiel': materiel.id_materiel}) }}">edit</a>
+    <a href="{{ path('app_materiel_edit', {'id': materiel.id_materiel}) }}">edit</a>
 
-    {{ include('materiel/_delete_form.html.twig') }}
+    {{ include('materiel/_delete_form.html.twig', {'materiel': materiel}) }}
 {% endblock %}

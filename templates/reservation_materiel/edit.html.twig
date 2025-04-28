@@ -84,6 +84,18 @@
         </ol>
     </nav>
 
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+
     <div class="card shadow-lg">
         <div class="card-header bg-primary text-white">
             <h4 class="mb-0"><i class="fas fa-edit me-2"></i> Modifier la réservation</h4>
