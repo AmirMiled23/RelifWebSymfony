@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des événements</title>
+</head>
+<body>
+    <h1>Liste des événements</h1>
+
+    {% for event in events %}
+        <div style="border:1px solid #ccc; margin-bottom:10px; padding:10px;">
+            <p><strong>ID :</strong> {{ event.idEvent }}</p>
+            <p><strong>Nom :</strong> {{ event.nomEvent }}</p>
+            <p><strong>Date :</strong> {{ event.dateEvent ? event.dateEvent|date('Y-m-d') : 'Non définie' }}</p>
+            <p><strong>Adresse :</strong> {{ event.adresseEvent }}</p>
+            <p><strong>Ville :</strong> {{ event.villes }}</p>
+            <p><strong>Description :</strong> {{ event.descriptionEvent }}</p>
+            <p><strong>Status :</strong> {{ event.statusEvent }}</p>
+            <p><strong>Participants max :</strong> {{ event.nbParticipantMax }}</p>
+        </div>
+    {% else %}
+        <p>Aucun événement trouvé.</p>
+    {% endfor %}
+</body>
+</html>
+

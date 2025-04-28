@@ -1,0 +1,58 @@
+{% extends 'backoff.html.twig' %}
+
+
+{% block title %}Event index{% endblock %}
+
+{% block body %}
+<div style="margin-top: 90px;">
+    <h1 style="text-align: center;">Liste des evenements</h1>
+
+
+    <table class="table">
+        <thead>
+            <tr>
+              
+                <th>Nom de l'evenement</th>
+                <th>Date</th>
+                
+                <th>Villes</th>
+                
+                <th>Status</th>
+                <th>Nb des participants</th>
+                <th>Categorie</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for event in events %}
+            <tr>
+               
+                <td>{{ event.nomEvent }}</td>
+                <td>{{ event.dateEvent ? event.dateEvent|date('Y-m-d') : '' }}</td>
+                
+                <td>{{ event.villes }}</td>
+                
+                <td>{{ event.statusEvent }}</td>
+                <td>{{ event.nbParticipantMax }}</td>
+                <td>{{ event.categorieEvent ? event.categorieEvent.nom_categorie : 'N/A' }}</td>
+                <td>
+    <div class="d-flex gap-2">
+        <a href="{{ path('app_event_show', {'id': event.id_event}) }}" class="btn btn-light btn-sm text-dark" title="Voir">
+            <i class="fas fa-eye me-1"></i> Show
+        </a>
+        <a href="{{ path('app_event_edit', {'id': event.id_event}) }}" class="btn btn-light btn-sm text-dark" title="Modifier">
+            <i class="fas fa-edit me-1"></i> Edit
+        </a>
+    </div>
+</td>
+
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="9">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>   
+{% endblock %}
