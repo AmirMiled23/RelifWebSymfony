@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -69,6 +70,11 @@ class Userprofil
     {
         $this->user = $user;
         return $this;
+    }
+
+    public function getIdProfil(): ?int
+    {
+        return $this->id_profil;
     }
 
 }

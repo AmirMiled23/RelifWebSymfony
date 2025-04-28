@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    User Details
+{% endblock %}
+
+{% block body %}
+    <h1>User Details</h1>
+    <p><strong>ID:</strong> {{ user.idUser }}</p>
+    <p><strong>Name:</strong> {{ user.nomUser }} {{ user.prenomUser }}</p>
+    <p><strong>Email:</strong> {{ user.emailUser }}</p>
+    <p><strong>Phone Number:</strong> {{ user.numUser }}</p>
+    <p><strong>Address:</strong> {{ user.adresseUser }}</p>
+    <p><strong>Age:</strong> {{ user.ageUser }}</p>
+    <p><strong>Points:</strong> {{ user.pointUser }}</p>
+    <p><strong>Registration Date:</strong> {{ user.dateInscri|date('Y-m-d') }}</p>
+    
+    <a href="{{ path('app_user_edit', {'id': user.idUser}) }}">Edit</a>
+    <a href="{{ path('app_user_index') }}">Back to list</a>
+{% endblock %}
