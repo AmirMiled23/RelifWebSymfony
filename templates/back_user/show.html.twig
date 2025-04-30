@@ -1,0 +1,63 @@
+{% extends 'backoff.html.twig' %}
+
+{% block title %}User Details{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="mb-4">User Details</h1>
+
+    <table class="table table-bordered">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ user.idUser }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ user.nomUser }}</td>
+            </tr>
+            <tr>
+                <th>Prénom</th>
+                <td>{{ user.prenomUser }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ user.emailUser }}</td>
+            </tr>
+            <tr>
+                <th>Numéro</th>
+                <td>{{ user.numUser }}</td>
+            </tr>
+            <tr>
+                <th>Adresse</th>
+                <td>{{ user.adresseUser }}</td>
+            </tr>
+            <tr>
+                <th>Âge</th>
+                <td>{{ user.ageUser }}</td>
+            </tr>
+            <tr>
+                <th>Points</th>
+                <td>{{ user.pointUser }}</td>
+            </tr>
+            <tr>
+                <th>Mot de passe</th>
+                <td>{{ user.pwUser }}</td>
+            </tr>
+            <tr>
+                <th>Date d'inscription</th>
+                <td>{{ user.dateInscri ? user.dateInscri|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Code de réinitialisation</th>
+                <td>{{ user.resetCode }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a class="btn btn-secondary" href="{{ path('app_back_user_index') }}">Back to list</a>
+    <a class="btn btn-warning" href="{{ path('app_back_user_edit', {'id': user.idUser}) }}">Edit</a>
+
+    {{ include('back_user/_delete_form.html.twig') }}
+</div>
+{% endblock %}

@@ -16,30 +16,46 @@ class Avi
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private ?int $id = null;
+    private ?int $id_avis = null;
 
-    public function getId(): ?int
+    public function getId_avis(): ?int
     {
-        return $this->id;
+        return $this->id_avis;
     }
 
-    public function setId(int $id): self
+    public function setId_avis(int $id_avis): self
     {
-        $this->id = $id;
+        $this->id_avis = $id_avis;
         return $this;
     }
 
-    #[ORM\Column(type: 'integer', nullable: true)]
-    private ?int $id_materiel = null;
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'avis')]
+    #[ORM\JoinColumn(name: 'utilisateur_id', referencedColumnName: 'id_user')]
+    private ?User $user = null;
 
-    public function getId_materiel(): ?int
+    public function getUser(): ?User
     {
-        return $this->id_materiel;
+        return $this->user;
     }
 
-    public function setId_materiel(?int $id_materiel): self
+    public function setUser(?User $user): self
     {
-        $this->id_materiel = $id_materiel;
+        $this->user = $user;
+        return $this;
+    }
+
+    #[ORM\ManyToOne(targetEntity: Event::class, inversedBy: 'avis')]
+    #[ORM\JoinColumn(name: 'id_event', referencedColumnName: 'id_event')]
+    private ?Event $event = null;
+
+    public function getEvent(): ?Event
+    {
+        return $this->event;
+    }
+
+    public function setEvent(?Event $event): self
+    {
+        $this->event = $event;
         return $this;
     }
 
@@ -71,28 +87,33 @@ class Avi
         return $this;
     }
 
-    #[ORM\Column(type: 'date', nullable: false)]
-    private ?\DateTimeInterface $date = null;
+    #[ORM\Column(type: 'datetime', nullable: false)]
+    private ?\DateTimeInterface $date_creation = null;
 
-    public function getDate(): ?\DateTimeInterface
+    public function getDate_creation(): ?\DateTimeInterface
     {
-        return $this->date;
+        return $this->date_creation;
     }
 
-    public function setDate(\DateTimeInterface $date): self
+    public function setDate_creation(\DateTimeInterface $date_creation): self
     {
-        $this->date = $date;
+        $this->date_creation = $date_creation;
         return $this;
     }
 
-    public function getIdMateriel(): ?int
+    public function getIdAvis(): ?int
     {
-        return $this->id_materiel;
+        return $this->id_avis;
     }
 
-    public function setIdMateriel(?int $id_materiel): static
+    public function getDateCreation(): ?\DateTimeInterface
     {
-        $this->id_materiel = $id_materiel;
+        return $this->date_creation;
+    }
+
+    public function setDateCreation(\DateTimeInterface $date_creation): static
+    {
+        $this->date_creation = $date_creation;
 
         return $this;
     }
