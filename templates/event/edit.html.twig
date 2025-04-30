@@ -1,0 +1,26 @@
+{% extends 'backoff.html.twig' %}
+
+{% block title %}Edit Event{% endblock %}
+
+{% block body %}
+<div style="margin-top: 90px;">
+    <h1>Edit Event</h1>
+
+    {{ include('event/_form.html.twig', {'button_label': 'Update'}) }}
+
+<div class="d-flex gap-2 mt-3">
+    <a href="{{ path('app_event_index') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left me-1"></i> Revenir à la liste
+    </a>
+
+    <form method="post" action="{{ path('app_event_delete', {'id': event.id_event}) }}" 
+          onsubmit="return confirm('Are you sure you want to delete this item?');" style="margin: 0;">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ event.id_event) }}">
+        <button class="btn btn-danger">
+            <i class="fas fa-trash-alt me-1"></i> Supprimer
+        </button>
+    </form>
+</div>
+
+</div>    
+{% endblock %}
