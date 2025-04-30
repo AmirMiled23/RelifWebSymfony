@@ -164,4 +164,30 @@ final class ReservationMaterielController extends AbstractController
             'reservation_materiels' => $reservations,
         ]);
     }
+
+    #[Route('/statistiques', name: 'app_reservation_materiel_stats', methods: ['GET'])]
+    public function stats(Request $request, EntityManagerInterface $em): Response
+    {
+        $dateDebut = $request->query->get('dateDebut');
+        $dateFin = $request->query->get('dateFin');
+
+        $query = $em->createQuery(
+            'SELECT m.nom_materiel AS nom, SUM(r.quantite_reservee) AS total
+             FROM App\Entity\ReservationMateriel r
+             JOIN r.materiel m
+             WHERE r.date_debut >= :dateDebut AND r.date_fin <= :dateFin
+             GROUP BY m.nom_materiel
+             ORDER BY total DESC'
+        )
+        ->setParameter('dateDebut', new \DateTime($dateDebut))
+        ->setParameter('dateFin', new \DateTime($dateFin));
+
+        $resultats = $query->getResult();
+
+        return $this->render('reservation_materiel/stats.html.twig', [
+            'resultats' => $resultats,
+            'dateDebut' => $dateDebut,
+            'dateFin' => $dateFin
+        ]);
+    }
 }

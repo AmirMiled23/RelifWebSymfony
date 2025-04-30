@@ -3,7 +3,7 @@
 {% block title %}ReservationMateriel index{% endblock %}
 
 {% block body %}
-    <h1 class="mb-4">Liste des réservations matériels</h1>
+    <h1 class="mb-4 text-center">Liste des réservations matériels</h1>
 
     <a class="btn btn-secondary mb-3" href="{{ path('app_materiel_index') }}">Liste des matériels</a>
 
@@ -36,33 +36,36 @@
         </div>
     </form>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Nom du matériel</th>
-                <th>Date début</th>
-                <th>Date fin</th>
-                <th>Quantité réservée</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
+    <div class="row">
         {% for reservation in reservation_materiels %}
-            <tr>
-                <td>{{ reservation.materiel ? reservation.materiel.nomMateriel : 'Non spécifié' }}</td>
-                <td>{{ reservation.dateDebut ? reservation.dateDebut|date('Y-m-d') : '' }}</td>
-                <td>{{ reservation.dateFin ? reservation.dateFin|date('Y-m-d') : '' }}</td>
-                <td>{{ reservation.quantiteReservee }}</td>
-                <td>
-                    <a href="{{ path('app_reservation_materiel_show', {'id_reservation': reservation.idReservation}) }}">show</a>
-                    <a href="{{ path('app_reservation_materiel_edit', {'id_reservation': reservation.idReservation}) }}">edit</a>
-                </td>
-            </tr>
+            <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="card-title mb-0">{{ reservation.materiel ? reservation.materiel.nomMateriel : 'Non spécifié' }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text"><strong>Date début:</strong> {{ reservation.dateDebut ? reservation.dateDebut|date('Y-m-d') : 'Non spécifiée' }}</p>
+                        <p class="card-text"><strong>Date fin:</strong> {{ reservation.dateFin ? reservation.dateFin|date('Y-m-d') : 'Non spécifiée' }}</p>
+                        <p class="card-text"><strong>Quantité réservée:</strong> {{ reservation.quantiteReservee }}</p>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between">
+                        <a href="{{ path('app_reservation_materiel_show', {'id_reservation': reservation.idReservation}) }}" class="btn btn-sm btn-outline-primary">Voir</a>
+                        <a href="{{ path('app_reservation_materiel_edit', {'id_reservation': reservation.idReservation}) }}" class="btn btn-sm btn-outline-secondary">Modifier</a>
+                    </div>
+                </div>
+            </div>
         {% else %}
-            <tr>
-                <td colspan="5">Aucune réservation trouvée</td>
-            </tr>
+            <div class="col-12">
+                <div class="alert alert-warning text-center" role="alert">
+                    Aucune réservation trouvée.
+                </div>
+            </div>
         {% endfor %}
-        </tbody>
-    </table>
+    </div>
+
+    <div class="d-flex justify-content-between mt-4">
+        <a href="{{ path('app_reservation_materiel_new') }}" class="btn btn-primary">Créer une nouvelle réservation</a>
+        <a href="{{ path('app_reservation_materiel_stats') }}" class="btn btn-info mb-3">Voir Statistiques</a>
+
+    </div>
 {% endblock %}

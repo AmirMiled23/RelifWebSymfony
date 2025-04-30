@@ -3,7 +3,7 @@
 {% block title %}Materiel index{% endblock %}
 
 {% block body %}
-    <h1 class="mb-4">Liste des materiels</h1>
+    <h1 class="mb-4 text-center">Liste des matériels</h1>
 
     <a class="btn btn-secondary mb-3" href="{{ path('app_reservation_materiel_index') }}">Liste des réservations</a>
 
@@ -33,33 +33,34 @@
         </div>
     </form>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Nom_materiel</th>
-                <th>Description</th>
-                <th>Quantite_dispo</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
+    <div class="row">
         {% for materiel in materiels %}
-            <tr>
-                <td>{{ materiel.nomMateriel }}</td>
-                <td>{{ materiel.description }}</td>
-                <td>{{ materiel.quantiteDispo }}</td>
-                <td>
-                    <a href="{{ path('app_materiel_show', {'id': materiel.id}) }}">show</a>
-                    <a href="{{ path('app_materiel_edit', {'id': materiel.id}) }}">edit</a>
-                </td>
-            </tr>
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="card-title mb-0">{{ materiel.nomMateriel }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">{{ materiel.description }}</p>
+                        <span class="badge bg-info text-dark">Quantité: {{ materiel.quantiteDispo }}</span>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between">
+                        <a href="{{ path('app_materiel_show', {'id_materiel': materiel.idMateriel}) }}" class="btn btn-sm btn-outline-primary">Voir</a>
+                        <a href="{{ path('app_materiel_edit', {'id_materiel': materiel.idMateriel}) }}" class="btn btn-sm btn-outline-secondary">Modifier</a>
+                    </div>
+                </div>
+            </div>
         {% else %}
-            <tr>
-                <td colspan="4">Aucun matériel trouvé</td>
-            </tr>
+            <div class="col-12">
+                <div class="alert alert-warning text-center" role="alert">
+                    Aucun matériel trouvé.
+                </div>
+            </div>
         {% endfor %}
-        </tbody>
-    </table>
+    </div>
 
-    <a href="{{ path('app_materiel_new') }}">Create new</a>
+    <div class="d-flex justify-content-between mt-4">
+        <a href="{{ path('app_materiel_new') }}" class="btn btn-success">Créer un nouveau matériel</a>
+        <a class="btn btn-success" href="{{ path('app_materiel_pdf') }}" target="_blank">Télécharger en PDF</a>
+    </div>
 {% endblock %}

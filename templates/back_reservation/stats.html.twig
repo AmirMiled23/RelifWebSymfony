@@ -1,0 +1,68 @@
+{% extends 'Baseback.html.twig' %}
+
+{% block title %}Statistiques des réservations (Back-Office){% endblock %}
+
+{% block body %}
+    <h1>Statistiques des matériels les plus réservés </h1>
+
+    <canvas id="barChart" width="400" height="200" class="mb-4"></canvas>
+    <canvas id="pieChart" width="400" height="200" class="mb-4"></canvas>
+
+    <form method="get" class="mt-5">
+        <div class="row g-3 align-items-center justify-content-center">
+            <div class="col-auto">
+                <label for="dateDebut" class="col-form-label">Date début :</label>
+            </div>
+            <div class="col-auto">
+                <input type="date" id="dateDebut" name="dateDebut" class="form-control" value="{{ dateDebut }}">
+            </div>
+            <div class="col-auto">
+                <label for="dateFin" class="col-form-label">Date fin :</label>
+            </div>
+            <div class="col-auto">
+                <input type="date" id="dateFin" name="dateFin" class="form-control" value="{{ dateFin }}">
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary">Voir</button>
+            </div>
+        </div>
+    </form>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const labels = {{ resultats|map(r => r.nom)|json_encode|raw }};
+        const data = {{ resultats|map(r => r.total)|json_encode|raw }};
+
+        // Bar Chart
+        new Chart(document.getElementById('barChart'), {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Quantité réservée',
+                    data: data,
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)'
+                }]
+            }
+        });
+
+        // Pie Chart
+        new Chart(document.getElementById('pieChart'), {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(54, 162, 235, 0.6)',
+                        'rgba(255, 206, 86, 0.6)',
+                        'rgba(75, 192, 192, 0.6)',
+                        'rgba(153, 102, 255, 0.6)',
+                        'rgba(255, 159, 64, 0.6)'
+                    ]
+                }]
+            }
+        });
+    </script>
+{% endblock %}

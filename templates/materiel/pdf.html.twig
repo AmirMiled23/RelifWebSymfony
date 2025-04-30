@@ -23,7 +23,6 @@
     <table>
         <thead>
             <tr>
-                <th>Id</th>
                 <th>Nom</th>
                 <th>Description</th>
                 <th>Quantité disponible</th>
@@ -32,14 +31,13 @@
         <tbody>
         {% for materiel in materiels %}
             <tr>
-                <td>{{ materiel.id }}</td>
                 <td>{{ materiel.nomMateriel }}</td>
                 <td>{{ materiel.description }}</td>
                 <td>{{ materiel.quantiteDispo }}</td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="4">Aucun matériel trouvé</td>
+                <td colspan="3">Aucun matériel trouvé</td>
             </tr>
         {% endfor %}
         </tbody>

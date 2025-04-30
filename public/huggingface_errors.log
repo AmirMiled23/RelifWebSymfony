@@ -1,0 +1,53 @@
+2025-04-28 21:17:07 - obobobob : Réponse inattendue: 'réponds uniquement par 'oui' ou 'non' : 'obobobob' est-il strictement un outil de bricolage? ne réponds rien d'autre.
+
+r'
+2025-04-28 21:17:35 - pffff : Réponse inattendue: 'réponds uniquement par 'oui' ou 'non' : 'pffff' est-il strictement un outil de bricolage? ne réponds rien d'autre.
+
+r'
+2025-04-28 21:17:47 - marteau : Réponse inattendue: 'réponds uniquement par 'oui' ou 'non' : 'marteau' est-il strictement un outil de bricolage? ne réponds rien d'autre.
+
+r'
+2025-04-28 21:23:03 - marteau : Réponse API invalide: 'question'
+2025-04-28 21:23:16 - obobobob : Réponse API invalide: 'question'
+2025-04-28 21:26:30 - marteau : Error setting certificate file: C:\Users\MSI\Desktop\PI\cacert.pem for "https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta".
+2025-04-28 21:27:04 - obobobob : Error setting certificate file: C:\Users\MSI\Desktop\PI\cacert.pem for "https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta".
+2025-04-28 21:29:51 - obobobob : Réponse inattendue: 'ceci est-il un outil de bricolage? réponds uniquement par oui ou non: obobobobobob'
+[2025-04-28 21:36:17] Erreur avec 'aeaeae': Réponse API non conforme : 'Réponds UNIQUEMENT par 'oui' si 'aeaeae' est un outil de bricolage, sinon réponds 'non'. Ne donne aucune explication.
+
+R'
+[2025-04-28 21:36:24] Erreur avec 'marteau': Réponse API non conforme : 'Réponds UNIQUEMENT par 'oui' si 'marteau' est un outil de bricolage, sinon réponds 'non'. Ne donne aucune explication.
+
+R'
+[2025-04-28 21:41:02] Erreur avec 'Ordinateur': Réponse API non conforme : 'Réponds UNIQUEMENT par 'oui' si 'Ordinateur' est un outil de bricolage, sinon réponds 'non'. Ne donne aucune explication.
+
+R'
+[2025-04-28 21:45:22] Erreur avec 'defefefe': Réponse API non conforme : 'Réponds UNIQUEMENT par 'oui' si 'defefefe' est un outil de bricolage, sinon réponds 'non'. Ne donne aucune explication.
+
+R'
+[2025-04-28 21:45:31] Erreur avec 'marteau': Réponse API non conforme : 'Réponds UNIQUEMENT par 'oui' si 'marteau' est un outil de bricolage, sinon réponds 'non'. Ne donne aucune explication.
+
+R'
+[2025-04-28 21:45:39] Erreur avec 'Marteau': Réponse API non conforme : 'Réponds UNIQUEMENT par 'oui' si 'Marteau' est un outil de bricolage, sinon réponds 'non'. Ne donne aucune explication.
+
+R'
+[2025-04-28 21:47:57] Erreur avec 'dednnnnnn': Réponse API non conforme : 'Réponds UNIQUEMENT par 'oui' si 'dednnnnnn' est un outil de bricolage, sinon réponds 'non'. Ne donne aucune explication.
+
+R'
+[2025-04-28 21:48:06] Erreur avec 'marteau': Réponse API non conforme : 'Réponds UNIQUEMENT par 'oui' si 'marteau' est un outil de bricolage, sinon réponds 'non'. Ne donne aucune explication.
+
+R'
+[2025-04-28 21:48:11] Erreur avec 'Marteau': Réponse API non conforme : 'Réponds UNIQUEMENT par 'oui' si 'Marteau' est un outil de bricolage, sinon réponds 'non'. Ne donne aucune explication.
+
+R'
+[2025-04-28 21:51:58] Erreur avec 'dcdcd': Réponse API non conforme ou vide : 'Réponds UNIQUEMENT par 'oui' si 'dcdcd' est un outil de bricolage, sinon réponds 'non'. Ne donne aucune explication.
+
+R'
+[2025-04-28 21:52:06] Erreur avec 'marteau': Réponse API non conforme ou vide : 'Réponds UNIQUEMENT par 'oui' si 'marteau' est un outil de bricolage, sinon réponds 'non'. Ne donne aucune explication.
+
+R'
+[2025-04-28 22:04:26] Erreur avec 'gggg' : HTTP/2 404  returned for "https://api-inference.huggingface.co/models/google/flan-t5-small".
+[2025-04-28 22:04:33] Erreur avec 'marteau' : HTTP/2 404  returned for "https://api-inference.huggingface.co/models/google/flan-t5-small".
+[2025-04-28 22:06:57] Erreur avec 'jijijipppp' : HTTP/2 404  returned for "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2".
+[2025-04-28 22:07:04] Erreur avec 'marteau' : HTTP/2 404  returned for "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2".
+[2025-04-28 22:09:04] Erreur avec 'frfr' : HTTP/2 404  returned for "https://api-inference.huggingface.co/models/tiiuae/falcon-7b-instruct".
+[2025-04-28 22:09:09] Erreur avec 'marteau' : HTTP/2 404  returned for "https://api-inference.huggingface.co/models/tiiuae/falcon-7b-instruct".

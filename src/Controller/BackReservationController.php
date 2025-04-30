@@ -58,20 +58,19 @@ final class BackReservationController extends AbstractController
     }
 
     #[Route('/reservation_materiel/{id_reservation}', name: 'app_back_reservation_show', methods: ['GET'])]
-public function show(int $id_reservation, ReservationMaterielRepository $repository): Response
-{
-    $reservationMateriel = $repository->find($id_reservation);
+    public function show(int $id_reservation, ReservationMaterielRepository $repository): Response
+    {
+        $reservationMateriel = $repository->find($id_reservation);
 
-    if (!$reservationMateriel) {
-        throw $this->createNotFoundException('Réservation non trouvée');
+        if (!$reservationMateriel) {
+            throw $this->createNotFoundException('Réservation non trouvée');
+        }
+
+        return $this->render('back_reservation/show.html.twig', [
+            'reservation_materiel' => $reservationMateriel,
+            'nom_materiel' => $reservationMateriel->getMateriel() ? $reservationMateriel->getMateriel()->getNomMateriel() : 'Non spécifié',
+        ]);
     }
-
-    return $this->render('back_reservation/show.html.twig', [
-        'reservation_materiel' => $reservationMateriel,
-        'nom_materiel' => $reservationMateriel->getMateriel() ? $reservationMateriel->getMateriel()->getNomMateriel() : 'Non spécifié',
-    ]);
-}
-
 
     #[Route('/{id_reservation}/edit', name: 'app_back_reservation_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, ReservationMateriel $reservationMateriel, EntityManagerInterface $entityManager): Response
@@ -147,6 +146,32 @@ public function show(int $id_reservation, ReservationMaterielRepository $reposit
 
         return $this->render('back_reservation/index.html.twig', [
             'reservation_materiels' => $reservations,
+        ]);
+    }
+
+    #[Route('/statistiques', name: 'app_back_reservation_stats', methods: ['GET'])]
+    public function stats(Request $request, EntityManagerInterface $em): Response
+    {
+        $dateDebut = $request->query->get('dateDebut');
+        $dateFin = $request->query->get('dateFin');
+
+        $query = $em->createQuery(
+            'SELECT m.nom_materiel AS nom, SUM(r.quantite_reservee) AS total
+             FROM App\Entity\ReservationMateriel r
+             JOIN r.materiel m
+             WHERE r.date_debut >= :dateDebut AND r.date_fin <= :dateFin
+             GROUP BY m.nom_materiel
+             ORDER BY total DESC'
+        )
+        ->setParameter('dateDebut', new \DateTime($dateDebut))
+        ->setParameter('dateFin', new \DateTime($dateFin));
+
+        $resultats = $query->getResult();
+
+        return $this->render('back_reservation/stats.html.twig', [
+            'resultats' => $resultats,
+            'dateDebut' => $dateDebut,
+            'dateFin' => $dateFin
         ]);
     }
 }
