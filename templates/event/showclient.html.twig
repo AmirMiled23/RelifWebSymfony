@@ -1,0 +1,110 @@
+{% extends 'homepage.html.twig' %}
+
+{% block title %}Evennement{% endblock %}
+
+{% block body %}
+<style>
+.background-container {
+    position: relative;
+    margin-top: 85px;
+    margin-bottom: 30px;
+    padding: 30px;
+    z-index: 1;
+}
+
+.background-container::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: url('{{ asset('uploads/' ~ event.categorieEvent.image) }}');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.4; 
+    z-index: -1; 
+    border-radius: 15px;
+}
+.content-overlay {
+    background-color: rgba(255, 255, 255, 0.8); /* blanc semi-transparent */
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+</style>
+
+{% if event.categorieEvent and event.categorieEvent.image %}
+<div class="background-container">
+{% else %}
+<div style="margin-top: 90px;"> {# fallback si jamais pas d'image #}
+{% endif %}
+
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 30px;">
+        
+        <div class="content-overlay" style="flex: 1;">
+            <h1>Evennement :</h1>
+            <table class="table table-striped">
+                <tbody>
+                    <tr>
+                        <th>Nom de l'événement</th>
+                        <td>{{ event.nomEvent }}</td>
+                    </tr>
+                    <tr>
+                        <th>Date de l'événement</th>
+                        <td>{{ event.dateEvent ? event.dateEvent|date('Y-m-d') : '' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Adresse de l'événement</th>
+                        <td>{{ event.adresseEvent }}</td>
+                    </tr>
+                    <tr>
+                        <th>La ville</th>
+                        <td>{{ event.villes }}</td>
+                    </tr>
+                    <tr>
+                        <th>Description</th>
+                        <td>{{ event.descriptionEvent }}</td>
+                    </tr>
+                    <tr>
+                        <th>État de l'événement</th>
+                        <td>{{ event.statusEvent|replace({'_': ' '})|capitalize }}</td>
+                    </tr>
+                    <tr>
+                        <th>Nombre de participants maximal</th>
+                        <td>{{ event.nbParticipantMax }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="d-flex gap-2 mt-3">
+                <a href="{{ path('app_event_public') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-1"></i> Revenir à la liste
+                </a>
+            </div>
+        </div>
+
+       
+        {% if currentTemp is defined %}
+            <div style="background-color: #f8f9fa; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); min-width: 250px; text-align: right;">
+                <p><strong>Température :</strong> {{ currentTemp }} °C</p>
+                <p><strong>Humidité :</strong> {{ currentHumidity }} %</p>
+                <p><strong>Vent :</strong> {{ currentWind }} km/h</p>
+
+                {% set canGoOut = (currentTemp >= 15 and currentTemp <= 28)
+                                and (currentHumidity >= 30 and currentHumidity <= 73)
+                                and (currentWind <= 30) %}
+                {% if canGoOut %}
+                    <p style="color: green; font-weight: bold;">✅ Bon temps pour sortir !</p>
+                {% else %}
+                    <p style="color: red; font-weight: bold;">❌ Pas conseillé de sortir !</p>
+                {% endif %}
+            </div>
+        {% else %}
+            <div style="text-align: right; min-width: 250px;">
+                <p>Aucune donnée météo disponible.</p>
+            </div>
+        {% endif %}
+    </div>
+
+</div> 
+
+{% endblock %}

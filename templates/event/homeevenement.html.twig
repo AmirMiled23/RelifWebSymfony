@@ -1,0 +1,108 @@
+{% extends 'homepage.html.twig' %}
+
+{% block title %}Nos évènements - RELIF{% endblock %}
+
+{% block body %}
+<div class="container" style="margin-top: 120px;" >
+  <h2 class="mb-4">Liste des Évènements</h2>
+
+  <form method="get" action="" class="mb-4">
+    <div class="row">
+      <div class="col-md-5">
+        <input type="text" name="titre" value="{{ app.request.get('titre') }}" class="form-control" placeholder="Rechercher par titre">
+      </div>
+      <div class="col-md-5">
+        <input type="text" name="ville" value="{{ app.request.get('ville') }}" class="form-control" placeholder="Rechercher par ville">
+      </div>
+      <div class="col-md-2">
+        <button type="submit" class="btn btn-primary w-100">Filtrer</button>
+      </div>
+    </div>
+  </form>
+
+  <div class="row">
+    {% for event in events %}
+      <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+        <style>
+  .event-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+   
+  }
+  .card-title {
+  white-space: normal;
+  word-break: break-word;}
+</style>
+          {% if event.categorieEvent and event.categorieEvent.image %}
+            <img src="{{ asset('uploads/' ~ event.categorieEvent.image) }}" class="card-img-top event-image" alt="{{ event.categorieEvent.nom_categorie }}">
+          {% endif %}
+          <div class="card-body card-title d-flex flex-column">
+            <h5 class="card-title">{{ event.nomEvent }}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">{{ event.dateEvent ? event.dateEvent|date('Y-m-d') : '' }}</h6>
+
+            <p class="card-text mb-1"><strong>Ville:</strong> {{ event.villes }}</p>
+            <p class="card-text mb-1"><strong>Status:</strong> {{ event.statusEvent|replace({'_': ' '})|capitalize }}</p>
+            <p class="card-text mb-1"><strong>Participants max:</strong> {{ event.nbParticipantMax }}</p>
+            <p class="card-text mb-1"><strong>Début dans:</strong> 
+              <div class="countdown fw-bold" data-date="{{ event.dateEvent ? event.dateEvent|date('Y-m-d H:i:s') : '' }}"></div>
+            </p>
+            <p class="card-text mb-3"><strong>Catégorie:</strong> {{ event.categorieEvent ? event.categorieEvent.nom_categorie : 'N/A' }}</p>
+
+            <div class="mt-auto">
+              <a href="{{ path('event_show', {'id': event.id_event}) }}" class="btn btn-primary btn-sm w-100">
+                <i class="fas fa-eye me-1"></i> Voir détails
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <div class="col-12">
+        <div class="alert alert-info">Pas d'événements.</div>
+      </div>
+    {% endfor %}
+  </div>
+
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+      const countdownElements = document.querySelectorAll(".countdown");
+
+      countdownElements.forEach(el => {
+          const targetDate = new Date(el.dataset.date).getTime();
+
+          const updateCountdown = () => {
+              const now = new Date().getTime();
+              const distance = targetDate - now;
+
+              if (distance <= 0) {
+                  el.innerHTML = " Démarré";
+                  el.classList.add("text-success");
+                  return;
+              }
+
+              const hoursRemaining = distance / (1000 * 60 * 60);
+
+              if (hoursRemaining <= 2) {
+                  el.innerHTML = "<strong class='text-warning'>Va débuter dans moins de 2 heures !</strong>";
+                  return;
+              }
+
+              const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+              const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+              const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+              const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+              el.innerHTML = `${days}j ${hours}h ${minutes}m ${seconds}s`;
+          };
+
+          updateCountdown();
+          setInterval(updateCountdown, 1000);
+      });
+  });
+</script>
+
+{% endblock %}

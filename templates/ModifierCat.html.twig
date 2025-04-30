@@ -1,0 +1,39 @@
+{% extends 'backoff.html.twig' %}
+
+{% block title %}Modifier Catégorie{% endblock %}
+
+{% block body %}
+<div style="margin-top: 60px;">
+<div class="d-flex justify-content-center align-items-center" style="min-height: 90vh;">
+    <div class="card shadow-lg p-4" style="width: 100%; max-width: 600px;">
+        <h2 class="mb-4 text-center text-primary">Modifier la Catégorie</h2>
+
+            {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+
+            <div class="form-group mb-3">
+                {{ form_label(form.nom_categorie, null, {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.nom_categorie, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.nom_categorie) }}
+            </div>
+
+            <div class="form-group mb-3">
+                {{ form_label(form.description, null, {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.description) }}
+            </div>
+
+            <div class="form-group mb-4">
+                {{ form_label(form.image, null, {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.image, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.image) }}
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <button type="submit" class="btn btn-success">✅ Confirmer</button>
+                <a href="{{ path('liste_categories') }}" class="btn btn-outline-secondary">❌ Annuler</a>
+            </div>
+        {{ form_end(form) }}
+    </div>
+</div>
+</div>
+{% endblock %}
