@@ -83,18 +83,37 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
     
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-private ?string $token = null;
+    private ?string $token = null;
 
-public function getToken(): ?string
-{
-    return $this->token;
-}
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $banned_until = null;
 
-public function setToken(?string $token): self
-{
-    $this->token = $token;
-    return $this;
-}
+    public function getToken(): ?string
+    {
+        return $this->token;
+    }
+
+    public function setToken(?string $token): self
+    {
+        $this->token = $token;
+        return $this;
+    }
+
+    public function getBannedUntil(): ?\DateTimeInterface
+    {
+        return $this->banned_until;
+    }
+
+    public function setBannedUntil(?\DateTimeInterface $banned_until): self
+    {
+        $this->banned_until = $banned_until;
+        return $this;
+    }
+
+    public function isBanned(): bool
+    {
+        return $this->banned_until !== null && $this->banned_until > new \DateTime();
+    }
 
     public function getRoles(): array
     {
@@ -280,10 +299,10 @@ public function setToken(?string $token): self
    }
 
 
-public function setRoles(array $roles): self
-{
-    $this->roles = $roles;
-    return $this;
-}
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+        return $this;
+    }
 
 }

@@ -1,6 +1,7 @@
+# config/packages/security.yaml
 security:
-    enable_authenticator_manager: true
     password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
         App\Entity\User:
             algorithm: auto
 
@@ -11,16 +12,18 @@ security:
                 property: email_user
 
     firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
         main:
             lazy: true
             provider: app_user_provider
-            form_login:
-                login_path: app_login
-                check_path: app_login
-                username_parameter: email_user
-                password_parameter: password
-                enable_csrf: true
-                default_target_path: app_user_index
+            custom_authenticator: App\Security\AppCustomAuthenticator
             logout:
                 path: app_logout
                 target: app_login
+
+    access_control:
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/profile, roles: ROLE_USER }

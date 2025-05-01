@@ -15,6 +15,8 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordC
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 use Psr\Log\LoggerInterface;
+use App\Repository\UserRepository;
+use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 
 class AppCustomAuthenticator extends AbstractLoginFormAuthenticator
 {
@@ -22,17 +24,33 @@ class AppCustomAuthenticator extends AbstractLoginFormAuthenticator
 
     public const LOGIN_ROUTE = 'app_login';
 
-    public function __construct(private UrlGeneratorInterface $urlGenerator, private LoggerInterface $logger)
-    {
+    public function __construct(
+        private UrlGeneratorInterface $urlGenerator,
+        private LoggerInterface $logger,
+        private UserRepository $userRepository
+    ) {
     }
 
     public function authenticate(Request $request): Passport
     {
-        $email = $request->request->get('email_user', null);
-        $password = $request->request->get('password', null);
-
+        $email = $request->request->get('email_user', '');
+        $password = $request->request->get('password', '');
+    
+        // Vérifier si l'utilisateur existe
+        $user = $this->userRepository->findOneBy(['email_user' => $email]);
+        
+        if (!$user) {
+            throw new CustomUserMessageAuthenticationException('Identifiants invalides.');
+        }
+    
+        // Vérifier si l'utilisateur est banni (méthode améliorée)
+        if ($user->isBanned()) {
+            $this->logger->warning('Tentative de connexion d\'un utilisateur banni', ['email' => $email]);
+            throw new CustomUserMessageAuthenticationException('Votre compte est suspendu. Contactez l\'administrateur.');
+        }
+    
         $request->getSession()->set(Security::LAST_USERNAME, $email);
-
+    
         return new Passport(
             new UserBadge($email),
             new PasswordCredentials($password),
@@ -44,15 +62,16 @@ class AppCustomAuthenticator extends AbstractLoginFormAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
-            return new RedirectResponse($targetPath);
-        }
-        
+        // Récupérer l'utilisateur connecté
         $user = $token->getUser();
-        
-         return new RedirectResponse($this->urlGenerator->generate('app_user_index'));
-         
-        //throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
+
+        // Vérifier si l'utilisateur a le rôle ROLE_ADMIN
+        if (in_array('ROLE_ADMIN', $user->getRoles(), true)) {
+            return new RedirectResponse($this->urlGenerator->generate('app_back_user_index')); // Redirige vers le back-office
+        }
+
+        // Rediriger les autres utilisateurs vers une page par défaut (par exemple, tableau de bord utilisateur)
+        return new RedirectResponse($this->urlGenerator->generate('app_user_index'));
     }
 
     protected function getLoginUrl(Request $request):String

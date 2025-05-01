@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 #[Route('/user')]
 class UserController extends AbstractController
@@ -67,7 +68,7 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'app_user_show', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function show(int $id): Response
     {
         $user = $this->userRepository->find($id);
@@ -100,7 +101,7 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
+        #[Route('/{id}', name: 'app_user_delete', methods: ['POST'], requirements: ['id' => '\d+'])]
     public function delete(Request $request, int $id): Response
     {
         $user = $this->userRepository->find($id);
@@ -118,6 +119,20 @@ class UserController extends AbstractController
         return $this->redirectToRoute('app_user_index');
     }
 
+    #[Route('/login', name: 'app_login')]
+    public function login(AuthenticationUtils $authenticationUtils): Response
+    {
+        if ($this->getUser() && $this->getUser()->isBanned()) {
+            $this->addFlash('error', 'Votre compte est suspendu.');
+            return $this->redirectToRoute('app_logout');
+        }
 
+        $error = $authenticationUtils->getLastAuthenticationError();
+        $lastUsername = $authenticationUtils->getLastUsername();
 
+        return $this->render('security/login.html.twig', [
+            'last_username' => $lastUsername,
+            'error' => $error,
+        ]);
+    }
 }

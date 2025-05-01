@@ -87,7 +87,6 @@ final class BackUserController extends AbstractController
         ]);
     }
 
-
     #[Route('/{id}', name: 'app_back_user_delete', methods: ['POST'])]
     public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
@@ -96,6 +95,34 @@ final class BackUserController extends AbstractController
             $entityManager->flush();
         }
 
+        return $this->redirectToRoute('app_back_user_index');
+    }
+
+    #[Route('/{id}/ban', name: 'app_back_user_ban', methods: ['POST'])]
+    public function ban(Request $request, User $user, EntityManagerInterface $entityManager): Response
+    {
+        $banType = $request->request->get('ban_type'); // 'permanent' ou 'temporary'
+        $banDuration = $request->request->get('ban_duration'); // Durée en jours pour un bannissement temporaire
+
+        if ($banType === 'permanent') {
+            $user->setBannedUntil(new \DateTime('9999-12-31')); // Bannissement permanent
+        } elseif ($banType === 'temporary' && $banDuration) {
+            $user->setBannedUntil((new \DateTime())->modify("+$banDuration days")); // Bannissement temporaire
+        }
+
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Utilisateur banni avec succès.');
+        return $this->redirectToRoute('app_back_user_index');
+    }
+
+    #[Route('/{id}/unban', name: 'app_back_user_unban', methods: ['POST'])]
+    public function unban(User $user, EntityManagerInterface $entityManager): Response
+    {
+        $user->setBannedUntil(null); // Supprime le bannissement
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Utilisateur débanni avec succès.');
         return $this->redirectToRoute('app_back_user_index');
     }
 }

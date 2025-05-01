@@ -55,6 +55,39 @@
         </tbody>
     </table>
 
+    {% if user.isBanned() %}
+        <form method="post" action="{{ path('app_back_user_unban', {'id': user.idUser}) }}">
+            <button class="btn btn-success">Débannir</button>
+        </form>
+        <p>Banni jusqu'au : {{ user.bannedUntil|date('Y-m-d H:i') }}</p>
+    {% else %}
+        <form method="post" action="{{ path('app_back_user_ban', {'id': user.idUser}) }}">
+            <label for="ban_type">Type de bannissement :</label>
+            <select name="ban_type" id="ban_type" class="form-select">
+                <option value="permanent">Permanent</option>
+                <option value="temporary">Temporaire</option>
+            </select>
+
+            <div id="ban_duration_field" style="display: none;">
+                <label for="ban_duration">Durée (en jours) :</label>
+                <input type="number" name="ban_duration" id="ban_duration" class="form-control">
+            </div>
+
+            <button class="btn btn-danger mt-2">Bannir</button>
+        </form>
+    {% endif %}
+
+    <script>
+        document.getElementById('ban_type').addEventListener('change', function () {
+            const durationField = document.getElementById('ban_duration_field');
+            if (this.value === 'temporary') {
+                durationField.style.display = 'block';
+            } else {
+                durationField.style.display = 'none';
+            }
+        });
+    </script>
+
     <a class="btn btn-secondary" href="{{ path('app_back_user_index') }}">Back to list</a>
     <a class="btn btn-warning" href="{{ path('app_back_user_edit', {'id': user.idUser}) }}">Edit</a>
 
