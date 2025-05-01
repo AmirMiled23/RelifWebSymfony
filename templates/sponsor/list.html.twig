@@ -78,62 +78,100 @@
     </div>
 </div>
 
-<style>
-    .card {
-        border-radius: 10px;
-        overflow: hidden;
-        border: none;
+<!-- Carte Google Map -->
+<div id="map" style="height: 400px; width: 100%;"></div>
+
+<!-- Chatbot -->
+<div class="card mt-4 shadow-lg">
+    <div class="card-header bg-primary text-white">
+        <h4 class="m-0">Chatbot</h4>
+    </div>
+    <div class="card-body">
+        <form id="chatbot-form">
+            <div class="input-group">
+                <input type="text" id="chatbot-input" name="prompt" class="form-control" placeholder="Posez une question..." required>
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-primary">Envoyer</button>
+                </div>
+            </div>
+        </form>
+        <div id="chatbot-response" class="mt-3 p-3 bg-light border rounded" style="display: none;"></div>
+    </div>
+</div>
+
+<script>
+    function initMap() {
+        const map = new google.maps.Map(document.getElementById("map"), {
+            center: { lat: 36.8065, lng: 10.1815 }, // Centre initial (ex: Tunis)
+            zoom: 8
+        });
+
+        const geocoder = new google.maps.Geocoder();
+
+        // Tableau de sponsors
+        const sponsors = {{ sponsors|json_encode|raw }};
+
+        sponsors.forEach(function(sponsor) {
+            const address = sponsor.adresse;
+
+            // Géocodage de l'adresse
+            geocoder.geocode({ 'address': address }, function(results, status) {
+                if (status === 'OK') {
+                    // Positionner la carte sur le premier sponsor trouvé
+                    map.setCenter(results[0].geometry.location);
+
+                    // Créer un marqueur personnalisé avec un SVG rouge
+                    const marker = new google.maps.Marker({
+                        map: map,
+                        position: results[0].geometry.location,
+                        title: sponsor.nom,  // Affiche le nom du sponsor au survol
+                        icon: {
+                            path: google.maps.SymbolPath.CIRCLE,
+                            scale: 8,
+                            fillColor: '#FF0000',  // Rouge
+                            fillOpacity: 1,
+                            strokeColor: '#FFFFFF',  // Contour blanc
+                            strokeWeight: 2
+                        }
+                    });
+                } else {
+                    console.error('Géocodage échoué pour l\'adresse ' + address + ': ' + status);
+                }
+            });
+        });
     }
-    
-    .table {
-        border-collapse: separate;
-        border-spacing: 0;
-    }
-    
-    .table thead th {
-        border-bottom: none;
-        font-weight: 600;
-        text-transform: uppercase;
-        font-size: 0.8rem;
-        letter-spacing: 0.5px;
-    }
-    
-    .table tbody tr:hover {
-        background-color: #f8f9fa !important;
-        transform: translateY(-1px);
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    
-    .badge-info {
-        background-color: #17a2b8;
-        color: white;
-        padding: 5px 10px;
-        border-radius: 50px;
-    }
-    
-    .btn-outline-primary {
-        border-color: #4e73df;
-        color: #4e73df;
-    }
-    
-    .btn-outline-primary:hover {
-        background-color: #4e73df;
-        color: white;
-    }
-    
-    .btn-outline-danger {
-        border-color: #e74a3b;
-        color: #e74a3b;
-    }
-    
-    .btn-outline-danger:hover {
-        background-color: #e74a3b;
-        color: white;
-    }
-    
-    .btn-success {
-        background-color: #1cc88a;
-        border-color: #1cc88a;
-    }
-</style>
+
+  document.getElementById('chatbot-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const prompt = document.getElementById('chatbot-input').value;
+    const responseDiv = document.getElementById('chatbot-response');
+
+    fetch('{{ path('chatbot') }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json', // Définir le type de contenu en JSON
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': '{{ csrf_token('chatbot') }}' // Si nécessaire, ajouter le token CSRF
+        },
+        body: JSON.stringify({ prompt: prompt }) // Passer les données au format JSON
+    })
+    .then(response => response.json())
+    .then(data => {
+        responseDiv.innerHTML = '<p><strong>Vous :</strong> ' + data.prompt + '</p>' +
+                                '<p><strong>Bot :</strong> ' + data.response + '</p>';
+        responseDiv.style.display = 'block';
+    })
+    .catch(error => {
+        responseDiv.innerHTML = '<p class="text-danger">Erreur lors de la communication avec le chatbot.</p>';
+        responseDiv.style.display = 'block';
+        console.error('Erreur:', error);
+    });
+});
+
+</script>
+
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBPs01ZphPbB1zMDD9JQcK4vsvEmpjdMWo&callback=initMap">
+</script>
+
 {% endblock %}

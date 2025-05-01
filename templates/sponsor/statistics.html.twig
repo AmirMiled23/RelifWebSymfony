@@ -1,0 +1,36 @@
+{# templates/sponsor/statistics.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Sponsor Statistics</h1>
+
+    <div>
+        <canvas id="sponsorChart" width="400" height="200"></canvas>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('sponsorChart').getContext('2d');
+        const sponsorChart = new Chart(ctx, {
+            type: 'bar', // Vous pouvez changer le type de graphique ici (bar, line, pie, etc.)
+            data: {
+                labels: {{ secteurs|json_encode()|raw }}, // Labels : Secteurs
+                datasets: [{
+                    label: 'Number of Sponsors',  // Titre du graphique
+                    data: {{ counts|json_encode()|raw }}, // Données : Nombre de sponsors
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)', // Couleur de fond des barres
+                    borderColor: 'rgba(255, 99, 132, 1)', // Couleur des bords des barres
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true  // Commencer l'axe Y à zéro
+                    }
+                }
+            }
+        });
+    </script>
+{% endblock %}

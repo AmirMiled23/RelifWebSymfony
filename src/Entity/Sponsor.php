@@ -51,7 +51,7 @@ class Sponsor
     private ?Secteur $secteur = null;
 
     #[ORM\Column(length: 255)]
-
+ 
     private ?string $photo = null;
 
     public function getId(): ?int

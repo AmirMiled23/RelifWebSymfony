@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20250328021822 extends AbstractMigration
+final class Version20250429185440 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -21,16 +21,16 @@ final class Version20250328021822 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql(<<<'SQL'
-            ALTER TABLE secteur ADD sponsor VARCHAR(255) NOT NULL
+            ALTER TABLE sponsor DROP FOREIGN KEY FK_818CC9D49F7E4405
         SQL);
         $this->addSql(<<<'SQL'
-            ALTER TABLE sponsor ADD secteur_id INT DEFAULT NULL
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE sponsor ADD CONSTRAINT FK_818CC9D49F7E4405 FOREIGN KEY (secteur_id) REFERENCES secteur (id)
+            DROP INDEX fk_818cc9d49f7e4405 ON sponsor
         SQL);
         $this->addSql(<<<'SQL'
             CREATE INDEX IDX_818CC9D49F7E4405 ON sponsor (secteur_id)
+        SQL);
+        $this->addSql(<<<'SQL'
+            ALTER TABLE sponsor ADD CONSTRAINT FK_818CC9D49F7E4405 FOREIGN KEY (secteur_id) REFERENCES secteur (id)
         SQL);
     }
 
@@ -38,16 +38,16 @@ final class Version20250328021822 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql(<<<'SQL'
-            ALTER TABLE secteur DROP sponsor
-        SQL);
-        $this->addSql(<<<'SQL'
             ALTER TABLE sponsor DROP FOREIGN KEY FK_818CC9D49F7E4405
         SQL);
         $this->addSql(<<<'SQL'
-            DROP INDEX IDX_818CC9D49F7E4405 ON sponsor
+            DROP INDEX idx_818cc9d49f7e4405 ON sponsor
         SQL);
         $this->addSql(<<<'SQL'
-            ALTER TABLE sponsor DROP secteur_id
+            CREATE INDEX FK_818CC9D49F7E4405 ON sponsor (secteur_id)
+        SQL);
+        $this->addSql(<<<'SQL'
+            ALTER TABLE sponsor ADD CONSTRAINT FK_818CC9D49F7E4405 FOREIGN KEY (secteur_id) REFERENCES secteur (id)
         SQL);
     }
 }
