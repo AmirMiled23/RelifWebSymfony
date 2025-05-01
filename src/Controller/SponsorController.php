@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Secteur;
 use App\Entity\Sponsor;
 use App\Form\SponsorType;
 use App\Repository\SecteurRepository;
@@ -29,45 +30,54 @@ use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
 use Symfony\UX\Chartjs\Model\Chart;
 final class SponsorController extends AbstractController{
     private $SponsorRepo;
+    private $secteurRepo;
     private $entityManager;
     private $chatApiService;
-    public function __construct(SponsorRepository $sponsorRepository,EntityManagerInterface $entityManagerParam, ChatApiService $chatApiService)
+    public function __construct(SponsorRepository $sponsorRepository,EntityManagerInterface $entityManagerParam, ChatApiService $chatApiService,SecteurRepository $secteurRepository)
     {
        
         $this->SponsorRepo=$sponsorRepository; 
         $this->entityManager=$entityManagerParam;
         $this->chatApiService = $chatApiService;
-
+        $this->secteurRepo=$secteurRepository;
      
-} #[Route('/chatbot', name: 'chatbot', methods: ['POST'])]
-public function chatbot(Request $request): JsonResponse
-{
-    // Récupérer les données JSON envoyées
-    $data = json_decode($request->getContent(), true);
-    $prompt = $data['prompt'] ?? '';  // Le message à envoyer au chatbot
+    }
+    #[Route('/chatbot', name: 'chatbot', methods: ['POST'])]
+    public function chatbot(Request $request): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        $prompt = $data['prompt'] ?? '';
+        $prompt1 = $data['prompt1'] ?? '';
 
-    if ($prompt) {
-        // Recherche d'un sponsor par nom
+        if (empty($prompt)) {
+            return $this->json([
+                'response' => 'Please provide a prompt.',
+            ]);
+        }
+
         $sponsorRepository = $this->entityManager->getRepository(Sponsor::class);
         $sponsor = $sponsorRepository->findOneBy(['nom' => $prompt]);
 
-        if ($sponsor) {
-            // Si le sponsor est trouvé, créer un prompt enrichi
-            $prompt = "Détails du sponsor : " . $sponsor->getNom() . " - " . $sponsor->getEmail() . " - " . $sponsor->getAdresse();
-        }
-        
-        // Appeler votre service ChatApiService pour obtenir la réponse du chatbot
-        $responseText = $this->chatApiService->getResponse($prompt);
-    } else {
-        $responseText = 'Please provide a prompt.';
-    }
+        $secteurRepository = $this->entityManager->getRepository(Secteur::class);
+        $secteur = $secteurRepository->findOneBy(['nom' => $prompt1]);
 
-    // Retourner la réponse sous forme de JSON
-    return $this->json([
-        'prompt' => $prompt,
-        'response' => $responseText,
-    ]);
-}
+        if ($sponsor) {
+            $details = "Détails du sponsor : " . $sponsor->getNom() . " - " . $sponsor->getEmail() . " - " . $sponsor->getAdresse();
+
+            if ($secteur) {
+                $details .= " | Secteur : " . $secteur->getNom() . " - " . $secteur->getDescription();
+            }
+
+            $prompt = $details;
+        }
+
+        $responseText = $this->chatApiService->getResponse($prompt);
+
+        return $this->json([
+            'prompt' => $prompt,
+            'response' => $responseText,
+        ]);
+    }
 
 #[Route('/chat', name: 'chat')]
 public function chat(): Response
