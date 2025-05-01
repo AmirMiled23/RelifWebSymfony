@@ -37,19 +37,24 @@ class UserController extends AbstractController
     }
 
     #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
-    public function new(Request $request): Response 
+    public function new(Request $request): Response
     {
+        // Vérifier si l'utilisateur est déjà connecté
+        if ($this->getUser()) {
+            $this->addFlash('warning', 'Vous êtes déjà connecté. Vous ne pouvez pas créer un nouveau compte.');
+            return $this->redirectToRoute('app_user_index'); // Redirigez vers une autre page
+        }
+
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $hashedPassword = $this->passwordHasher->hashPassword(
-    $user,
-    $user->getPwUser()
-);
-$user->setPwUser($hashedPassword);
+                $user,
+                $user->getPwUser()
+            );
+            $user->setPwUser($hashedPassword);
             $this->entityManager->persist($user);
             $this->entityManager->flush();
 
