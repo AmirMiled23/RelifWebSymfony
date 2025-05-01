@@ -1,0 +1,147 @@
+<link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900&display=swap" rel="stylesheet">
+
+<title>Finance Business HTML5 Template</title>
+
+<!-- Bootstrap core CSS -->
+<link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="{{ asset('front/assets/css/flex-slider.css') }}">
+<link rel="stylesheet" href="{{ asset('front/assets/css/fontawesome.css') }}">
+<link rel="stylesheet" href="{{ asset('front/assets/css/owl.css') }}">
+<link rel="stylesheet" href="{{ asset('front/assets/css/templatemo-finance-business.css') }}">
+<script src="{{ asset('front/assets/js/accordions.js') }}"></script>
+<script src="{{ asset('front/assets/js/custom.js') }}"></script>
+<script src="{{ asset('front/assets/js/jquery.singlePageNav.min.js') }}"></script>
+<script src="{{ asset('front/assets/js/owl.js') }}"></script>
+<script src="{{ asset('front/assets/js/slick.js') }}"></script>
+<img src="{{ asset('front/assets/images') }}" alt="Logo">
+<script src="{{ asset('front/vendor/jquery/jquery.min.js') }}"></script>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Additional CSS Files -->
+
+
+<div class="sub-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-xs-12">
+                <ul class="left-info">
+                    <li><a href="#"><i class="fa fa-clock-o"></i>Mon-Fri 09:00-17:00</a></li>
+                    <li><a href="#"><i class="fa fa-phone"></i>090-080-0760</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <ul class="right-icons">
+                    <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                    <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                    <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
+                    <li><a href="#"><i class="fa fa-behance"></i></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<header>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="index.html"><h2>Relief</h2></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="services.html">Our Services</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="contact.html">Contact Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="one-page.html">One Page</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<!-- Page Content -->
+<div class="page-heading header-text">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Create New Reclamation</h1>
+                <span>Please fill in the details below to submit a new reclamation.</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block body %}
+    <div class="container my-5">
+        <h2 class="mb-4">Edit Reclamation</h2>
+
+        <div class="card p-4 shadow-sm">
+            <h4 class="card-title mb-4">Reclamation Details</h4>
+
+            {{ form_start(form) }}
+                <div class="mb-3">
+                    {{ form_label(form.titre, null, {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.titre, {'attr': {'class': 'form-control'}}) }}
+                    {% if form.titre.vars.errors|length > 0 %}
+                        <div class="invalid-feedback d-block">
+                            {{ form_errors(form.titre) }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form_label(form.type, null, {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.type, {'attr': {'class': 'form-control'}}) }}
+                    {% if form.type.vars.errors|length > 0 %}
+                        <div class="invalid-feedback d-block">
+                            {{ form_errors(form.type) }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form_label(form.status, null, {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.status, {'attr': {'class': 'form-control'}}) }}
+                    {% if form.status.vars.errors|length > 0 %}
+                        <div class="invalid-feedback d-block">
+                            {{ form_errors(form.status) }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form_label(form.description, null, {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': '4'}}) }}
+                    {% if form.description.vars.errors|length > 0 %}
+                        <div class="invalid-feedback d-block">
+                            {{ form_errors(form.description) }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <button type="submit" class="btn btn-primary">{{ button_label|default('Update') }}</button>
+                    <a href="{{ path('app_reclamation_index') }}" class="btn btn-secondary">Back to List</a>
+                </div>
+            {{ form_end(form) }}
+        </div>
+
+        <div class="mt-4">
+            {{ include('reclamation/_delete_form.html.twig') }}
+        </div>
+    </div>
+{% endblock %}
+
+

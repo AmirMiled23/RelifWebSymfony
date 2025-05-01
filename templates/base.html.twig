@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+        <style>
+            :root {
+                --bg-color: white;
+                --text-color: black;
+                --table-bg: #f8f9fa;
+                --table-th-bg: #e9ecef;
+                --input-bg: #ffffff;
+                --placeholder-color: #6c757d;
+                --badge-default: #6c757d;
+            }
+
+            [data-theme="dark"] {
+                --bg-color: #121212;
+                --text-color: #ffffff;
+                --table-bg: #1e1e1e;
+                --table-th-bg: #2c2c2c;
+                --input-bg: #2a2a2a;
+                --placeholder-color: #aaaaaa;
+                --badge-default: #6c757d;
+            }
+
+            body {
+                background-color: var(--bg-color);
+                color: var(--text-color);
+                transition: background-color 0.3s, color 0.3s;
+            }
+
+            .navbar, .btn, .form-control {
+                background-color: var(--input-bg) !important;
+                color: var(--text-color) !important;
+                border-color: var(--text-color) !important;
+            }
+
+            .navbar a.nav-link {
+                color: var(--text-color) !important;
+            }
+
+            .table {
+                background-color: var(--table-bg);
+                color: var(--text-color);
+            }
+
+            .table th {
+                background-color: var(--table-th-bg);
+                color: var(--text-color);
+            }
+
+            .table td, .table th {
+                color: var(--text-color) !important;
+            }
+
+            .form-control::placeholder {
+                color: var(--placeholder-color) !important;
+            }
+
+            .badge {
+                background-color: var(--badge-default) !important;
+                color: white !important;
+            }
+
+            #theme-toggle {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 9999;
+            }
+        </style>
+    {% endblock %}
+</head>
+<body>
+
+<!-- Bouton switch thème -->
+<button id="theme-toggle" class="btn btn-outline-secondary">🌙 / ☀️</button>
+
+{% block body %}{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const themeToggle = document.getElementById('theme-toggle');
+            const currentTheme = localStorage.getItem('theme');
+
+            if (currentTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+
+            themeToggle.addEventListener('click', function () {
+                const current = document.documentElement.getAttribute('data-theme');
+                const newTheme = current === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+            });
+        });
+    </script>
+{% endblock %}
+</body>
+</html>

@@ -1,0 +1,215 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+  {{ parent() }}
+  <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ asset('front/assets/css/flex-slider.css') }}">
+  <link rel="stylesheet" href="{{ asset('front/assets/css/fontawesome.css') }}">
+  <link rel="stylesheet" href="{{ asset('front/assets/css/owl.css') }}">
+  <link rel="stylesheet" href="{{ asset('front/assets/css/templatemo-finance-business.css') }}">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <script src="{{ asset('front/vendor/jquery/jquery.min.js') }}"></script>
+  <script src="{{ asset('front/assets/js/accordions.js') }}"></script>
+  <script src="{{ asset('front/assets/js/custom.js') }}"></script>
+  <script src="{{ asset('front/assets/js/jquery.singlePageNav.min.js') }}"></script>
+  <script src="{{ asset('front/assets/js/owl.js') }}"></script>
+  <script src="{{ asset('front/assets/js/slick.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+<div class="sub-header">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 col-xs-12">
+        <ul class="left-info">
+          <li><a href="#"><i class="fa fa-clock-o"></i>Mon-Fri 09:00-17:00</a></li>
+          <li><a href="#"><i class="fa fa-phone"></i>090-080-0760</a></li>
+        </ul>
+      </div>
+      <div class="col-md-4">
+        <ul class="right-icons">
+          <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+          <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+          <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
+          <li><a href="#"><i class="fa fa-behance"></i></a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<header class="">
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="{{ path('app_reclamation_index') }}">
+        <img src="{{ asset('front/assets/images/logo.png') }}" alt="RELIF Logo" style="width: 95px;">
+        <h2 class="mb-0 ml-2" style="font-size: 45px;">RELIF</h2>
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item"><a class="nav-link" href="{{ path('app_reclamation_index') }}">Reclamations</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">About Us</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Services</a></li>
+          <li class="nav-item active"><a class="nav-link" href="#">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<div class="page-heading header-text">
+  <div class="container">
+    <h1>Reclamation Details</h1>
+    <span>Here are the details of the selected reclamation.</span>
+  </div>
+</div>
+
+<div class="container my-5">
+  <div class="row">
+    <div class="col-md-8 mx-auto">
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <h4 class="mb-0">Reclamation Information</h4>
+        </div>
+        <div class="card-body">
+          <table class="table table-borderless">
+            <tbody>
+              <tr>
+                <th class="text-right">ID:</th>
+                <td>{{ reclamation.idReclamation }}</td>
+              </tr>
+              <tr>
+                <th class="text-right">Titre:</th>
+                <td>{{ reclamation.titre }}</td>
+              </tr>
+              <tr>
+                <th class="text-right">Type:</th>
+                <td>{{ reclamation.type }}</td>
+              </tr>
+              <tr>
+                <th class="text-right">Status:</th>
+                <td>
+                  {% set status = reclamation.status %}
+                  {% if status == 'Resolved' %}
+                    <span class="badge badge-success">{{ status }}</span>
+                  {% elseif status == 'Pending' %}
+                    <span class="badge badge-warning">{{ status }}</span>
+                  {% elseif status == 'Rejected' %}
+                    <span class="badge badge-danger">{{ status }}</span>
+                  {% else %}
+                    <span class="badge badge-secondary">{{ status }}</span>
+                  {% endif %}
+                </td>
+              </tr>
+              <tr>
+                <th class="text-right">Description:</th>
+                <td>{{ reclamation.description }}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <hr>
+          <h5 class="mt-4">Réponses</h5>
+
+          {% if reclamation.reponses|length > 0 %}
+            <div class="list-group">
+              {% for reponse in reclamation.reponses %}
+                <div class="list-group-item bg-light shadow-sm mb-3">
+                  <h6><strong>Titre:</strong> {{ reponse.titre }}</h6>
+                  <p><strong>Description:</strong> {{ reponse.description }}</p>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="alert alert-info mt-3">
+              Aucune réponse n’a encore été ajoutée à cette réclamation.
+            </div>
+          {% endif %}
+        </div>
+        <div class="card-footer d-flex justify-content-between">
+          <a href="{{ path('app_reclamation_index') }}" class="btn btn-outline-primary btn-lg">
+            <i class="fa fa-arrow-left"></i> Retour à la liste
+          </a>
+          <div>
+            <a href="{{ path('app_reclamation_edit', {'id_reclamation': reclamation.idReclamation}) }}" class="btn btn-warning btn-lg">
+              <i class="fa fa-edit"></i> Modifier
+            </a>
+            {{ include('reclamation/_delete_form.html.twig') }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .card {
+    border-radius: 10px;
+  }
+  .card-header {
+    font-weight: bold;
+  }
+  .table th {
+    width: 30%;
+    text-align: right;
+    color: #555;
+  }
+  .table td {
+    color: #333;
+  }
+  .badge {
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+  .btn-lg {
+    padding: 10px 20px;
+    font-size: 1.2rem;
+  }
+  [data-theme="dark"] .card,
+[data-theme="dark"] .list-group-item.bg-light {
+  background: #23272b !important;
+  color: #fff !important;
+  border-color: #444 !important;
+}
+
+[data-theme="dark"] .card-header,
+[data-theme="dark"] .card-footer {
+  background: #181a1b !important;
+  color: #fff !important;
+}
+
+[data-theme="dark"] .table th,
+[data-theme="dark"] .table td {
+  color: #fff !important;
+}
+
+[data-theme="dark"] .badge {
+  color: #fff !important;
+}
+
+[data-theme="dark"] .alert-info {
+  background: #23272b !important;
+  color: #fff !important;
+  border-color: #444 !important;
+}
+[data-theme="dark"] .card-body {
+  background: #23272b !important;
+  color: #fff !important;
+}
+[data-theme="dark"] .container,
+[data-theme="dark"] .row {
+  background: transparent !important;
+}
+
+[data-theme="dark"] body {
+  background: #181a1b !important;
+}
+</style>
+{% endblock %}
