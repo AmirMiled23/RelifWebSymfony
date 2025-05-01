@@ -93,6 +93,7 @@ final class EventController extends AbstractController{
     {
         $titre = $request->query->get('titre');
         $ville = $request->query->get('ville');
+        $periode = $request->query->get('periode');
     
         $events = $eventRepository->createQueryBuilder('e');
     
@@ -106,6 +107,24 @@ final class EventController extends AbstractController{
                    ->setParameter('ville', '%' . $ville . '%');
         }
     
+        if ($periode) {
+            $dates = explode(' au ', $periode);
+            if (count($dates) === 2) {
+                $dateDebut = trim($dates[0]);
+                $dateFin = trim($dates[1]);
+        
+                // Vérifier validité
+                $dateDebutValid = \DateTime::createFromFormat('Y-m-d', $dateDebut) !== false;
+                $dateFinValid = \DateTime::createFromFormat('Y-m-d', $dateFin) !== false;
+        
+                if ($dateDebutValid && $dateFinValid) {
+                    $events->andWhere('e.date_event BETWEEN :dateDebut AND :dateFin')
+                           ->setParameter('dateDebut', $dateDebut)
+                           ->setParameter('dateFin', $dateFin);
+                }
+            }
+        }
+        
         $result = $events->getQuery()->getResult();
 
     return $this->render('event/homeevenement.html.twig', [

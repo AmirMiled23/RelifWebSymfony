@@ -32,7 +32,7 @@
                 
                 <td>{{ event.villes }}</td>
                 
-                <td>{{ event.statusEvent }}</td>
+                <td>{{ event.statusEvent|replace({'_': ' '}) }}</td>
                 <td>{{ event.nbParticipantMax }}</td>
                 <td>{{ event.categorieEvent ? event.categorieEvent.nom_categorie : 'N/A' }}</td>
                 <td>

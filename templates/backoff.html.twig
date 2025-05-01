@@ -47,7 +47,7 @@
         <div class="sidebar-logo">
           <!-- Logo Header -->
           <div class="logo-header" data-background-color="dark">
-                <a href="{{ path('app_home_controll') }}" class="logo">
+                <a href="{{ path('app_backoffice') }}" class="logo">
                  <img
                       src="{{ asset('assets/back/img/logo.png') }}"
                        alt="navbar brand"
@@ -125,6 +125,11 @@
     <span class="sub-item">Liste des evenements</span>
   </a>
 </li>
+ <li>
+                    <a href="{{ path('admin_calendar') }}">
+    <span class="sub-item">Calendrier des evenements</span>
+  </a>
+</li>
                   </ul>
                 </div>
               </li>
@@ -185,28 +190,7 @@
                     </li>
                   </ul>
                 </div>
-              </li>
-              <li class="nav-item">
-                <a data-bs-toggle="collapse" href="#maps">
-                  <i class="fas fa-map-marker-alt"></i>
-                  <p>Maps</p>
-                  <span class="caret"></span>
-                </a>
-                <div class="collapse" id="maps">
-                  <ul class="nav nav-collapse">
-                    <li>
-                      <a href="maps/googlemaps.html">
-                        <span class="sub-item">Google Maps</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="maps/jsvectormap.html">
-                        <span class="sub-item">Jsvectormap</span>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              </li>                                    
+              </li>                                   
             </ul>
           </div>
         </div>
@@ -581,7 +565,7 @@
           <!-- End Navbar -->
         </div>
     <main>
-        {# Bloc principal de contenu spécifique aux pages enfants #}
+      
         {% block body %}
             {% block content %}{% endblock %}
         {% endblock %}

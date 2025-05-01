@@ -300,4 +300,18 @@ class Event
         return $this;
     }
 
+    #[ORM\Column(type: 'boolean')]
+    private bool $assignedToCalendar = false;
+
+    public function isAssignedToCalendar(): bool
+    {
+        return $this->assignedToCalendar;
+    }
+
+    public function setAssignedToCalendar(bool $assignedToCalendar): self
+    {
+        $this->assignedToCalendar = $assignedToCalendar;
+
+        return $this;
+    }
 }

@@ -1,0 +1,95 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css' rel='stylesheet' />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+    body {
+        background-color: rgb(244, 246, 252);
+    }
+    #calendar {
+        max-width: 900px;
+        margin: 40px auto;
+        height: 600px;
+    }
+    .btn-return {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background-color: #007bff;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    font-weight: 500;
+}
+
+.btn-return:hover {
+    background-color: #0056b3;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    text-decoration: none;
+    color: white;
+}
+</style>
+
+{% endblock %}
+
+{% block body %}
+    <a href="{{ path('ajout_event') }}" class="btn-return">
+    <i class="fas fa-arrow-left"></i> Retour a la partie admin
+</a>
+
+
+    <h2>Assigner des événements au calendrier</h2>
+    <form method="post" action="{{ path('admin_assign_events') }}">
+        <table>
+            <thead>
+                <tr>
+                    <th>Sélectionner</th>
+                    <th>Nom</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for event in events %}
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="event_ids[]" value="{{ event.idEvent }}" {% if event.assignedToCalendar %}checked{% endif %}>
+                        </td>
+                        <td>{{ event.nomEvent }}</td>
+                        <td>{{ event.dateEvent|date('Y-m-d H:i') }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button type="submit" class="btn btn-primary">Mettre à jour le calendrier</button>
+    </form>
+    
+    <div id='calendar'></div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                editable: false,
+                eventSources: [
+                    {
+                        url: '{{ path('admin_calendar_events') }}',
+                        color: 'blue',
+                        textColor: 'white'
+                    }
+                ]
+            });
+
+            calendar.render();
+        });
+    </script>
+{% endblock %}
+

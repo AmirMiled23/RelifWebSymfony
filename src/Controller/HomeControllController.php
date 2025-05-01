@@ -7,15 +7,15 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 class HomeControllController extends AbstractController {
-  /*  #[Route('/', name: 'app_home_controll')]
-    public function index(): Response
+    #[Route('/admin', name: 'app_backoffice')]
+    public function backoffice(): Response
     {
         return $this->render('back.html.twig');
-    }*/
-    #[Route('/', name: 'app_home_controll')]
-    public function index(): Response
+    }
+    #[Route('/', name: 'app_homepage')]
+    public function homepage(): Response
     {
-        return $this->render('homepage.html.twig');
+        return $this->render('backofficehome.html.twig');
     }
 
 }

@@ -9,35 +9,31 @@
     <table class="table">
         <tbody>
             <tr>
-                <th>Id_event</th>
-                <td>{{ event.idEvent }}</td>
-            </tr>
-            <tr>
-                <th>Nom_event</th>
+                <th>Nom de l'evenement</th>
                 <td>{{ event.nomEvent }}</td>
             </tr>
             <tr>
-                <th>Date_event</th>
+                <th>Date</th>
                 <td>{{ event.dateEvent ? event.dateEvent|date('Y-m-d') : '' }}</td>
             </tr>
             <tr>
-                <th>Adresse_event</th>
+                <th>Adresse</th>
                 <td>{{ event.adresseEvent }}</td>
             </tr>
             <tr>
-                <th>Villes</th>
+                <th>La Ville</th>
                 <td>{{ event.villes }}</td>
             </tr>
             <tr>
-                <th>Description_event</th>
+                <th>Description</th>
                 <td>{{ event.descriptionEvent }}</td>
             </tr>
             <tr>
-                <th>Status_event</th>
+                <th>Status</th>
                 <td>{{ event.statusEvent }}</td>
             </tr>
             <tr>
-                <th>Nb_participant_max</th>
+                <th>Nombre des participants maximum</th>
                 <td>{{ event.nbParticipantMax }}</td>
             </tr>
         </tbody>

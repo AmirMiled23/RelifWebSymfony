@@ -1,0 +1,98 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+    .fc .fc-daygrid-day-frame {
+    border: 1px solid #333 !important; 
+}
+
+.fc .fc-scrollgrid {
+    border: 1px solid #333 !important; 
+}
+
+
+
+.fc-theme-standard td, 
+.fc-theme-standard th {
+    border-color: #333 !important; 
+}
+    body {
+        background-color:rgb(203, 240, 203);
+    }
+        #calendar {
+            max-width: 900px;
+            margin: 40px auto;
+            height: 600px;
+        }
+
+        .fc-event {
+            cursor: pointer;}
+             .back-button {
+            display: inline-block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #198754;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        .back-button:hover {
+            background-color: #157347;
+            text-decoration: none;
+            color: white;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="text-center">
+        <a href="{{ path('app_event_public') }}" class="back-button">
+            <i class="fas fa-arrow-left"></i> Retour à la liste des événements
+        </a>
+    </div>
+    <h1 class="text-center">Calendrier des événements</h1>
+    <div id="calendar"></div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+    <script>
+        window.addEventListener('load', function () {
+            const calendarEl = document.getElementById('calendar');
+            if (!calendarEl) {
+                console.error("Div #calendar introuvable !");
+                return;
+            }
+
+            console.log('Calendrier utilisateur chargé');
+
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                editable: false,
+                eventSources: [
+                    {
+                        url: '{{ path('user_calendar_events') }}',
+                        color: 'green',
+                        textColor: 'white'
+                    }
+                ],
+eventClick: function(info) {
+        info.jsEvent.preventDefault(); 
+        if (info.event.url) {
+            window.location.href = info.event.url;
+        }
+    }
+
+            });
+
+            calendar.render();
+        });
+    </script>
+{% endblock %}

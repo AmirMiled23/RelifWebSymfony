@@ -3,21 +3,37 @@
 {% block title %}Nos évènements - RELIF{% endblock %}
 
 {% block body %}
+<style>
+  body {
+    background-color:rgb(240, 240, 240);
+  }
+</style>
 <div class="container" style="margin-top: 120px;" >
   <h2 class="mb-4">Liste des Évènements</h2>
+  <div class="mb-4 text-end">
+  <a href="{{ path('user_calendar') }}" class="btn btn-outline-success btn-lg rounded-pill shadow">
+    <i class="fas fa-calendar-alt me-2"></i> Voir Calendrier
+  </a>
+</div>
+
 
   <form method="get" action="" class="mb-4">
     <div class="row">
-      <div class="col-md-5">
-        <input type="text" name="titre" value="{{ app.request.get('titre') }}" class="form-control" placeholder="Rechercher par titre">
-      </div>
-      <div class="col-md-5">
-        <input type="text" name="ville" value="{{ app.request.get('ville') }}" class="form-control" placeholder="Rechercher par ville">
-      </div>
-      <div class="col-md-2">
-        <button type="submit" class="btn btn-primary w-100">Filtrer</button>
-      </div>
+    <div class="col-md-4">
+      <input type="text" name="titre" value="{{ app.request.get('titre') }}" class="form-control" placeholder="Rechercher par titre">
     </div>
+    <div class="col-md-4">
+      <input type="text" name="ville" value="{{ app.request.get('ville') }}" class="form-control" placeholder="Rechercher par ville">
+    </div>
+    
+    <input type="text" id="periodePicker" name="periode" value="{{ app.request.get('periode') }}" class="form-control" placeholder="Choisissez une période">
+
+  </div>
+  <div class="row mt-2">
+    <div class="col-md-12 text-end">
+      <button type="submit" class="btn btn-primary">Filtrer</button>
+    </div>
+  </div>
   </form>
 
   <div class="row">
@@ -102,6 +118,13 @@
           updateCountdown();
           setInterval(updateCountdown, 1000);
       });
+     
+
+      flatpickr("#periodePicker", {
+      mode: "range",
+      dateFormat: "Y-m-d",
+      locale: "fr"
+    });
   });
 </script>
 
