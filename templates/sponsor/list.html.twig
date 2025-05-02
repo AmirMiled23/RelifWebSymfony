@@ -3,6 +3,7 @@
 {% block title %}Liste des Sponsors{% endblock %}
 
 {% block body %}
+
 <div class="container mt-5">
     <div class="card shadow-lg">
         <div class="card-header bg-info text-white">
@@ -157,7 +158,7 @@
     })
     .then(response => response.json())
     .then(data => {
-        responseDiv.innerHTML = '<p><strong>Vous :</strong> ' + data.prompt + '</p>' +
+        responseDiv.innerHTML = '<p><strong>Vous et la Réflexion du Bot  :</strong> ' + data.prompt + '</p>' +
                                 '<p><strong>Bot :</strong> ' + data.response + '</p>';
         responseDiv.style.display = 'block';
     })

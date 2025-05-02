@@ -47,37 +47,57 @@ final class SponsorController extends AbstractController{
     {
         $data = json_decode($request->getContent(), true);
         $prompt = $data['prompt'] ?? '';
-        $prompt1 = $data['prompt1'] ?? '';
-
+    
         if (empty($prompt)) {
             return $this->json([
-                'response' => 'Please provide a prompt.',
+                'response' => 'Please provide a sponsor name.',
             ]);
         }
-
+    
         $sponsorRepository = $this->entityManager->getRepository(Sponsor::class);
-        $sponsor = $sponsorRepository->findOneBy(['nom' => $prompt]);
-
-        $secteurRepository = $this->entityManager->getRepository(Secteur::class);
-        $secteur = $secteurRepository->findOneBy(['nom' => $prompt1]);
-
-        if ($sponsor) {
-            $details = "Détails du sponsor : " . $sponsor->getNom() . " - " . $sponsor->getEmail() . " - " . $sponsor->getAdresse();
-
-            if ($secteur) {
-                $details .= " | Secteur : " . $secteur->getNom() . " - " . $secteur->getDescription();
-            }
-
-            $prompt = $details;
+    
+        // 🔍 Rechercher le sponsor spécifiquement par son nom
+        $sponsor = $sponsorRepository->createQueryBuilder('sp')
+            ->leftJoin('sp.secteur', 'sec')
+            ->addSelect('sec')
+            ->where('sp.nom = :nom')
+            ->setParameter('nom', $prompt)
+            ->getQuery()
+            ->getOneOrNullResult();
+    
+        // ❌ Aucun sponsor trouvé
+        if (!$sponsor) {
+            return $this->json([
+                'response' => 'Aucun sponsor trouvé avec ce nom.',
+            ]);
         }
-
-        $responseText = $this->chatApiService->getResponse($prompt);
-
+    
+        // ✅ Construire les détails du sponsor trouvé
+        $detail = sprintf(
+            "Détails du sponsor : %s — %s — %s",
+            $sponsor->getNom(),
+            $sponsor->getEmail(),
+            $sponsor->getAdresse()
+        );
+    
+        $secteur = $sponsor->getSecteur();
+        if ($secteur) {
+            $detail .= sprintf(
+                " | Secteur : %s — %s",
+                $secteur->getNom(),
+                $secteur->getDescription()
+            );
+        }
+    
+        // Appel à ton service d’IA (si besoin)
+        $responseText = $this->chatApiService->getResponse($detail);
+    
         return $this->json([
-            'prompt' => $prompt,
+            'prompt'   => $detail,
             'response' => $responseText,
         ]);
     }
+    
 
 #[Route('/chat', name: 'chat')]
 public function chat(): Response
@@ -193,7 +213,7 @@ return $this->render('sponsor/frontlist.html.twig', [
         }
     
         // Assurez-vous que l'adresse est définie ici
-        $address = "Tunis, Tunis"; // Remplacez ceci par la logique pour obtenir l'adresse
+        $address = $sponsor->getAdresse(); // Remplacez ceci par la logique pour obtenir l'adresse
     
         return $this->render('sponsor/add.html.twig', [
             'form' => $form->createView(),
