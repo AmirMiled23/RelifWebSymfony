@@ -45,18 +45,20 @@ final class BackmaterielController extends AbstractController
     }
 
     #[Route('/{id_materiel}', name: 'app_backmateriel_show', methods: ['GET'], requirements: ['id_materiel' => '\d+'])]
-    public function show(int $id_materiel, MaterielRepository $materielRepository): Response
-    {
-        $materiel = $materielRepository->find($id_materiel);
+public function show(int $id_materiel, MaterielRepository $materielRepository): Response
+{
+    $materiel = $materielRepository->find($id_materiel);
 
-        if (!$materiel) {
-            throw $this->createNotFoundException('Matériel non trouvé.');
-        }
-
-        return $this->render('backmateriel/show.html.twig', [
-            'materiel' => $materiel,
-        ]);
+    if (!$materiel) {
+        throw $this->createNotFoundException('Matériel non trouvé.');
     }
+
+    return $this->render('backmateriel/show.html.twig', [
+        'materiel' => $materiel,
+    ]);
+}
+
+    
 
     #[Route('/{id_materiel}/edit', name: 'app_backmateriel_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Materiel $materiel, EntityManagerInterface $entityManager): Response
@@ -90,27 +92,33 @@ final class BackmaterielController extends AbstractController
     #[Route('/pdf', name: 'app_backmateriel_pdf', methods: ['GET'])]
     public function generatePdf(MaterielRepository $materielRepository): Response
     {
-        // Récupérer tous les matériels
+        // Configure Dompdf
+        $pdfOptions = new Options();
+        $pdfOptions->set('defaultFont', 'Arial');
+
+        $dompdf = new Dompdf($pdfOptions);
+
+        // Fetch all materiels
         $materiels = $materielRepository->findAll();
 
-        // Configurer DomPDF
-        $options = new Options();
-        $options->set('defaultFont', 'Arial');
-        $dompdf = new Dompdf($options);
-
-        // Générer le HTML à partir du template Twig
+        // Render the view
         $html = $this->renderView('backmateriel/pdf.html.twig', [
-            'materiels' => $materiels, // Liste des matériels
+            'materiels' => $materiels,
         ]);
 
+        // Load HTML to Dompdf
         $dompdf->loadHtml($html);
+
+        // Set paper size and orientation
         $dompdf->setPaper('A4', 'portrait');
+
+        // Render the PDF
         $dompdf->render();
 
-        // Retourner le PDF en réponse
+        // Output the generated PDF
         return new Response($dompdf->output(), 200, [
             'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="liste_materiels.pdf"',
+            'Content-Disposition' => 'inline; filename="materiels.pdf"',
         ]);
     }
 

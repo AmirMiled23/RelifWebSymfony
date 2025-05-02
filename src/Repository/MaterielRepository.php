@@ -44,6 +44,9 @@ class MaterielRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }
+    
+    
+
 
     //    /**
     //     * @return Materiel[] Returns an array of Materiel objects

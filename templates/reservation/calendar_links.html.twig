@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liens de Calendrier{% endblock %}
+
+{% block body %}
+    <h1>Liens de Calendrier</h1>
+    <p>Vous pouvez ajouter cette réservation à votre calendrier en utilisant les liens ci-dessous :</p>
+
+    <div class="links">
+        <a href="{{ links.google }}" target="_blank">Ajouter à Google Calendar</a>
+        <a href="{{ links.outlook }}" target="_blank">Ajouter à Outlook</a>
+    </div>
+
+    <p><strong>Détails de la réservation :</strong></p>
+    <ul>
+        <li><strong>Matériel :</strong> {{ reservation.materiel.nomMateriel }}</li>
+        <li><strong>Date de début :</strong> {{ reservation.dateDebut|date('d/m/Y') }}</li>
+        <li><strong>Date de fin :</strong> {{ reservation.dateFin|date('d/m/Y') }}</li>
+        <li><strong>Quantité réservée :</strong> {{ reservation.quantiteReservee }}</li>
+    </ul>
+{% endblock %}
