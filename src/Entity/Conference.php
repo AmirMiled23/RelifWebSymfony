@@ -173,15 +173,9 @@ class Conference
     #[ORM\OneToMany(targetEntity: Inscription::class, mappedBy: 'conference')]
     private Collection $inscriptions;
 
-    /**
-     * @ORM\ManyToMany(targetEntity=Resource::class, inversedBy="conferences")
-     */
-    private Collection $resources;
-
     public function __construct()
     {
         $this->inscriptions = new ArrayCollection();
-        $this->resources = new ArrayCollection();
     }
 
     /**
@@ -229,33 +223,6 @@ class Conference
     public function setNbPlace(int $nb_place): static
     {
         $this->nb_place = $nb_place;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Resource>
-     */
-    public function getResources(): Collection
-    {
-        return $this->resources;
-    }
-
-    public function addResource(Resource $resource): self
-    {
-        if (!$this->resources->contains($resource)) {
-            $this->resources->add($resource);
-            $resource->addConference($this);  // If this method exists in Resource entity
-        }
-
-        return $this;
-    }
-
-    public function removeResource(Resource $resource): self
-    {
-        if ($this->resources->removeElement($resource)) {
-            $resource->removeConference($this);  // If this method exists in Resource entity
-        }
 
         return $this;
     }

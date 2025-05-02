@@ -18,6 +18,21 @@
         border-radius: 1rem;
         box-shadow: 0 0.5rem 2rem rgba(0,0,0,0.15);
     }
+    /* Add some styles for the form */
+    .form-control:focus {
+        border-color: #4e73df;
+        box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+    }
+    .btn-register {
+        background-color: #1cc88a;
+        border-color: #1cc88a;
+        color: white;
+        margin-bottom: 10px;
+    }
+    .btn-register:hover {
+        background-color: #169a6e;
+        border-color: #169a6e;
+    }
 </style>
 <div class="conference-details-bg">
     <div class="container py-5">
@@ -36,6 +51,10 @@
                             <li class="list-group-item"><strong>Status:</strong> {{ conference.status }}</li>
                             <li class="list-group-item"><strong>Resource:</strong> {{ conference.resource }}</li>
                         </ul>
+                        <!-- Add Register Button -->
+                        <button type="button" class="btn btn-register w-100 mb-2" data-bs-toggle="modal" data-bs-target="#inscriptionModal">
+                            <i class="fas fa-user-plus"></i> S'inscrire
+                        </button>
                         <a href="{{ path('app_conference_index') }}" class="btn btn-outline-primary w-100 mt-2">
                             <i class="fas fa-arrow-left"></i> Back to list
                         </a>
@@ -45,8 +64,48 @@
         </div>
     </div>
 </div>
+
+<!-- Registration Modal -->
+<div class="modal fade" id="inscriptionModal" tabindex="-1" aria-labelledby="inscriptionModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="inscriptionModalLabel">Inscription à la conférence</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="inscriptionForm">
+                    <div class="mb-3">
+                        <label for="nom" class="form-label">Nom</label>
+                        <input type="text" class="form-control" id="nom" name="nom" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="prenom" class="form-label">Prénom</label>
+                        <input type="text" class="form-control" id="prenom" name="prenom" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="telephone" class="form-label">Téléphone</label>
+                        <input type="tel" class="form-control" id="telephone" name="telephone" required>
+                    </div>
+                    <input type="hidden" name="conference_id" value="{{ conference.id }}">
+                </form>
+                <div id="inscriptionMessage" class="alert d-none"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-primary" id="submitInscription">Confirmer l'inscription</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
 (function() {
+    // Draggable card functionality
     const card = document.getElementById('draggable-card');
     let isDragging = false, startX, startY, origX, origY;
     card.addEventListener('mousedown', function(e) {
@@ -73,6 +132,819 @@
             document.body.style.userSelect = '';
         }
     });
+    
+    // Form submission handling
+    document.getElementById('submitInscription').addEventListener('click', function() {
+        const form = document.getElementById('inscriptionForm');
+        const messageDiv = document.getElementById('inscriptionMessage');
+        
+        // Simple validation
+        const inputs = form.querySelectorAll('input[required]');
+        let isValid = true;
+        inputs.forEach(input => {
+            if (!input.value.trim()) {
+                isValid = false;
+                input.classList.add('is-invalid');
+            } else {
+                input.classList.remove('is-invalid');
+            }
+        });
+        
+        if (!isValid) {
+            messageDiv.textContent = 'Veuillez remplir tous les champs requis.';
+            messageDiv.classList.add('alert-danger');
+            messageDiv.classList.remove('d-none', 'alert-success');
+            return;
+        }
+        
+        // Collect form data
+        const formData = new FormData(form);
+        
+        // Send AJAX request
+        fetch('{{ path("app_inscription_new") }}', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                messageDiv.textContent = 'Inscription réussie!';
+                messageDiv.classList.add('alert-success');
+                messageDiv.classList.remove('d-none', 'alert-danger');
+                form.reset();
+                setTimeout(() => {
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('inscriptionModal'));
+                    modal.hide();
+                    // Optionally reload the page to show updated status
+                    // window.location.reload();
+                }, 2000);
+            } else {
+                messageDiv.textContent = data.message || 'Une erreur est survenue.';
+                messageDiv.classList.add('alert-danger');
+                messageDiv.classList.remove('d-none', 'alert-success');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            messageDiv.textContent = 'Une erreur est survenue lors de la communication avec le serveur.';
+            messageDiv.classList.add('alert-danger');
+            messageDiv.classList.remove('d-none', 'alert-success');
+        });
+    });
+
+    // Ensure the modal is properly initialized with Bootstrap
+    document.addEventListener('DOMContentLoaded', function() {
+        // Make sure modal is properly initialized with Bootstrap
+        const inscriptionModal = document.getElementById('inscriptionModal');
+        const modal = new bootstrap.Modal(inscriptionModal);
+        
+        // Add explicit event listener to the button
+        document.querySelector('.btn-register').addEventListener('click', function(e) {
+            e.preventDefault();
+            modal.show();
+        });
+        
+        // Reset form and error messages when modal is closed
+        inscriptionModal.addEventListener('hidden.bs.modal', function() {
+            document.getElementById('inscriptionForm').reset();
+            const messageDiv = document.getElementById('inscriptionMessage');
+            messageDiv.classList.add('d-none');
+            messageDiv.classList.remove('alert-danger', 'alert-success');
+            
+            // Remove validation classes
+            const inputs = document.querySelectorAll('.form-control');
+            inputs.forEach(input => {
+                input.classList.remove('is-invalid');
+            });
+        });
+
+        // Modified form submission to handle payment flow
+        document.getElementById('submitInscription').addEventListener('click', function() {
+            const form = document.getElementById('inscriptionForm');
+            const messageDiv = document.getElementById('inscriptionMessage');
+            
+            // Simple validation
+            const inputs = form.querySelectorAll('input[required]');
+            let isValid = true;
+            inputs.forEach(input => {
+                if (!input.value.trim()) {
+                    isValid = false;
+                    input.classList.add('is-invalid');
+                } else {
+                    input.classList.remove('is-invalid');
+                }
+            });
+            
+            if (!isValid) {
+                messageDiv.textContent = 'Veuillez remplir tous les champs requis.';
+                messageDiv.classList.add('alert-danger');
+                messageDiv.classList.remove('d-none', 'alert-success');
+                return;
+            }
+            
+            // Collect form data
+            const formData = new FormData(form);
+            
+            // Send AJAX request for registration
+            fetch('{{ path("app_inscription_new") }}', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    messageDiv.textContent = 'Inscription réussie!';
+                    messageDiv.classList.add('alert-success');
+                    messageDiv.classList.remove('d-none', 'alert-danger');
+                    
+                    // Show payment confirmation
+                    setTimeout(() => {
+                        const modalInstance = bootstrap.Modal.getInstance(inscriptionModal);
+                        modalInstance.hide();
+                        
+                        // Store registration data for payment processing
+                        sessionStorage.setItem('registrationData', JSON.stringify({
+                            conferenceId: {{ conference.id }},
+                            conferenceTitle: "{{ conference.titre }}",
+                            conferenceCost: {{ conference.prix }},
+                            inscriptionId: data.inscriptionId || 0,
+                            nom: document.getElementById('nom').value,
+                            prenom: document.getElementById('prenom').value,
+                            email: document.getElementById('email').value
+                        }));
+                        
+                        // Show payment confirmation modal
+                        const paymentConfirmModal = new bootstrap.Modal(document.getElementById('paymentConfirmModal'));
+                        paymentConfirmModal.show();
+                    }, 1500);
+                } else {
+                    messageDiv.textContent = data.message || 'Une erreur est survenue.';
+                    messageDiv.classList.add('alert-danger');
+                    messageDiv.classList.remove('d-none', 'alert-success');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                messageDiv.textContent = 'Une erreur est survenue lors de la communication avec le serveur.';
+                messageDiv.classList.add('alert-danger');
+                messageDiv.classList.remove('d-none', 'alert-success');
+            });
+            
+            // Prevent default form submission
+            return false;
+        });
+
+        // Payment method selection handler
+        document.getElementById('proceedToPayment').addEventListener('click', function() {
+            const paymentConfirmModal = bootstrap.Modal.getInstance(document.getElementById('paymentConfirmModal'));
+            paymentConfirmModal.hide();
+            const paymentMethodModal = new bootstrap.Modal(document.getElementById('paymentMethodModal'));
+            paymentMethodModal.show();
+        });
+
+        // Payment method buttons
+        document.querySelectorAll('.payment-method-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const paymentType = this.getAttribute('data-payment-type');
+                
+                // Store selected payment method
+                sessionStorage.setItem('paymentMethod', paymentType);
+                
+                // Close payment method modal
+                const paymentMethodModal = bootstrap.Modal.getInstance(document.getElementById('paymentMethodModal'));
+                paymentMethodModal.hide();
+                
+                // Show appropriate payment form based on selection
+                if (paymentType === 'Carte Bancaire') {
+                    // Show credit card form with Stripe
+                    const stripeModal = new bootstrap.Modal(document.getElementById('stripePaymentModal'));
+                    stripeModal.show();
+                    initStripeElements();
+                } else if (paymentType === 'GoogleApplePay') {
+                    // Show Google/Apple Pay options
+                    const digitalWalletModal = new bootstrap.Modal(document.getElementById('digitalWalletModal'));
+                    digitalWalletModal.show();
+                } else {
+                    // For SEPA options, show the SEPA form
+                    const sepaModal = new bootstrap.Modal(document.getElementById('sepaPaymentModal'));
+                    sepaModal.show();
+                }
+            });
+        });
+
+        // Initialize Stripe elements
+        let stripe = null;
+        let elements = null;
+        let card = null;
+        
+        function initStripeElements() {
+            if (stripe) return; // Only initialize once
+            
+            // Initialize Stripe with the public key
+            stripe = Stripe('pk_test_51Qyl1xFMW7DU2mdyb3QIMJAuNVrsfWjnXIV42wX1tJVx54ltqyLqjhFmme03D71tQjDu6x3Kk40fwu0JwlfMLuKe00CB3zhiW9');
+            elements = stripe.elements();
+            
+            // Create card element
+            card = elements.create('card', {
+                style: {
+                    base: {
+                        color: '#32325d',
+                        fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+                        fontSmoothing: 'antialiased',
+                        fontSize: '16px',
+                        '::placeholder': {
+                            color: '#aab7c4'
+                        }
+                    },
+                    invalid: {
+                        color: '#fa755a',
+                        iconColor: '#fa755a'
+                    }
+                }
+            });
+            
+            // Mount the card element
+            card.mount('#card-element');
+            
+            // Handle validation errors
+            card.addEventListener('change', function(event) {
+                const displayError = document.getElementById('card-errors');
+                if (event.error) {
+                    displayError.textContent = event.error.message;
+                } else {
+                    displayError.textContent = '';
+                }
+            });
+        }
+
+        // Handle Stripe form submission
+        document.getElementById('stripe-payment-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const stripeSubmitBtn = document.getElementById('stripe-submit');
+            const loadingSpinner = document.getElementById('stripe-loading');
+            
+            // Show loading spinner
+            stripeSubmitBtn.disabled = true;
+            loadingSpinner.classList.remove('d-none');
+            
+            // Get registration data
+            const registrationData = JSON.parse(sessionStorage.getItem('registrationData'));
+            
+            // Create payment intent on server
+            fetch('{{ path("app_payment_create_intent") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    amount: registrationData.conferenceCost * 100, // Amount in cents
+                    currency: 'eur',
+                    payment_method_types: ['card'],
+                    inscription_id: registrationData.inscriptionId,
+                    conference_id: registrationData.conferenceId,
+                    payment_type: sessionStorage.getItem('paymentMethod')
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.clientSecret) {
+                    // Confirm card payment
+                    return stripe.confirmCardPayment(data.clientSecret, {
+                        payment_method: {
+                            card: card,
+                            billing_details: {
+                                name: registrationData.nom + ' ' + registrationData.prenom,
+                                email: registrationData.email
+                            }
+                        }
+                    });
+                } else {
+                    throw new Error('Failed to create payment intent');
+                }
+            })
+            .then(result => {
+                if (result.error) {
+                    // Show error message
+                    const errorElement = document.getElementById('card-errors');
+                    errorElement.textContent = result.error.message;
+                    
+                    // Reset button state
+                    stripeSubmitBtn.disabled = false;
+                    loadingSpinner.classList.add('d-none');
+                } else if (result.paymentIntent && result.paymentIntent.status === 'succeeded') {
+                    // Payment succeeded - update payment record
+                    return fetch('{{ path("app_payment_update") }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            payment_id: result.paymentIntent.id,
+                            inscription_id: registrationData.inscriptionId,
+                            status: 'completed',
+                            amount: registrationData.conferenceCost,
+                            payment_type: sessionStorage.getItem('paymentMethod')
+                        })
+                    });
+                }
+            })
+            .then(response => {
+                if (response) return response.json();
+            })
+            .then(data => {
+                if (data && data.success) {
+                    // Show success modal
+                    const stripeModal = bootstrap.Modal.getInstance(document.getElementById('stripePaymentModal'));
+                    stripeModal.hide();
+                    
+                    const successModal = new bootstrap.Modal(document.getElementById('paymentSuccessModal'));
+                    successModal.show();
+                    
+                    // Clear session storage
+                    setTimeout(() => {
+                        sessionStorage.removeItem('registrationData');
+                        sessionStorage.removeItem('paymentMethod');
+                    }, 1000);
+                }
+            })
+            .catch(error => {
+                console.error('Payment error:', error);
+                const errorElement = document.getElementById('card-errors');
+                errorElement.textContent = 'An error occurred during payment processing.';
+                
+                // Reset button state
+                stripeSubmitBtn.disabled = false;
+                loadingSpinner.classList.add('d-none');
+            });
+        });
+
+        // Handle SEPA form submission
+        document.getElementById('sepa-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            // Get form data
+            const accountHolder = document.getElementById('sepa-account-holder').value;
+            const iban = document.getElementById('sepa-iban').value;
+            
+            // Basic IBAN validation
+            if (!accountHolder || !iban) {
+                document.getElementById('sepa-errors').textContent = 'Please fill in all fields';
+                return;
+            }
+            
+            // Get registration data
+            const registrationData = JSON.parse(sessionStorage.getItem('registrationData'));
+            
+            // Submit SEPA payment
+            fetch('{{ path("app_payment_process_sepa") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    account_holder: accountHolder,
+                    iban: iban,
+                    amount: registrationData.conferenceCost,
+                    inscription_id: registrationData.inscriptionId,
+                    conference_id: registrationData.conferenceId,
+                    payment_type: sessionStorage.getItem('paymentMethod')
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Show success modal
+                    const sepaModal = bootstrap.Modal.getInstance(document.getElementById('sepaPaymentModal'));
+                    sepaModal.hide();
+                    
+                    const successModal = new bootstrap.Modal(document.getElementById('paymentSuccessModal'));
+                    successModal.show();
+                    
+                    // Clear session storage
+                    setTimeout(() => {
+                        sessionStorage.removeItem('registrationData');
+                        sessionStorage.removeItem('paymentMethod');
+                    }, 1000);
+                } else {
+                    document.getElementById('sepa-errors').textContent = data.message || 'Payment processing failed';
+                }
+            })
+            .catch(error => {
+                console.error('SEPA error:', error);
+                document.getElementById('sepa-errors').textContent = 'An error occurred during payment processing';
+            });
+        });
+
+        // Handle digital wallet form submission
+        document.getElementById('digital-wallet-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            // Get registration data
+            const registrationData = JSON.parse(sessionStorage.getItem('registrationData'));
+            
+            // Submit digital wallet payment
+            fetch('{{ path("app_payment_process_digital") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    amount: registrationData.conferenceCost,
+                    inscription_id: registrationData.inscriptionId,
+                    conference_id: registrationData.conferenceId,
+                    payment_type: 'GoogleApplePay',
+                    wallet_type: document.querySelector('input[name="wallet-type"]:checked').value
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Show success modal
+                    const walletModal = bootstrap.Modal.getInstance(document.getElementById('digitalWalletModal'));
+                    walletModal.hide();
+                    
+                    const successModal = new bootstrap.Modal(document.getElementById('paymentSuccessModal'));
+                    successModal.show();
+                    
+                    // Clear session storage
+                    setTimeout(() => {
+                        sessionStorage.removeItem('registrationData');
+                        sessionStorage.removeItem('paymentMethod');
+                    }, 1000);
+                } else {
+                    document.getElementById('digital-wallet-errors').textContent = data.message || 'Payment processing failed';
+                }
+            })
+            .catch(error => {
+                console.error('Digital wallet error:', error);
+                document.getElementById('digital-wallet-errors').textContent = 'An error occurred during payment processing';
+            });
+        });
+        
+        // Close button handlers for all modals to return to conference view
+        document.querySelectorAll('.return-to-conference').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Clear session storage
+                sessionStorage.removeItem('registrationData');
+                sessionStorage.removeItem('paymentMethod');
+                
+                // Reload page
+                window.location.reload();
+            });
+        });
+    });
 })();
 </script>
+
+<!-- Payment Confirmation Modal -->
+<div class="modal fade" id="paymentConfirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title">Confirmation de paiement</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-4">
+                    <i class="fas fa-question-circle fa-4x text-info mb-3"></i>
+                    <h4>Souhaitez-vous procéder au paiement?</h4>
+                    <p class="text-muted">Votre inscription est enregistrée. Vous pouvez payer maintenant ou plus tard.</p>
+                </div>
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Récapitulatif</h5>
+                        <p class="card-text"><strong>Conférence:</strong> {{ conference.titre }}</p>
+                        <p class="card-text"><strong>Prix:</strong> {{ conference.prix }} TND</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Payer plus tard</button>
+                <button type="button" class="btn btn-primary" id="proceedToPayment">
+                    <i class="fas fa-credit-card me-2"></i>Procéder au paiement
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Payment Method Selection Modal -->
+<div class="modal fade" id="paymentMethodModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Choisir une méthode de paiement</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="card h-100 payment-method-card">
+                            <div class="card-body text-center">
+                                <i class="fas fa-credit-card fa-3x text-primary mb-3"></i>
+                                <h5 class="card-title">Carte Bancaire</h5>
+                                <p class="card-text">Payer avec Visa, Mastercard, etc.</p>
+                                <button class="btn btn-outline-primary w-100 payment-method-btn" data-payment-type="Carte Bancaire">
+                                    Sélectionner
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card h-100 payment-method-card">
+                            <div class="card-body text-center">
+                                <i class="fab fa-google-wallet fa-3x text-success mb-3"></i>
+                                <h5 class="card-title">Google/Apple Pay</h5>
+                                <p class="card-text">Payez avec votre portefeuille digital</p>
+                                <button class="btn btn-outline-success w-100 payment-method-btn" data-payment-type="GoogleApplePay">
+                                    Sélectionner
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card h-100 payment-method-card">
+                            <div class="card-body text-center">
+                                <i class="fas fa-university fa-3x text-info mb-3"></i>
+                                <h5 class="card-title">Virement SEPA</h5>
+                                <p class="card-text">Payer par virement bancaire</p>
+                                <button class="btn btn-outline-info w-100 payment-method-btn" data-payment-type="Virement SEPA">
+                                    Sélectionner
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card h-100 payment-method-card">
+                            <div class="card-body text-center">
+                                <i class="fas fa-money-check fa-3x text-warning mb-3"></i>
+                                <h5 class="card-title">Prélèvement SEPA</h5>
+                                <p class="card-text">Autoriser un prélèvement bancaire</p>
+                                <button class="btn btn-outline-warning w-100 payment-method-btn" data-payment-type="Prélèvement SEPA">
+                                    Sélectionner
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Stripe Credit Card Payment Modal -->
+<div class="modal fade" id="stripePaymentModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Paiement par Carte Bancaire</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <h6 class="card-title">{{ conference.titre }}</h6>
+                            <h6 class="card-title">{{ conference.prix }} TND</h6>
+                        </div>
+                    </div>
+                </div>
+                
+                <form id="stripe-payment-form" action="{{ path('app_payment_new') }}" method="post">
+                    <div class="form-group mb-3">
+                        <label for="card-element" class="form-label">
+                            Carte de crédit
+                        </label>
+                        <div id="card-element" class="form-control"></div>
+                        <div id="card-errors" class="text-danger mt-2" role="alert"></div>
+                    </div>
+                    
+                    <input type="hidden" name="inscription_id" id="stripe-inscription-id">
+                    <input type="hidden" name="conference_id" value="{{ conference.id }}">
+                    <input type="hidden" name="payment_type" value="Carte Bancaire">
+                    <input type="hidden" name="amount" value="{{ conference.prix }}">
+                    
+                    <div class="d-grid gap-2">
+                        <button type="button" class="btn btn-primary" id="stripe-submit">
+                            <span id="stripe-button-text">Payer {{ conference.prix }} TND</span>
+                            <span id="stripe-loading" class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SEPA Payment Modal -->
+<div class="modal fade" id="sepaPaymentModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title">Paiement par SEPA</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <h6 class="card-title">{{ conference.titre }}</h6>
+                            <h6 class="card-title">{{ conference.prix }} TND</h6>
+                        </div>
+                    </div>
+                </div>
+                
+                <form id="sepa-form" action="{{ path('app_payment_new') }}" method="post">
+                    <div class="form-group mb-3">
+                        <label for="sepa-account-holder" class="form-label">Titulaire du compte</label>
+                        <input type="text" id="sepa-account-holder" name="account_holder" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label for="sepa-iban" class="form-label">IBAN</label>
+                        <input type="text" id="sepa-iban" name="iban" class="form-control" required>
+                    </div>
+                    
+                    <input type="hidden" name="inscription_id" id="sepa-inscription-id">
+                    <input type="hidden" name="conference_id" value="{{ conference.id }}">
+                    <input type="hidden" name="payment_type" id="sepa-payment-type">
+                    <input type="hidden" name="amount" value="{{ conference.prix }}">
+                    
+                    <div id="sepa-errors" class="text-danger mb-3"></div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-info text-white">
+                            Confirmer le paiement
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Digital Wallet Payment Modal -->
+<div class="modal fade" id="digitalWalletModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">Paiement par Portefeuille Digital</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <h6 class="card-title">{{ conference.titre }}</h6>
+                            <h6 class="card-title">{{ conference.prix }} TND</h6>
+                        </div>
+                    </div>
+                </div>
+                
+                <form id="digital-wallet-form" action="{{ path('app_payment_new') }}" method="post">
+                    <div class="mb-4">
+                        <h6>Choisissez votre portefeuille:</h6>
+                        
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="wallet_type" id="google-pay" value="google-pay" checked>
+                            <label class="form-check-label" for="google-pay">
+                                <i class="fab fa-google-pay fa-2x me-2"></i> Google Pay
+                            </label>
+                        </div>
+                        
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="wallet_type" id="apple-pay" value="apple-pay">
+                            <label class="form-check-label" for="apple-pay">
+                                <i class="fab fa-apple-pay fa-2x me-2"></i> Apple Pay
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <input type="hidden" name="inscription_id" id="wallet-inscription-id">
+                    <input type="hidden" name="conference_id" value="{{ conference.id }}">
+                    <input type="hidden" name="payment_type" value="GoogleApplePay">
+                    <input type="hidden" name="amount" value="{{ conference.prix }}">
+                    
+                    <div id="digital-wallet-errors" class="text-danger mb-3"></div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success">
+                            Payer avec portefeuille digital
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Payment Success Modal -->
+<div class="modal fade" id="paymentSuccessModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">Paiement Réussi</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <i class="fas fa-check-circle fa-5x text-success mb-4"></i>
+                <h4>Merci pour votre paiement!</h4>
+                <p>Votre inscription à la conférence a été confirmée.</p>
+                <p class="text-muted">Un email de confirmation a été envoyé à votre adresse email.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success return-to-conference">Retour à la conférence</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Include Stripe.js -->
+<script src="https://js.stripe.com/v3/"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Stripe
+    const stripe = Stripe('pk_test_51Qyl1xFMW7DU2mdyb3QIMJAuNVrsfWjnXIV42wX1tJVx54ltqyLqjhFmme03D71tQjDu6x3Kk40fwu0JwlfMLuKe00CB3zhiW9');
+    const elements = stripe.elements();
+    
+    // Create card element
+    const cardElement = elements.create('card');
+    
+    // Mount card element when modal is shown
+    document.getElementById('stripePaymentModal').addEventListener('shown.bs.modal', function() {
+        cardElement.mount('#card-element');
+    });
+    
+    // Handle Stripe payment button click
+    document.getElementById('stripe-submit').addEventListener('click', function() {
+        const registrationData = JSON.parse(sessionStorage.getItem('registrationData'));
+        document.getElementById('stripe-inscription-id').value = registrationData.inscriptionId;
+        
+        this.disabled = true;
+        document.getElementById('stripe-loading').classList.remove('d-none');
+        
+        stripe.createToken(cardElement).then(function(result) {
+            if (result.error) {
+                // Show error to customer
+                const errorElement = document.getElementById('card-errors');
+                errorElement.textContent = result.error.message;
+                document.getElementById('stripe-submit').disabled = false;
+                document.getElementById('stripe-loading').classList.add('d-none');
+            } else {
+                // Create a hidden input with the token and submit the form
+                const form = document.getElementById('stripe-payment-form');
+                const hiddenInput = document.createElement('input');
+                hiddenInput.setAttribute('type', 'hidden');
+                hiddenInput.setAttribute('name', 'stripeToken');
+                hiddenInput.setAttribute('value', result.token.id);
+                form.appendChild(hiddenInput);
+                
+                // Submit the form
+                form.submit();
+            }
+        });
+    });
+    
+    // Update hidden fields for other payment methods
+    document.querySelectorAll('.payment-method-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const paymentType = this.getAttribute('data-payment-type');
+            if (paymentType === 'Virement SEPA' || paymentType === 'Prélèvement SEPA') {
+                document.getElementById('sepa-payment-type').value = paymentType;
+            }
+            
+            // Set inscription ID for all forms
+            const registrationData = JSON.parse(sessionStorage.getItem('registrationData'));
+            document.getElementById('sepa-inscription-id').value = registrationData.inscriptionId;
+            document.getElementById('wallet-inscription-id').value = registrationData.inscriptionId;
+        });
+    });
+});
+</script>
+
+<style>
+/* Payment styles */
+.payment-method-card {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+.payment-method-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+#card-element {
+    padding: 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    background-color: #fff;
+}
+.modal-header {
+    border-bottom: 0;
+}
+.modal-footer {
+    border-top: 0;
+}
+</style>
 {% endblock %}

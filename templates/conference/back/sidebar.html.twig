@@ -1,0 +1,27 @@
+{# This is assuming this is the correct sidebar file. If not, find the actual sidebar template #}
+{% block sidebar %}
+    <div class="sidebar">
+        <div class="logo">
+            {# ... existing logo code ... #}
+        </div>
+
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a href="{{ path('app_conference_back') }}" class="nav-link {% if app.request.get('_route') == 'app_conference_back' %}active{% endif %}">
+                    <i class="bi bi-speedometer2 me-2"></i>
+                    Dashboard
+                </a>
+            </li>
+            
+            {# Add Statistics Button directly in the template #}
+            <li class="nav-item">
+                <a href="#" class="nav-link" id="stats-button" data-bs-toggle="modal" data-bs-target="#statisticsModal">
+                    <i class="bi bi-graph-up me-2"></i>
+                    Statistics
+                </a>
+            </li>
+            
+            {# ... existing sidebar items ... #}
+        </ul>
+    </div>
+{% endblock %}

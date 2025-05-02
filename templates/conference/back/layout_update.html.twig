@@ -1,0 +1,11 @@
+{# Include this in your main backend layout file #}
+
+{# Include the modal #}
+{% include 'conference/back/statistics_modal.html.twig' %}
+
+{# Include Chart.js and our custom script #}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="{{ asset('js/conference-statistics.js') }}"></script>
+{% endblock %}

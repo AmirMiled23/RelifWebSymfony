@@ -3,12 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Inscription;
+use App\Entity\Conference;
 use App\Form\InscriptionType;
 use App\Repository\InscriptionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/inscription')]
@@ -23,38 +25,47 @@ final class InscriptionController extends AbstractController
     }
 
     #[Route('/new', name: 'app_inscription_new', methods: ['POST', 'GET'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
+        // Get form data
         $conferenceId = $request->request->get('conference_id');
-        if ($conferenceId) {
-            $conference = $entityManager->getRepository(\App\Entity\Conference::class)->find($conferenceId);
-            if ($conference) {
-                $inscription = new Inscription();
-                $inscription->setConference($conference);
-                // Optionally set user or other fields here
-                $entityManager->persist($inscription);
-                $entityManager->flush();
-                $this->addFlash('success', 'Vous êtes inscrit avec succès !');
-                return $this->redirectToRoute('app_conference_index');
-            } else {
-                $this->addFlash('danger', 'Conférence introuvable.');
-                return $this->redirectToRoute('app_conference_index');
-            }
+        $nom = $request->request->get('nom');
+        $prenom = $request->request->get('prenom');
+        $email = $request->request->get('email');
+        $telephone = $request->request->get('telephone');
+        
+        // Validate required fields
+        if (!$conferenceId || !$nom || !$prenom || !$email || !$telephone) {
+            return $this->json(['success' => false, 'message' => 'All fields are required']);
         }
-        // fallback to default form if no conference_id (old behavior)
-        $inscription = new Inscription();
-        $form = $this->createForm(InscriptionType::class, $inscription);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
+        
+        // Get the conference
+        $conference = $entityManager->getRepository(Conference::class)->find($conferenceId);
+        if (!$conference) {
+            return $this->json(['success' => false, 'message' => 'Conference not found']);
+        }
+        
+        try {
+            // Create new inscription
+            $inscription = new Inscription();
+            $inscription->setNom($nom);
+            $inscription->setPrenom($prenom);
+            $inscription->setEmail($email);
+            $inscription->setTelephone($telephone);
+            $inscription->setConference($conference);
+            // Date is set automatically if using current_timestamp default
+            
+            // Save to database
             $entityManager->persist($inscription);
             $entityManager->flush();
-            $this->addFlash('success', 'Inscription créée avec succès !');
-            return $this->redirectToRoute('app_inscription_index', [], Response::HTTP_SEE_OTHER);
+            
+            return $this->json([
+                'success' => true,
+                'inscriptionId' => $inscription->getId() // Return the new inscription ID
+            ]);
+        } catch (\Exception $e) {
+            return $this->json(['success' => false, 'message' => $e->getMessage()]);
         }
-        return $this->render('inscription/new.html.twig', [
-            'inscription' => $inscription,
-            'form' => $form,
-        ]);
     }
 
     #[Route('/{id}', name: 'app_inscription_show', methods: ['GET'])]

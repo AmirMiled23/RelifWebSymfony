@@ -6,7 +6,9 @@ use App\Entity\Resource;
 use App\Form\Resource1Type;
 use App\Repository\ResourceRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Snappy\Pdf;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -14,6 +16,13 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/resource/back')]
 final class ResourceBackController extends AbstractController
 {
+    private Pdf $pdfGenerator;
+
+    public function __construct(Pdf $pdfGenerator)
+    {
+        $this->pdfGenerator = $pdfGenerator;
+    }
+
     #[Route(name: 'app_resource_back_index', methods: ['GET'])]
     public function index(ResourceRepository $resourceRepository): Response
     {
@@ -30,8 +39,17 @@ final class ResourceBackController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $file = $form->get('pdf')->getData();
+
+            if ($file) {
+                $fileName = uniqid() . '.' . $file->guessExtension();
+                $file->move($this->getParameter('pdf_directory'), $fileName);
+                $resource->setPdfPath($fileName);
+            }
+
             $entityManager->persist($resource);
             $entityManager->flush();
+
             $this->addFlash('success', 'Resource ajoutée avec succès !');
             return $this->redirectToRoute('app_resource_back_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -78,5 +96,17 @@ final class ResourceBackController extends AbstractController
         }
 
         return $this->redirectToRoute('app_resource_back_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/export/{id}', name: 'resource_export', methods: ['GET'])]
+    public function exportPdf(Resource $resource): BinaryFileResponse
+    {
+        $pdfFilePath = $this->getParameter('pdf_directory') . '/' . $resource->getPdfPath();
+
+        if (!file_exists($pdfFilePath)) {
+            throw $this->createNotFoundException('The requested PDF file does not exist.');
+        }
+
+        return new BinaryFileResponse($pdfFilePath);
     }
 }

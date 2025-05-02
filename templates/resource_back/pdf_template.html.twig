@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Resource PDF{% endblock %}
+
+{% block body %}
+<h1>Resource Details</h1>
+
+<table class="table">
+    <tr>
+        <th>ID</th>
+        <td>{{ resource.id }}</td>
+    </tr>
+    <tr>
+        <th>Type</th>
+        <td>{{ resource.type }}</td>
+    </tr>
+    <tr>
+        <th>URL</th>
+        <td>{{ resource.url }}</td>
+    </tr>
+    <tr>
+        <th>Description</th>
+        <td>{{ resource.description }}</td>
+    </tr>
+</table>
+{% endblock %}

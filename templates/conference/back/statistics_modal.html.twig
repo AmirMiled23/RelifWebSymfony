@@ -1,0 +1,137 @@
+<!-- Statistics Modal -->
+<div class="modal fade" id="statisticsModal" tabindex="-1" aria-labelledby="statisticsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="statisticsModalLabel">
+                    <i class="bi bi-graph-up me-2"></i> Conference Statistics
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0">
+                <!-- Tabs navigation -->
+                <ul class="nav nav-tabs nav-fill" id="statsTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" 
+                                role="tab" aria-controls="overview" aria-selected="true">Overview</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="themes-tab" data-bs-toggle="tab" data-bs-target="#themes" type="button" 
+                                role="tab" aria-controls="themes" aria-selected="false">Themes</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="locations-tab" data-bs-toggle="tab" data-bs-target="#locations" type="button" 
+                                role="tab" aria-controls="locations" aria-selected="false">Locations</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="revenue-tab" data-bs-toggle="tab" data-bs-target="#revenue" type="button" 
+                                role="tab" aria-controls="revenue" aria-selected="false">Revenue</button>
+                    </li>
+                </ul>
+                
+                <!-- Tab content -->
+                <div class="tab-content p-4" id="statsTabContent">
+                    <!-- Overview Tab -->
+                    <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+                        <div class="row">
+                            <div class="col-md-7">
+                                <div class="card shadow-sm h-100">
+                                    <div class="card-header bg-white">
+                                        <h5 class="mb-0">Monthly Conferences</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="monthlySummaryChart" height="250"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="card shadow-sm h-100">
+                                    <div class="card-header bg-white">
+                                        <h5 class="mb-0">Conference Status</h5>
+                                    </div>
+                                    <div class="card-body d-flex justify-content-center align-items-center">
+                                        <canvas id="statusPieChart" width="250" height="250"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Themes Tab -->
+                    <div class="tab-pane fade" id="themes" role="tabpanel" aria-labelledby="themes-tab">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="card shadow-sm">
+                                    <div class="card-header bg-white">
+                                        <h5 class="mb-0">Conferences by Theme</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="themesBarChart" height="300"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card shadow-sm">
+                                    <div class="card-header bg-white">
+                                        <h5 class="mb-0">Theme Distribution</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="themesPieChart" height="300"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Locations Tab -->
+                    <div class="tab-pane fade" id="locations" role="tabpanel" aria-labelledby="locations-tab">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card shadow-sm">
+                                    <div class="card-header bg-white">
+                                        <h5 class="mb-0">Top Conference Locations</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="locationsChart" height="300"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Revenue Tab -->
+                    <div class="tab-pane fade" id="revenue" role="tabpanel" aria-labelledby="revenue-tab">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="card shadow-sm">
+                                    <div class="card-header bg-white">
+                                        <h5 class="mb-0">Monthly Revenue</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="revenueChart" height="250"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card shadow-sm">
+                                    <div class="card-header bg-white">
+                                        <h5 class="mb-0">Revenue by Theme</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="revenueByThemeChart" height="250"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="downloadStats">
+                    <i class="bi bi-download me-2"></i> Download Report
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

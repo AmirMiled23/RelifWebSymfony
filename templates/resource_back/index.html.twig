@@ -37,6 +37,7 @@
                 <th class="gray">Url</th>
                 <th class="white">Description</th>
                 <th>actions</th>
+                <th>PDF Export</th>
             </tr>
         </thead>
         <tbody>
@@ -50,10 +51,13 @@
                     <a href="{{ path('app_resource_back_show', {'id': resource.id}) }}" class="btn btn-info btn-sm">show</a>
                     <a href="{{ path('app_resource_back_edit', {'id': resource.id}) }}" class="btn btn-warning btn-sm">edit</a>
                 </td>
+                <td>
+                    <a href="{{ path('resource_export', {'id': resource.id}) }}" class="btn btn-secondary btn-sm">Export PDF</a>
+                </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="5">no records found</td>
+                <td colspan="6">no records found</td>
             </tr>
         {% endfor %}
         </tbody>

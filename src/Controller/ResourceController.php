@@ -6,14 +6,24 @@ use App\Entity\Resource;
 use App\Form\ResourceType;
 use App\Repository\ResourceRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Snappy\Pdf;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/resource')]
 final class ResourceController extends AbstractController
 {
+    private Pdf $pdfGenerator;
+
+    public function __construct(Pdf $pdfGenerator)
+    {
+        $this->pdfGenerator = $pdfGenerator;
+    }
+
     #[Route(name: 'app_resource_index', methods: ['GET'])]
     public function index(ResourceRepository $resourceRepository): Response
     {
@@ -30,6 +40,14 @@ final class ResourceController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $file = $form->get('pdf')->getData();
+
+            if ($file) {
+                $fileName = uniqid() . '.' . $file->guessExtension();
+                $file->move($this->getParameter('pdf_directory'), $fileName);
+                $resource->setPdfPath($fileName);
+            }
+
             $entityManager->persist($resource);
             $entityManager->flush();
 
@@ -77,5 +95,37 @@ final class ResourceController extends AbstractController
         }
 
         return $this->redirectToRoute('app_resource_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/upload', name: 'resource_upload', methods: ['POST'])]
+    public function uploadPdf(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $file = $request->files->get('pdf');
+
+        if ($file instanceof UploadedFile && $file->isValid()) {
+            $fileName = uniqid() . '.' . $file->guessExtension();
+            $file->move($this->getParameter('pdf_directory'), $fileName);
+
+            $resource = new Resource();
+            $resource->setPdfPath($fileName);
+            $entityManager->persist($resource);
+            $entityManager->flush();
+
+            return new Response('PDF uploaded successfully!');
+        }
+
+        return new Response('Invalid file upload.', Response::HTTP_BAD_REQUEST);
+    }
+
+    #[Route('/export/{id}', name: 'resource_export', methods: ['GET'])]
+    public function exportPdf(Resource $resource): BinaryFileResponse
+    {
+        $pdfFilePath = $this->getParameter('pdf_directory') . '/' . $resource->getPdfPath();
+
+        if (!file_exists($pdfFilePath)) {
+            throw $this->createNotFoundException('The requested PDF file does not exist.');
+        }
+
+        return new BinaryFileResponse($pdfFilePath);
     }
 }

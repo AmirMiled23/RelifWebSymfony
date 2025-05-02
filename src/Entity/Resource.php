@@ -71,4 +71,18 @@ class Resource
         return $this;
     }
 
+    #[ORM\Column(type: 'string', nullable: true)]
+    private ?string $pdfPath = null;
+
+    public function getPdfPath(): ?string
+    {
+        return $this->pdfPath;
+    }
+
+    public function setPdfPath(?string $pdfPath): self
+    {
+        $this->pdfPath = $pdfPath;
+        return $this;
+    }
+
 }

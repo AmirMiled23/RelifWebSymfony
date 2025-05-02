@@ -5,32 +5,36 @@ namespace App\Controller;
 use App\Entity\Conference;
 use App\Form\ConferenceType;
 use App\Repository\ConferenceRepository;
-use App\Repository\ResourceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Knp\Component\Pager\PaginatorInterface;
 
 #[Route('/conference')]
 final class ConferenceController extends AbstractController
 {
     #[Route(name: 'app_conference_index', methods: ['GET'])]
-    public function index(ConferenceRepository $conferenceRepository): Response
+    public function index(ConferenceRepository $conferenceRepository, PaginatorInterface $paginator, Request $request): Response
     {
+        $queryBuilder = $conferenceRepository->createQueryBuilder('c');
+        $pagination = $paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page', 1),
+            10 // Items per page
+        );
+
         return $this->render('conference/index.html.twig', [
-            'conferences' => $conferenceRepository->findAll(),
+            'pagination' => $pagination,
         ]);
     }
 
     #[Route('/new', name: 'app_conference_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, ResourceRepository $resourceRepository): Response
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $conference = new Conference();
-        $resources = $resourceRepository->findAll();
-        $form = $this->createForm(ConferenceType::class, $conference, [
-            'resources' => $resources
-        ]);
+        $form = $this->createForm(ConferenceType::class, $conference);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -40,10 +44,9 @@ final class ConferenceController extends AbstractController
             return $this->redirectToRoute('app_conference_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('conference/new.html.twig', [
+        return $this->render('conference/new.html.twig', [
             'conference' => $conference,
             'form' => $form,
-            'resources' => $resources,
         ]);
     }
 
@@ -56,12 +59,9 @@ final class ConferenceController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_conference_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Conference $conference, EntityManagerInterface $entityManager, ResourceRepository $resourceRepository): Response
+    public function edit(Request $request, Conference $conference, EntityManagerInterface $entityManager): Response
     {
-        $resources = $resourceRepository->findAll();
-        $form = $this->createForm(ConferenceType::class, $conference, [
-            'resources' => $resources
-        ]);
+        $form = $this->createForm(ConferenceType::class, $conference);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -70,17 +70,16 @@ final class ConferenceController extends AbstractController
             return $this->redirectToRoute('app_conference_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('conference/edit.html.twig', [
+        return $this->render('conference/edit.html.twig', [
             'conference' => $conference,
             'form' => $form,
-            'resources' => $resources,
         ]);
     }
 
     #[Route('/{id}', name: 'app_conference_delete', methods: ['POST'])]
     public function delete(Request $request, Conference $conference, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$conference->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$conference->getId(), $request->get('_token'))) {
             // Remove all inscriptions related to this conference
             foreach ($conference->getInscriptions() as $inscription) {
                 $entityManager->remove($inscription);

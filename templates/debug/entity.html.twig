@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Entity Debug{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1>Entity Debug Information</h1>
+        
+        {% if entities|length > 0 %}
+            <div class="alert alert-info">Found {{ entities|length }} related entities</div>
+            
+            {% for entity in entities %}
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="card-title mb-0">{{ entity.class }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Table:</strong> {{ entity.table }}</p>
+                        
+                        <h6>Fields:</h6>
+                        <ul>
+                            {% for field in entity.fields %}
+                                <li>{{ field }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-warning">No Conference-related entities found</div>
+        {% endif %}
+        
+        <div class="mt-4">
+            <a href="{{ path('debug_entity') }}?refresh=1" class="btn btn-primary">Refresh</a>
+        </div>
+    </div>
+{% endblock %}

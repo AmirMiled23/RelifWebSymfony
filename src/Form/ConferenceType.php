@@ -3,8 +3,6 @@
 namespace App\Form;
 
 use App\Entity\Conference;
-use App\Entity\Resource;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -17,6 +15,8 @@ class ConferenceType extends AbstractType
             ->add('titre')
             ->add('date_conference', null, [
                 'widget' => 'single_text',
+                'label' => 'Date de la conférence',
+                'attr' => ['class' => 'form-control', 'id' => 'conference_date_conference'],
             ])
             ->add('presenteur')
             ->add('lieu')
@@ -25,22 +25,6 @@ class ConferenceType extends AbstractType
             ->add('theme')
             ->add('status')
             ->add('resource')
-            ->add('resources', EntityType::class, [
-                'class' => Resource::class,
-                'choice_label' => function (Resource $resource) {
-                    return $resource->getName() . ' (' . $resource->getType() . ')';
-                },
-                'choices' => $options['resources'],
-                'multiple' => true,
-                'expanded' => false,
-                'required' => false,
-                'attr' => [
-                    'class' => 'resource-select form-select',
-                    'data-live-search' => 'true',
-                    'data-placeholder' => 'Select resources...'
-                ],
-                'label' => 'Resources'
-            ])
         ;
     }
 
@@ -48,7 +32,6 @@ class ConferenceType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Conference::class,
-            'resources' => [],
         ]);
     }
 }

@@ -1,0 +1,157 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Paiement Réussi{% endblock %}
+
+{% block body %}
+<style>
+    .success-page {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: url('{{ asset('assets/front/images/backgroundRelif.png') }}') center center/cover no-repeat;
+        padding: 20px;
+    }
+    .success-card {
+        background: rgba(255,255,255,0.95);
+        border-radius: 1rem;
+        box-shadow: 0 0.5rem 2rem rgba(0,0,0,0.15);
+        max-width: 600px;
+        width: 100%;
+    }
+    .success-icon {
+        font-size: 5rem;
+        color: #28a745;
+    }
+    .confetti {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background-color: #f2d74e;
+        animation: confetti 5s ease-in-out infinite;
+    }
+    .confetti:nth-child(1) {
+        left: 10%;
+        animation-duration: 2.5s;
+        animation-delay: 0s;
+        background-color: #f2d74e;
+    }
+    .confetti:nth-child(2) {
+        left: 20%;
+        animation-duration: 2.7s;
+        animation-delay: 0.2s;
+        background-color: #95c3de;
+    }
+    .confetti:nth-child(3) {
+        left: 30%;
+        animation-duration: 2.9s;
+        animation-delay: 0.4s;
+        background-color: #ff9a91;
+    }
+    .confetti:nth-child(4) {
+        left: 40%;
+        animation-duration: 2.4s;
+        animation-delay: 0.6s;
+        background-color: #f2d74e;
+    }
+    .confetti:nth-child(5) {
+        left: 50%;
+        animation-duration: 2.6s;
+        animation-delay: 0.8s;
+        background-color: #95c3de;
+    }
+    .confetti:nth-child(6) {
+        left: 60%;
+        animation-duration: 2.8s;
+        animation-delay: 1s;
+        background-color: #ff9a91;
+    }
+    .confetti:nth-child(7) {
+        left: 70%;
+        animation-duration: 3s;
+        animation-delay: 1.2s;
+        background-color: #f2d74e;
+    }
+    .confetti:nth-child(8) {
+        left: 80%;
+        animation-duration: 2.7s;
+        animation-delay: 1.4s;
+        background-color: #95c3de;
+    }
+    .confetti:nth-child(9) {
+        left: 90%;
+        animation-duration: 2.9s;
+        animation-delay: 1.6s;
+        background-color: #ff9a91;
+    }
+    
+    @keyframes confetti {
+        0% {
+            transform: translateY(0) rotateX(0) rotateY(0);
+        }
+        100% {
+            transform: translateY(1000px) rotateX(720deg) rotateY(360deg);
+        }
+    }
+</style>
+
+<div class="success-page position-relative overflow-hidden">
+    <!-- Confetti animation -->
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    
+    <div class="success-card p-5 text-center">
+        <div class="mb-4">
+            <i class="fas fa-check-circle success-icon"></i>
+        </div>
+        <h1 class="mb-4">Paiement Réussi !</h1>
+        <p class="lead mb-4">Votre inscription à la conférence a été confirmée et votre paiement a été traité avec succès.</p>
+        <p class="mb-5">Un email de confirmation contenant tous les détails a été envoyé à votre adresse email.</p>
+        
+        <div class="d-grid gap-3 col-lg-8 mx-auto">
+            <a href="{{ path('app_conference_index') }}" class="btn btn-primary btn-lg">
+                <i class="fas fa-list me-2"></i> Voir toutes les conférences
+            </a>
+        </div>
+        
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success mt-4">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    // Additional confetti animation for a more dynamic effect
+    document.addEventListener('DOMContentLoaded', function() {
+        createConfetti(100);
+    });
+    
+    function createConfetti(num) {
+        const container = document.querySelector('.success-page');
+        for (let i = 0; i < num; i++) {
+            const confetti = document.createElement('div');
+            confetti.classList.add('confetti');
+            
+            // Random confetti properties
+            confetti.style.left = Math.random() * 100 + '%';
+            confetti.style.width = Math.random() * 8 + 6 + 'px';
+            confetti.style.height = confetti.style.width;
+            confetti.style.opacity = Math.random() + 0.5;
+            confetti.style.backgroundColor = ['#f2d74e', '#95c3de', '#ff9a91', '#f49ac2', '#82cbb2'][Math.floor(Math.random() * 5)];
+            confetti.style.animationDuration = Math.random() * 3 + 2 + 's';
+            confetti.style.animationDelay = Math.random() * 5 + 's';
+            
+            container.appendChild(confetti);
+        }
+    }
+</script>
+{% endblock %}

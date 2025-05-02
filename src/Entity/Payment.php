@@ -18,93 +18,106 @@ class Payment
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
+    #[ORM\Column(type: 'string', length: 255)]
+    private ?string $inscriptionId = null;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    private ?string $conferenceId = null;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    private ?string $paymentType = null;
+
+    #[ORM\Column(type: 'float')]
+    private ?float $amount = null;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    private ?string $status = null;
+
+    #[ORM\Column(type: 'datetime')]
+    private ?\DateTimeInterface $paymentDate = null;
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $additionalData = null;
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function setId(int $id): self
+    public function getInscriptionId(): ?string
     {
-        $this->id = $id;
+        return $this->inscriptionId;
+    }
+
+    public function setInscriptionId(string $inscriptionId): self
+    {
+        $this->inscriptionId = $inscriptionId;
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
-    private ?string $payment_type = null;
-
-    public function getPayment_type(): ?string
+    public function getConferenceId(): ?string
     {
-        return $this->payment_type;
+        return $this->conferenceId;
     }
 
-    public function setPayment_type(string $payment_type): self
+    public function setConferenceId(string $conferenceId): self
     {
-        $this->payment_type = $payment_type;
-        return $this;
-    }
-
-    #[ORM\Column(type: 'datetime', nullable: false)]
-    private ?\DateTimeInterface $purchase_date = null;
-
-    public function getPurchase_date(): ?\DateTimeInterface
-    {
-        return $this->purchase_date;
-    }
-
-    public function setPurchase_date(\DateTimeInterface $purchase_date): self
-    {
-        $this->purchase_date = $purchase_date;
-        return $this;
-    }
-
-    #[ORM\Column(type: 'decimal', nullable: false)]
-    private ?float $total_amount = null;
-
-    public function getTotal_amount(): ?float
-    {
-        return $this->total_amount;
-    }
-
-    public function setTotal_amount(float $total_amount): self
-    {
-        $this->total_amount = $total_amount;
+        $this->conferenceId = $conferenceId;
         return $this;
     }
 
     public function getPaymentType(): ?string
     {
-        return $this->payment_type;
+        return $this->paymentType;
     }
 
-    public function setPaymentType(string $payment_type): static
+    public function setPaymentType(string $paymentType): self
     {
-        $this->payment_type = $payment_type;
-
+        $this->paymentType = $paymentType;
         return $this;
     }
 
-    public function getPurchaseDate(): ?\DateTimeInterface
+    public function getAmount(): ?float
     {
-        return $this->purchase_date;
+        return $this->amount;
     }
 
-    public function setPurchaseDate(\DateTimeInterface $purchase_date): static
+    public function setAmount(float $amount): self
     {
-        $this->purchase_date = $purchase_date;
-
+        $this->amount = $amount;
         return $this;
     }
 
-    public function getTotalAmount(): ?string
+    public function getStatus(): ?string
     {
-        return $this->total_amount;
+        return $this->status;
     }
 
-    public function setTotalAmount(string $total_amount): static
+    public function setStatus(string $status): self
     {
-        $this->total_amount = $total_amount;
-
+        $this->status = $status;
         return $this;
     }
 
+    public function getPaymentDate(): ?\DateTimeInterface
+    {
+        return $this->paymentDate;
+    }
+
+    public function setPaymentDate(\DateTimeInterface $paymentDate): self
+    {
+        $this->paymentDate = $paymentDate;
+        return $this;
+    }
+
+    public function getAdditionalData(): ?string
+    {
+        return $this->additionalData;
+    }
+
+    public function setAdditionalData(?string $additionalData): self
+    {
+        $this->additionalData = $additionalData;
+        return $this;
+    }
 }
