@@ -6,6 +6,7 @@
     {{ parent() }}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{{ asset('css/conference.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/ai-assistant.css') }}">
 {% endblock %}
 
 {% block body %}
@@ -134,10 +135,14 @@
         {{ knp_pagination_render(pagination) }}
     </div>
 </div>
+
+{# Include AI Assistant Widget #}
+{% include 'shared/_ai_assistant.html.twig' %}
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
+    <script src="{{ asset('js/ai-assistant.js') }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             setTimeout(function() {

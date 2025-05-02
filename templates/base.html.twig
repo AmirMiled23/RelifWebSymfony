@@ -20,6 +20,13 @@
     <link rel="stylesheet" href="{{ asset('assets/front/css/fontawesome.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/front/css/templatemo-finance-business.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/front/css/owl.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="{{ asset('css/ai-assistant.css') }}">
+    <!-- Make sure we have Bootstrap Icons for the robot icon -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="{{ asset('css/ai-assistant.css') }}">
   </head>
 
   <body>
@@ -174,12 +181,59 @@
 
     <!-- Bootstrap core JavaScript -->
     <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
-
+    
+    <!-- jQuery UI -->
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+    
+    <!-- Slick Carousel -->
+    <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick.min.js"></script>
+    
+    <!-- Bootstrap core JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
     <!-- Additional Scripts -->
-    <script src="{{ asset('assets/front/js/custom.js') }}"></script>
     <script src="{{ asset('assets/front/js/owl.js') }}"></script>
-    <script src="{{ asset('assets/front/js/slick.js') }}"></script>
-    <script src="{{ asset('assets/front/js/accordions.js') }}"></script>
+    <script src="{{ asset('assets/front/js/custom.js') }}"></script>
+    
+    <!-- Include Bootstrap Icons for the AI Assistant -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ asset('css/ai-assistant.css') }}">
+
+    {# Include AI Assistant Widget on all pages #}
+    {% include 'shared/_ai_assistant.html.twig' %}
+    
+    <script>
+        // Debug script to check if AI assistant elements are present
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("Base template loaded");
+            console.log("AI toggle button exists:", !!document.getElementById('aiAssistantToggle'));
+            console.log("AI panel exists:", !!document.getElementById('aiAssistantPanel'));
+        });
+    </script>
+    <script>
+    // Ensure AI assistant is working
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log("Base template loaded - AI Assistant check");
+        // Check if the button exists
+        var assistantBtn = document.getElementById('aiAssistantToggle');
+        if (assistantBtn) {
+            console.log("AI Assistant button found");
+            // Add a fallback click handler just to be sure
+            assistantBtn.addEventListener('click', function() {
+                console.log("AI Assistant button clicked from base.html.twig");
+                var panel = document.getElementById('aiAssistantPanel');
+                if (panel) {
+                    if (panel.style.display === 'flex') {
+                        panel.style.display = 'none';
+                    } else {
+                        panel.style.display = 'flex';
+                    }
+                }
+            });
+        } else {
+            console.error("AI Assistant button not found!");
+        }
+    });
+    </script>
   </body>
 </html>

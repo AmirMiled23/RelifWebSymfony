@@ -646,3 +646,75 @@ Forecast Data: {
     },
     "dt_txt": "2025-05-03 00:00:00"
 }
+Forecast Data: {
+    "dt": 1746187200,
+    "main": {
+        "temp": 27.69,
+        "feels_like": 26.59,
+        "temp_min": 27.69,
+        "temp_max": 30.66,
+        "pressure": 1018,
+        "sea_level": 1018,
+        "grnd_level": 1006,
+        "humidity": 22,
+        "temp_kf": -2.97
+    },
+    "weather": [
+        {
+            "id": 800,
+            "main": "Clear",
+            "description": "clear sky",
+            "icon": "01d"
+        }
+    ],
+    "clouds": {
+        "all": 2
+    },
+    "wind": {
+        "speed": 0.74,
+        "deg": 154,
+        "gust": 0.94
+    },
+    "visibility": 10000,
+    "pop": 0,
+    "sys": {
+        "pod": "d"
+    },
+    "dt_txt": "2025-05-02 12:00:00"
+}
+Forecast Data: {
+    "dt": 1746187200,
+    "main": {
+        "temp": 26.11,
+        "feels_like": 26.11,
+        "temp_min": 26.11,
+        "temp_max": 28.08,
+        "pressure": 1018,
+        "sea_level": 1018,
+        "grnd_level": 948,
+        "humidity": 40,
+        "temp_kf": -1.97
+    },
+    "weather": [
+        {
+            "id": 801,
+            "main": "Clouds",
+            "description": "few clouds",
+            "icon": "02d"
+        }
+    ],
+    "clouds": {
+        "all": 11
+    },
+    "wind": {
+        "speed": 2.74,
+        "deg": 8,
+        "gust": 3.01
+    },
+    "visibility": 10000,
+    "pop": 0,
+    "sys": {
+        "pod": "d"
+    },
+    "dt_txt": "2025-05-02 12:00:00"
+}

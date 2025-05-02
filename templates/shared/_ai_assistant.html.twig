@@ -1,0 +1,149 @@
+<div class="ai-assistant-widget" id="aiAssistant">
+    <div class="ai-assistant-button" id="aiAssistantToggle" onclick="toggleAssistant()">
+        <i class="bi bi-robot"></i>
+    </div>
+    
+    <div class="ai-assistant-panel" id="aiAssistantPanel">
+        <div class="ai-assistant-header">
+            <h5>Conference Assistant</h5>
+            <button type="button" class="ai-assistant-close" id="aiAssistantClose" onclick="closeAssistant()">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+        
+        <div class="ai-assistant-body" id="aiAssistantMessages">
+            <div class="ai-message">
+                <div class="ai-avatar">AI</div>
+                <div class="ai-bubble">
+                    Hello! I'm your conference assistant. Ask me anything about conferences, events, scheduling, or event management.
+                </div>
+            </div>
+        </div>
+        
+        <div class="ai-assistant-footer">
+            <form id="aiAssistantForm" onsubmit="sendMessage(event)">
+                <div class="ai-assistant-input-group">
+                    <input type="text" id="aiAssistantInput" placeholder="Type your message..." class="ai-assistant-input">
+                    <button type="submit" class="ai-assistant-send">
+                        <i class="bi bi-send"></i>
+                    </button>
+                </div>
+                <div class="ai-assistant-typing-indicator" id="aiTypingIndicator">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+// Guaranteed working inline JavaScript, no external dependencies
+var conversationHistory = [];
+
+function toggleAssistant() {
+    console.log("Toggle assistant called");
+    var panel = document.getElementById('aiAssistantPanel');
+    if (panel.style.display === 'flex') {
+        panel.style.display = 'none';
+    } else {
+        panel.style.display = 'flex';
+        document.getElementById('aiAssistantInput').focus();
+    }
+}
+
+function closeAssistant() {
+    document.getElementById('aiAssistantPanel').style.display = 'none';
+}
+
+function sendMessage(event) {
+    event.preventDefault();
+    var input = document.getElementById('aiAssistantInput');
+    var message = input.value.trim();
+    if (!message) return;
+    
+    // Clear input
+    input.value = '';
+    
+    // Add user message to chat
+    addMessage('user', message);
+    
+    // Show typing indicator
+    document.getElementById('aiTypingIndicator').style.display = 'block';
+    
+    // Send to backend
+    fetchAIResponse(message);
+}
+
+function addMessage(role, content) {
+    var messagesContainer = document.getElementById('aiAssistantMessages');
+    
+    var messageEl = document.createElement('div');
+    messageEl.className = role === 'user' ? 'user-message' : 'ai-message';
+    
+    var avatarEl = document.createElement('div');
+    avatarEl.className = role === 'user' ? 'user-avatar' : 'ai-avatar';
+    avatarEl.textContent = role === 'user' ? 'You' : 'AI';
+    
+    var bubbleEl = document.createElement('div');
+    bubbleEl.className = role === 'user' ? 'user-bubble' : 'ai-bubble';
+    bubbleEl.textContent = content;
+    
+    messageEl.appendChild(avatarEl);
+    messageEl.appendChild(bubbleEl);
+    messagesContainer.appendChild(messageEl);
+    
+    // Add to conversation history
+    conversationHistory.push({
+        role: role === 'user' ? 'user' : 'assistant',
+        content: content
+    });
+    
+    // Scroll to bottom
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+function fetchAIResponse(message) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/api/ai-assistant/chat', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+    
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+            // Hide typing indicator
+            document.getElementById('aiTypingIndicator').style.display = 'none';
+            
+            if (xhr.status === 200) {
+                try {
+                    var response = JSON.parse(xhr.responseText);
+                    if (response.success && response.reply) {
+                        addMessage('assistant', response.reply);
+                    } else {
+                        addMessage('assistant', 'Sorry, I encountered an error processing your request.');
+                    }
+                } catch (e) {
+                    console.error('Error parsing response', e);
+                    addMessage('assistant', 'Sorry, I encountered an error processing your request.');
+                }
+            } else {
+                addMessage('assistant', 'Sorry, I encountered an error connecting to the server.');
+            }
+        }
+    };
+    
+    xhr.send(JSON.stringify({
+        message: message,
+        history: conversationHistory
+    }));
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("AI Assistant inline script loaded");
+    // Initialize panel as hidden
+    var panel = document.getElementById('aiAssistantPanel');
+    if (panel) panel.style.display = 'none';
+});
+</script>
