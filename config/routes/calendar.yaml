@@ -1,1 +1,2 @@
-# Removed the invalid calendar key as it is no longer needed.
+calendar:
+    resource: "@CalendarBundle/Resources/config/routing.yaml"

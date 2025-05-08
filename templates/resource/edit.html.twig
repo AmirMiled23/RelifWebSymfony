@@ -14,39 +14,50 @@
         .select2-container {
             width: 100% !important;
         }
+        .resource-form-container {
+            position: relative;
+            border-top: 1px solid #e9ecef;
+            padding-top: 20px;
+        }
+        .resource-form-container label {
+            margin-bottom: 8px;
+            display: block;
+        }
     </style>
 {% endblock %}
 
 {% block body %}
     <h1>Edit Resource</h1>
 
-    <div class="resource-form">
-        {{ include('resource/_form.html.twig', {'button_label': 'Update'}) }}
-    </div>
-
-    <div class="card conference-resources">
-        <div class="card-header">
-            <h5>Associated Conference Resources</h5>
+    <div class="resource-form-container mt-4 pt-3">
+        <div class="resource-form">
+            {{ include('resource/_form.html.twig', {'button_label': 'Update'}) }}
         </div>
-        <div class="card-body">
-            <div class="form-group">
-                <label for="conferenceResources">Select Conference Resources</label>
-                <select class="form-control resource-select" id="conferenceResources" multiple>
-                    {% if resource.conference is defined and resource.conference is not null %}
-                        {% for res in resource.conference.resources %}
-                            <option value="{{ res.id }}" {% if res.id == resource.id %}selected{% endif %}>
-                                {{ res.name }} ({{ res.type }})
-                            </option>
-                        {% endfor %}
-                    {% endif %}
-                </select>
+
+        <div class="card conference-resources">
+            <div class="card-header">
+                <h5>Associated Conference Resources</h5>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="conferenceResources">Select Conference Resources</label>
+                    <select class="form-control resource-select" id="conferenceResources" multiple>
+                        {% if resource.conference is defined and resource.conference is not null %}
+                            {% for res in resource.conference.resources %}
+                                <option value="{{ res.id }}" {% if res.id == resource.id %}selected{% endif %}>
+                                    {{ res.name }} ({{ res.type }})
+                                </option>
+                            {% endfor %}
+                        {% endif %}
+                    </select>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="mt-4">
-        <a href="{{ path('app_resource_index') }}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back to list</a>
-        {{ include('resource/_delete_form.html.twig') }}
+        <div class="mt-4">
+            <a href="{{ path('app_resource_index') }}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back to list</a>
+            {{ include('resource/_delete_form.html.twig') }}
+        </div>
     </div>
 {% endblock %}
 
@@ -67,6 +78,22 @@
             {% else %}
             $('#conferenceResources').prop('disabled', true);
             {% endif %}
+        });
+
+        $(document).ready(function () {
+            const conferenceResources = $('#conferenceResources');
+            {% if resource.conference is defined and resource.conference is not null %}
+            // Keep the select enabled to allow viewing the relations
+            conferenceResources.css('margin-top', '80px'); // Adjust for navbar height
+            {% else %}
+            conferenceResources.prop('disabled', true).css('margin-top', '80px'); // Adjust for navbar height
+            {% endif %}
+            
+            // Ensure proper spacing from navbar
+            $('.resource-form-container').closest('.page-inner').css({
+                'padding-top': '30px',
+                'margin-top': '20px'
+            });
         });
     </script>
 {% endblock %}

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -39,17 +38,17 @@
 
   <!-- Navigation -->
   <header>
-    <nav class="navbar navbar-expand-lg">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
       <div class="container">
-        <a class="navbar-brand" href="#">
-          <img src="{{ asset('assets/back/img/logo.png') }}" alt="Logo" style="height: 50px;">
-          <h2 style="margin: 0; font-size: 18px; color: #8bc34a;">RELIF pour l'environnement</h2>
+        <a class="navbar-brand d-flex align-items-center" href="/">
+          <img src="{{ asset('assets/back/img/logo.png') }}" alt="Logo" style="height: 50px; margin-right: 10px;">
+          <span style="font-size: 20px; color: #8bc34a; font-weight: bold;">RELIF pour l'environnement</span>
         </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
-          <ul class="navbar-nav ml-auto">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
             <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
             <li class="nav-item"><a class="nav-link" href="#">About Us</a></li>
             <li class="nav-item"><a class="nav-link" href="{{ path('app_event_public') }}">Nos évènements</a></li>
@@ -61,7 +60,7 @@
   </header>
 
   <!-- Contenu spécifique à chaque page -->
-  <main>
+  <main class="container mt-5">
     {% block body %}{% endblock %}
   </main>
 
