@@ -33,7 +33,7 @@ class OffensiveSpeechDetector
         foreach ($data[0] as $labelData) {
             // Ce modèle retourne des labels comme "toxicity", "insult", "obscene", etc.
             if (
-                in_array(strtolower($labelData['label']), ['toxicity', 'insult', 'obscene', 'identi aty_attack', 'threat']) 
+                in_array(strtolower($labelData['label']), ['toxicity', 'insult', 'obscene', 'identity_attack', 'threat']) 
                 && $labelData['score'] > 0.5
             ) {
                 return true;
