@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -113,12 +114,12 @@ class Inscription
         return $this;
     }
 
-    public function getDateInscription(): ?\DateTime
+    public function getDateInscription(): ?\DateTimeInterface
     {
         return $this->date_inscription;
     }
 
-    public function setDateInscription(\DateTime $date_inscription): static
+    public function setDateInscription(\DateTimeInterface $date_inscription): static
     {
         $this->date_inscription = $date_inscription;
 

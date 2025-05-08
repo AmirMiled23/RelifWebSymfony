@@ -3,7 +3,7 @@ namespace App\Form;
 
 use App\Entity\CategorieEvent;
 use Symfony\Component\Form\AbstractType;
-use App\Form\CategorieEventType;
+use App\Form;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;

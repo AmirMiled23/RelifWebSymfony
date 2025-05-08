@@ -6,6 +6,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 use App\Repository\ConferenceRepository;
 
@@ -30,6 +31,8 @@ class Conference
     }
 
     #[ORM\Column(type: 'string', nullable: false)]
+    #[Assert\NotBlank(message: 'Le titre est obligatoire.')]
+    #[Assert\Length(min: 3, max: 255, minMessage: 'Le titre doit comporter au moins {{ limit }} caractères.')]
     private ?string $titre = null;
 
     public function getTitre(): ?string
@@ -44,6 +47,9 @@ class Conference
     }
 
     #[ORM\Column(type: 'date', nullable: false)]
+    #[Assert\NotBlank(message: 'La date est obligatoire.')]
+    #[Assert\Type(type: '\\DateTimeInterface', message: 'Date invalide.')]
+    #[Assert\GreaterThanOrEqual('today', message: 'La date doit être dans le futur ou aujourd\'hui.')]
     private ?\DateTimeInterface $date_conference = null;
 
     public function getDate_conference(): ?\DateTimeInterface
@@ -58,6 +64,7 @@ class Conference
     }
 
     #[ORM\Column(type: 'string', nullable: false)]
+    #[Assert\NotBlank(message: 'Le présentateur est obligatoire.')]
     private ?string $presenteur = null;
 
     public function getPresenteur(): ?string
@@ -72,6 +79,7 @@ class Conference
     }
 
     #[ORM\Column(type: 'string', nullable: false)]
+    #[Assert\NotBlank(message: 'Le lieu est obligatoire.')]
     private ?string $lieu = null;
 
     public function getLieu(): ?string
@@ -86,6 +94,8 @@ class Conference
     }
 
     #[ORM\Column(type: 'integer', nullable: false)]
+    #[Assert\NotBlank(message: 'Le nombre de places est obligatoire.')]
+    #[Assert\Positive(message: 'Le nombre de places doit être positif.')]
     private ?int $nb_place = null;
 
     public function getNb_place(): ?int
@@ -100,6 +110,8 @@ class Conference
     }
 
     #[ORM\Column(type: 'integer', nullable: false)]
+    #[Assert\NotBlank(message: 'Le prix est obligatoire.')]
+    #[Assert\PositiveOrZero(message: 'Le prix doit être positif ou zéro.')]
     private ?int $prix = null;
 
     public function getPrix(): ?int
@@ -114,6 +126,7 @@ class Conference
     }
 
     #[ORM\Column(type: 'string', nullable: false)]
+    #[Assert\NotBlank(message: 'Le thème est obligatoire.')]
     private ?string $theme = null;
 
     public function getTheme(): ?string
@@ -128,6 +141,7 @@ class Conference
     }
 
     #[ORM\Column(type: 'string', nullable: false)]
+    #[Assert\NotBlank(message: 'Le statut est obligatoire.')]
     private ?string $status = null;
 
     public function getStatus(): ?string
@@ -142,6 +156,7 @@ class Conference
     }
 
     #[ORM\Column(type: 'string', nullable: false)]
+    #[Assert\NotBlank(message: 'La ressource est obligatoire.')]
     private ?string $resource = null;
 
     public function getResource(): ?string
@@ -188,12 +203,12 @@ class Conference
         return $this;
     }
 
-    public function getDateConference(): ?\DateTime
+    public function getDateConference(): ?\DateTimeInterface
     {
         return $this->date_conference;
     }
 
-    public function setDateConference(\DateTime $date_conference): static
+    public function setDateConference(\DateTimeInterface $date_conference): static
     {
         $this->date_conference = $date_conference;
 

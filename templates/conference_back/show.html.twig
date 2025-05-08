@@ -1,0 +1,52 @@
+{% extends 'backbase.html.twig' %}
+
+{% block title %}Conference{% endblock %}
+
+{% block body %}
+<style>
+    .conference-details-back-bg {
+        background: linear-gradient(120deg, #e8f5e9 0%, #b2dfdb 100%);
+        min-height: 100vh;
+        padding-top: 40px;
+        padding-bottom: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .conference-details-back-card {
+        background: rgba(255,255,255,0.98);
+        border-radius: 1rem;
+        box-shadow: 0 0.5rem 2rem rgba(44, 62, 80, 0.15);
+    }
+</style>
+<div class="conference-details-back-bg">
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card conference-details-back-card border-0">
+                    <div class="card-body">
+                        <h2 class="card-title mb-3 text-success">{{ conference.titre }}</h2>
+                        <h5 class="card-subtitle mb-3 text-muted">{{ conference.theme }}</h5>
+                        <ul class="list-group list-group-flush mb-3">
+                            <li class="list-group-item"><strong>Date:</strong> {{ conference.dateConference ? conference.dateConference|date('Y-m-d') : 'N/A' }}</li>
+                            <li class="list-group-item"><strong>Presenter:</strong> {{ conference.presenteur }}</li>
+                            <li class="list-group-item"><strong>Location:</strong> {{ conference.lieu }}</li>
+                            <li class="list-group-item"><strong>Places:</strong> {{ conference.nbPlace }}</li>
+                            <li class="list-group-item"><strong>Price:</strong> {{ conference.prix }} TND</li>
+                            <li class="list-group-item"><strong>Status:</strong> {{ conference.status }}</li>
+                            <li class="list-group-item"><strong>Resource:</strong> {{ conference.resource }}</li>
+                        </ul>
+                        <a href="{{ path('app_conference_back_index') }}" class="btn btn-outline-success w-100 mt-2">
+                            <i class="fas fa-arrow-left"></i> Back to list
+                        </a>
+                        <a href="{{ path('app_conference_back_edit', {'id': conference.id}) }}" class="btn btn-warning w-100 mt-2">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        {{ include('conference_back/_delete_form.html.twig') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

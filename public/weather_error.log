@@ -1,0 +1,16 @@
+Error: HTTP request failed: file_get_contents(https://api.openweathermap.org/data/2.5/forecast?q=Megrine+Chaker%2C+D%C3%A9l%C3%A9gation+de+M%C3%A9grine%2C+Bin+%E2%80%98Ar%C5%ABs&amp;appid=34a5ba330480c38a1ab17b0cf2e0f8f3&amp;units=metric): Failed to open stream: HTTP request failed! HTTP/1.1 404 Not Found
+
+URL: https://api.openweathermap.org/data/2.5/forecast?q=Megrine+Chaker%2C+D%C3%A9l%C3%A9gation+de+M%C3%A9grine%2C+Bin+%E2%80%98Ar%C5%ABs&appid=34a5ba330480c38a1ab17b0cf2e0f8f3&units=metric
+Payload: {"location":"Megrine Chaker, D\u00e9l\u00e9gation de M\u00e9grine, Bin \u2018Ar\u016bs","date":"2025-04-28"}
+Error: HTTP request failed: file_get_contents(https://api.openweathermap.org/data/2.5/forecast?q=Sidi+Ali+Dadi%2C+Menzel+Temime&amp;appid=34a5ba330480c38a1ab17b0cf2e0f8f3&amp;units=metric): Failed to open stream: HTTP request failed! HTTP/1.1 404 Not Found
+
+URL: https://api.openweathermap.org/data/2.5/forecast?q=Sidi+Ali+Dadi%2C+Menzel+Temime&appid=34a5ba330480c38a1ab17b0cf2e0f8f3&units=metric
+Payload: {"location":"Sidi Ali Dadi, Menzel Temime","date":"2025-04-28"}
+Error: HTTP request failed: file_get_contents(https://api.openweathermap.org/data/2.5/forecast?q=Menzel+Temime&amp;appid=34a5ba330480c38a1ab17b0cf2e0f8f3&amp;units=metric): Failed to open stream: HTTP request failed! HTTP/1.1 404 Not Found
+
+URL: https://api.openweathermap.org/data/2.5/forecast?q=Menzel+Temime&appid=34a5ba330480c38a1ab17b0cf2e0f8f3&units=metric
+Payload: {"location":"Menzel Temime","date":"2025-04-28"}
+Error: HTTP request failed: file_get_contents(https://api.openweathermap.org/data/2.5/forecast?q=El+Houdh%2C+Tajerouine%2C+Kef&amp;appid=34a5ba330480c38a1ab17b0cf2e0f8f3&amp;units=metric): Failed to open stream: HTTP request failed! HTTP/1.1 404 Not Found
+
+URL: https://api.openweathermap.org/data/2.5/forecast?q=El+Houdh%2C+Tajerouine%2C+Kef&appid=34a5ba330480c38a1ab17b0cf2e0f8f3&units=metric
+Payload: {"location":"El Houdh, Tajerouine, Kef","date":"2025-05-02"}

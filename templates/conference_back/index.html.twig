@@ -1,0 +1,1370 @@
+{% extends 'backbase.html.twig' %}
+
+{% block title %}Conference Dashboard{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {# Bootstrap 5 CSS #}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    {# Bootstrap Icons (for filter/add buttons) #}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    {# Tippy.js for Tooltips #}
+    <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/dist/tippy.css"/>
+    {# Custom Styles #}
+    <style>
+        body {
+            background-color: #f8f9fa; /* Light grey background */
+            font-family: 'Roboto', sans-serif; /* Example clean font */
+        }
+        /* --- Calendar Modal & General --- */
+        #calendarModal .modal-dialog {
+            max-width: 90%;
+        }
+        #calendarModal .modal-content {
+            /* Nature theme gradient background */
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); /* Light green gradient */
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        #calendarModal .modal-header {
+            background: linear-gradient(135deg, #66bb6a 0%, #43a047 100%); /* Medium green gradient */
+            color: #ffffff; /* White text */
+            border-top-left-radius: 15px; /* Match content border */
+            border-top-right-radius: 15px;
+            border-bottom: none; /* Remove default border */
+        }
+        #calendarModal .modal-header .btn-close {
+            filter: brightness(0) invert(1); /* Make close button white */
+        }
+        #calendarModal .modal-title {
+            font-weight: bold;
+        }
+        #calendarModal .modal-body {
+            padding: 2rem; /* More padding */
+            background-color: transparent; /* Let modal content gradient show */
+        }
+        #calendarModal .modal-footer {
+            border-top: none; /* Remove default border */
+            background-color: rgba(255, 255, 255, 0.5); /* Slightly transparent white */
+            border-bottom-left-radius: 15px; /* Match content border */
+            border-bottom-right-radius: 15px;
+        }
+        .fc { /* FullCalendar container */
+            background-color: #ffffff; /* White background for calendar itself */
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .fc .fc-toolbar.fc-header-toolbar {
+            margin-bottom: 1.5em;
+            background: linear-gradient(to right, #a5d6a7, #81c784); /* Lighter green gradient for toolbar */
+            padding: 10px;
+            border-radius: 6px;
+        }
+        .fc .fc-toolbar-title {
+            color: #1b5e20; /* Dark green */
+            font-size: 1.6em; /* Slightly larger title */
+        }
+        .fc .fc-button { /* Style FC buttons */
+            background: linear-gradient(to bottom, #4caf50, #388e3c); /* Green gradient for buttons */
+            border: 1px solid #2e7d32;
+            color: #ffffff;
+            text-transform: capitalize;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            padding: 0.5em 1em;
+        }
+        .fc .fc-button:hover {
+            background: linear-gradient(to bottom, #66bb6a, #4caf50); /* Lighter green on hover */
+            border-color: #388e3c;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+        }
+        .fc .fc-button-primary:not(:disabled).fc-button-active,
+        .fc .fc-button-primary:not(:disabled):active {
+            background: linear-gradient(to bottom, #388e3c, #2e7d32); /* Darker green when active */
+            border-color: #1b5e20;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .fc-event {
+            border: none; /* Remove default border */
+            border-radius: 4px;
+            padding: 5px 8px;
+            font-size: 0.85em;
+            cursor: pointer;
+            background: linear-gradient(135deg, #29b6f6 0%, #0288d1 100%); /* Blue gradient for events */
+            color: #ffffff;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .fc-event:hover {
+            background: linear-gradient(135deg, #4fc3f7 0%, #29b6f6 100%); /* Lighter blue on hover */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);
+        }
+        .fc-event-past {
+            background: linear-gradient(135deg, #bdbdbd 0%, #9e9e9e 100%); /* Grey gradient for past events */
+            opacity: 0.8;
+        }
+        .fc-daygrid-event { /* Day view events */
+            margin-top: 3px;
+        }
+        .fc-day-header { /* Day headers (Mon, Tue, etc.) */
+            background-color: #e8f5e9; /* Very light green */
+            padding: 8px 0;
+            font-weight: 600;
+            color: #388e3c; /* Darker green text */
+        }
+        .fc-daygrid-day { /* Individual day cells */
+            border-color: #c8e6c9; /* Light green borders */
+        }
+        .fc-daygrid-day:hover {
+            background-color: #e8f5e9; /* Subtle hover effect */
+        }
+        .fc-day-today { /* Highlight today's date */
+            background-color: #fff9c4 !important; /* Light yellow background */
+            font-weight: bold;
+        }
+        .event-badge {
+            display: inline-block;
+            padding: 0.2em 0.4em;
+            font-size: 0.75em;
+            font-weight: 700;
+            line-height: 1;
+            color: #fff;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: 0.25rem;
+            margin-right: 5px;
+        }
+        .tippy-box[data-theme~='light-border'] { /* Tippy theme */
+            font-size: 0.9rem;
+        }
+        .btn-float-add {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1050; /* Above modals */
+        }
+        .filter-section {
+            background-color: #fff;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,.075);
+        }
+        .offcanvas-body { padding-top: 0; }
+        .nature-table thead th {
+            background: linear-gradient(90deg, #e8f5e9 0%, #c8e6c9 100%);
+            color: #2e7d32;
+        }
+        .nature-table tbody tr:nth-child(odd) {
+            background: #f8f9fa;
+        }
+        .nature-table tbody tr:nth-child(even) {
+            background: #e0f2f1;
+        }
+        .nature-table td.pistach {
+            background: #b2dfdb;
+            color: #33691e;
+            font-weight: 600;
+        }
+        .nature-table td.gray {
+            background: #ececec;
+            color: #424242;
+        }
+        .nature-table td.white {
+            background: #fff;
+        }
+        .text-danger {
+            color: #dc3545;
+            font-size: 0.95em;
+            margin-top: 2px;
+        }
+        #weatherInfo {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.7); /* Semi-transparent white */
+            border-radius: 5px;
+            font-size: 0.9em;
+            color: #333;
+        }
+        #weatherInfo strong {
+            color: #43a047; /* Green for emphasis */
+        }
+        @media print {
+            #calendarModal .modal-content,
+            #calendarModal .modal-header,
+            .fc .fc-toolbar.fc-header-toolbar,
+            .fc .fc-button,
+            .fc-event {
+                /* Reset gradients for printing */
+                background: #ffffff !important;
+                color: #000000 !important;
+                box-shadow: none !important;
+                border: 1px solid #ccc !important; /* Add simple borders for print */
+            }
+            .fc-event {
+                border: 1px solid #999 !important;
+                padding: 2px 4px;
+            }
+            #calendarModal .modal-header {
+                border-bottom: 1px solid #ccc !important;
+            }
+            #calendarModal .modal-header .btn-close { filter: none !important; }
+            #calendarModal .modal-title, .fc .fc-toolbar-title { color: #000000 !important; }
+        }
+        /* Statistics Button Style */
+        .btn-stats {
+            background: linear-gradient(to right, #ff7b25, #ff5722);
+            color: white;
+            border: none;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(255, 123, 37, 0.3);
+            margin-left: 10px;
+        }
+        
+        .btn-stats:hover {
+            background: linear-gradient(to right, #ff5722, #e64a19);
+            color: white;
+            box-shadow: 0 6px 15px rgba(255, 123, 37, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        #statisticsModal .modal-header {
+            background: linear-gradient(135deg, #66bb6a 0%, #43a047 100%);
+            color: #ffffff;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            border-bottom: none;
+        }
+        
+        #statisticsModal .modal-content {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="container-fluid mt-3">
+        {# Top Filters Section #}
+        <div class="filter-section">
+            <div class="row g-2 align-items-end">
+                <div class="col-md-3">
+                    <label for="filterTopic" class="form-label form-label-sm">Topic</label>
+                    <input type="text" id="filterTopic" class="form-control form-control-sm" placeholder="Search topic...">
+                </div>
+                <div class="col-md-3">
+                    <label for="filterSpeaker" class="form-label form-label-sm">Speaker</label>
+                    <input type="text" id="filterSpeaker" class="form-control form-control-sm" placeholder="Search speaker...">
+                </div>
+                <div class="col-md-3">
+                    <label for="filterLocation" class="form-label form-label-sm">Location</label>
+                    <input type="text" id="filterLocation" class="form-control form-control-sm" placeholder="Search location...">
+                </div>
+                <div class="col-md-1">
+                     <button id="applyFiltersBtn" class="btn btn-secondary btn-sm w-100">Filter</button>
+                </div>
+                <div class="col-md-1">
+                     <button id="resetFiltersBtn" class="btn btn-outline-secondary btn-sm w-100">Reset</button>
+                </div>
+                 <div class="col-md-1 text-end">
+                     <button class="btn btn-light btn-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasFilters" aria-controls="offcanvasFilters">
+                         <i class="bi bi-funnel"></i> Types
+                     </button>
+                 </div>
+            </div>
+        </div>
+
+        {# Main Content Area (Could be your existing table or just the calendar button) #}
+        <div class="text-center mb-3">
+             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#calendarModal">
+                <i class="bi bi-calendar-event"></i> View Calendar
+            </button>
+             <button id="printCalendarBtn" class="btn btn-outline-secondary ms-2"><i class="bi bi-printer"></i> Print</button>
+        </div>
+
+        {# Your existing conference table can go here if needed #}
+        <table class="table nature-table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th class="pistach">Titre</th>
+                    <th>Date_conference</th>
+                    <th>Presenteur</th>
+                    <th class="gray">Lieu</th>
+                    <th>Nb_place</th>
+                    <th class="pistach">Prix</th>
+                    <th class="gray">Theme</th>
+                    <th>Status</th>
+                    <th class="white">Resource</th>
+                    <th>actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for conference in pagination.items %}
+                <tr>
+                    <td>{{ conference.id }}</td>
+                    <td class="pistach">{{ conference.titre }}</td>
+                    <td>{{ conference.dateConference ? conference.dateConference|date('Y-m-d') : '' }}</td>
+                    <td>{{ conference.presenteur }}</td>
+                    <td class="gray">{{ conference.lieu }}</td>
+                    <td>{{ conference.nbPlace }}</td>
+                    <td class="pistach">{{ conference.prix }}</td>
+                    <td class="gray">{{ conference.theme }}</td>
+                    <td>{{ conference.status }}</td>
+                    <td class="white">{{ conference.resource }}</td>
+                    <td>
+                        <a href="{{ path('app_conference_back_show', {'id': conference.id}) }}" class="btn btn-info btn-sm">show</a>
+                        <a href="{{ path('app_conference_back_edit', {'id': conference.id}) }}" class="btn btn-warning btn-sm">edit</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="11">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="pagination">
+            {{ knp_pagination_render(pagination) }}
+        </div>
+
+        <div class="d-flex mt-3">
+            <a href="{{ path('app_conference_back_new') }}" class="btn btn-success">Create new</a>
+            
+            {# STATISTICS BUTTON - Added next to "Create new" #}
+            <button type="button" class="btn btn-stats" data-bs-toggle="modal" data-bs-target="#statisticsModal">
+                <i class="bi bi-bar-chart-fill me-2"></i> Conference Statistics
+            </button>
+        </div>
+
+        {# Weather card - keep if needed #}
+        <div class="card mt-4 mb-4 p-3">
+            <h5>Vérifier la météo pour une conférence</h5>
+            <div class="row">
+                <div class="col">
+                    <input type="text" id="weather_location" class="form-control" placeholder="Ville">
+                </div>
+                <div class="col">
+                    <input type="date" id="weather_date" class="form-control">
+                </div>
+                <div class="col">
+                    <button type="button" class="btn btn-info" onclick="fetchWeather()">Vérifier la météo</button>
+                </div>
+            </div>
+            <div id="weather_result" class="mt-3"></div>
+        </div>
+
+        {# Add the container for the jsVectorMap #}
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Visitor Map</h4>
+                    </div>
+                    <div class="card-body">
+                        <div id="world-map" style="height: 400px;"></div>
+                    </div>
+                </div>
+            </div>
+
+            {# Statistics Chart Card #}
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-head-row">
+                            <div class="card-title">Statistics Chart</div>
+                            <div class="card-tools">
+                                <div id="myChartLegend"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="statisticsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# Add a row for the Daily Sales Chart and potentially the Calendar #}
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Daily Sales Chart</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="dailySalesChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                {# Potential location for the calendar div, e.g., <div id="calendar"></div> #}
+            </div>
+        </div>
+    </div>
+
+    {# Floating Add Button #}
+    <button type="button" class="btn btn-success btn-float-add rounded-circle p-3 shadow" data-bs-toggle="modal" data-bs-target="#conferenceFormModal" title="Add New Conference">
+        <i class="bi bi-plus-lg fs-4"></i>
+    </button>
+
+    {# Calendar Modal #}
+    <div class="modal fade" id="calendarModal" tabindex="-1" aria-labelledby="calendarModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="calendarModalLabel">Conference Calendar</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="calendar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Conference Add/Edit Form Modal #}
+    <div class="modal fade" id="conferenceFormModal" tabindex="-1" aria-labelledby="conferenceFormModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="conferenceFormModalLabel">Add/Edit Conference</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {# Load your Symfony form here, potentially via AJAX or embed directly #}
+                    <p>Conference form will go here...</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary">Save Conference</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Conference Detail Modal (Replaces old #eventModal) #}
+    <div class="modal fade" id="conferenceDetailModal" tabindex="-1" aria-labelledby="conferenceDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="conferenceDetailModalLabel">Conference Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="conferenceDetailBody">
+                    {# Details will be loaded here by JS #}
+                    Loading...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Offcanvas Filter Panel #}
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasFilters" aria-labelledby="offcanvasFiltersLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasFiltersLabel">Filter by Type</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="list-group list-group-flush">
+                <label class="list-group-item">
+                    <input class="form-check-input me-1 filter-type" type="checkbox" value="workshop" checked>
+                    Workshop
+                </label>
+                <label class="list-group-item">
+                    <input class="form-check-input me-1 filter-type" type="checkbox" value="talk" checked>
+                    Talk
+                </label>
+                <label class="list-group-item">
+                    <input class="form-check-input me-1 filter-type" type="checkbox" value="keynote" checked>
+                    Keynote
+                </label>
+                <label class="list-group-item">
+                    <input class="form-check-input me-1 filter-type" type="checkbox" value="general" checked>
+                    General
+                </label>
+            </div>
+            <button id="applyTypeFiltersBtn" class="btn btn-primary btn-sm mt-3 w-100">Apply Type Filters</button>
+        </div>
+    </div>
+    
+    {# STATISTICS MODAL #}
+    <div class="modal fade" id="statisticsModal" tabindex="-1" aria-labelledby="statisticsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="statisticsModalLabel">
+                        <i class="bi bi-graph-up me-2"></i> Conference Analytics Dashboard
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <!-- Loading indicator -->
+                    <div id="statsLoading" class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-2">Loading statistics...</p>
+                    </div>
+                    
+                    <!-- Stats content (initially hidden) -->
+                    <div id="statsContent" style="display: none;">
+                        <!-- Tabs navigation -->
+                        <ul class="nav nav-tabs nav-fill" id="statsTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" role="tab">Overview</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="participation-tab" data-bs-toggle="tab" data-bs-target="#participation" type="button" role="tab">Participation</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="themes-tab" data-bs-toggle="tab" data-bs-target="#themes" type="button" role="tab">Themes</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="revenue-tab" data-bs-toggle="tab" data-bs-target="#revenue" type="button" role="tab">Revenue</button>
+                            </li>
+                        </ul>
+                        
+                        <!-- Tab content -->
+                        <div class="tab-content p-4" id="statsTabContent">
+                            <!-- Overview Tab -->
+                            <div class="tab-pane fade show active" id="overview" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-md-6 mb-4">
+                                        <div class="card shadow-sm h-100">
+                                            <div class="card-header bg-white">
+                                                <h5 class="mb-0">Monthly Conferences</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div id="monthlySummaryChart" height="220"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+                                        <div class="card shadow-sm h-100">
+                                            <div class="card-header bg-white">
+                                                <h5 class="mb-0">Status Distribution</h5>
+                                            </div>
+                                            <div class="card-body d-flex justify-content-center align-items-center">
+                                                <canvas id="statusPieChart" width="220" height="220"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="card shadow-sm">
+                                            <div class="card-header bg-white">
+                                                <h5 class="mb-0">Key Metrics</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="row" id="keyMetricsRow">
+                                                    <div class="col-md-3 text-center mb-3">
+                                                        <div class="p-3 rounded bg-light">
+                                                            <h3 id="totalConferences" class="text-primary mb-1">-</h3>
+                                                            <div class="text-muted">Total Conferences</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 text-center mb-3">
+                                                        <div class="p-3 rounded bg-light">
+                                                            <h3 id="totalRevenue" class="text-success mb-1">-</h3>
+                                                            <div class="text-muted">Total Revenue</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 text-center mb-3">
+                                                        <div class="p-3 rounded bg-light">
+                                                            <h3 id="averagePrice" class="text-warning mb-1">-</h3>
+                                                            <div class="text-muted">Average Price</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 text-center mb-3">
+                                                        <div class="p-3 rounded bg-light">
+                                                            <h3 id="totalCapacity" class="text-info mb-1">-</h3>
+                                                            <div class="text-muted">Total Capacity</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Participation Tab -->
+                            <div class="tab-pane fade" id="participation" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-md-6 mb-4">
+                                        <div class="card shadow-sm">
+                                            <div class="card-header bg-white">
+                                                <h5 class="mb-0">Participation Rate</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <canvas id="participationRateChart" height="250"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+                                        <div class="card shadow-sm">
+                                            <div class="card-header bg-white">
+                                                <h5 class="mb-0">Events per Bi-monthly Period</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <canvas id="biMonthlyEventsChart" height="250"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="card shadow-sm">
+                                            <div class="card-header bg-white">
+                                                <h5 class="mb-0">Attendance Trends</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <canvas id="attendanceTrendChart" height="200"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Themes Tab -->
+                            <div class="tab-pane fade" id="themes" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="card shadow-sm">
+                                            <div class="card-header bg-white">
+                                                <h5 class="mb-0">Conferences by Theme</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <canvas id="themesBarChart" height="300"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="card shadow-sm">
+                                            <div class="card-header bg-white">
+                                                <h5 class="mb-0">Theme Distribution</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <canvas id="themesPieChart" height="300"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Revenue Tab -->
+                            <div class="tab-pane fade" id="revenue" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="card shadow-sm">
+                                            <div class="card-header bg-white">
+                                                <h5 class="mb-0">Monthly Revenue</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <canvas id="revenueChart" height="250"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="card shadow-sm">
+                                            <div class="card-header bg-white">
+                                                <h5 class="mb-0">Revenue by Theme</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <canvas id="revenueByThemeChart" height="250"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="downloadStats">
+                        <i class="bi bi-download me-2"></i> Download Report
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.30.1/moment.min.js"></script>
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://unpkg.com/tippy.js@6"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Calendar initialization
+            var calendarEl = document.getElementById('calendar');
+            var calendarModal = new bootstrap.Modal(document.getElementById('calendarModal'));
+            var detailModal = new bootstrap.Modal(document.getElementById('conferenceDetailModal'));
+            var calendar;
+
+            // Function to initialize or refetch events for the calendar
+            function initializeCalendar(eventSources) {
+                if (calendar) {
+                    calendar.destroy(); // Destroy previous instance if exists
+                }
+                calendar = new FullCalendar.Calendar(calendarEl, {
+                    initialView: 'dayGridMonth', // Or your preferred view
+                    headerToolbar: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+                    },
+                    events: eventSources, // Use the provided event sources
+                    editable: true, // Allow event dragging & resizing
+                    selectable: true, // Allow date selection
+                    eventDrop: function(info) {
+                        // Handle event drop (date change)
+                        updateEventDate(info.event);
+                    },
+                    eventClick: function(info) {
+                        // Handle event click (show details)
+                        showEventDetails(info.event);
+                    },
+                    eventDidMount: function(info) {
+                        // Add tooltip using Tippy.js
+                        tippy(info.el, {
+                            content: `<strong>${info.event.title}</strong><br>Speaker: ${info.event.extendedProps.speaker || 'N/A'}<br>Location: ${info.event.extendedProps.location || 'N/A'}`,
+                            allowHTML: true,
+                        });
+                    }
+                });
+                calendar.render();
+            }
+
+            // Function to fetch events with current filters
+            function fetchAndLoadEvents() {
+                const typeCheckboxes = document.querySelectorAll('.filter-type:checked');
+                const types = Array.from(typeCheckboxes).map(cb => cb.value).join(',');
+                const eventSourceUrl = `{{ path('app_conference_back_events') }}?types=${encodeURIComponent(types)}`;
+                console.log("Fetching events from:", eventSourceUrl); // Debug log
+
+                // Initialize calendar with the dynamic event source URL
+                initializeCalendar(eventSourceUrl);
+            }
+
+            // Show event details in the modal
+            function showEventDetails(event) {
+                const detailBody = document.getElementById('conferenceDetailBody');
+                const modalLabel = document.getElementById('conferenceDetailModalLabel');
+                modalLabel.textContent = event.title; // Set modal title
+
+                let detailsHtml = `
+                    <p><strong>Date:</strong> ${moment(event.start).format('YYYY-MM-DD HH:mm')}</p>
+                    <p><strong>Speaker:</strong> ${event.extendedProps.speaker || 'N/A'}</p>
+                    <p><strong>Location:</strong> ${event.extendedProps.location || 'N/A'}</p>
+                    <p><strong>Theme/Category:</strong> ${event.extendedProps.theme || event.extendedProps.category || 'N/A'}</p>
+                    `;
+                // Add more details if available in extendedProps
+                // if (event.extendedProps.description) {
+                //     detailsHtml += `<p><strong>Description:</strong> ${event.extendedProps.description}</p>`;
+                // }
+
+                detailBody.innerHTML = detailsHtml;
+                detailModal.show();
+            }
+
+            // Function to update event date via AJAX
+            function updateEventDate(event) {
+                const updatedData = {
+                    start: event.start.toISOString(),
+                    // end: event.end ? event.end.toISOString() : null // Include end if applicable
+                };
+
+                fetch(`/conference/back/update-date/${event.id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest' // Important for Symfony to recognize AJAX
+                    },
+                    body: JSON.stringify(updatedData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        console.log('Event date updated successfully');
+                        // Optionally show a success message to the user
+                    } else {
+                        console.error('Failed to update event date:', data.message);
+                        alert('Error updating event: ' + data.message);
+                        info.revert(); // Revert the change on the calendar
+                    }
+                })
+                .catch(error => {
+                    console.error('Error during fetch:', error);
+                    alert('An error occurred while updating the event.');
+                    info.revert(); // Revert the change on the calendar
+                });
+            }
+
+            // Initial load when the modal is shown for the first time
+            document.getElementById('calendarModal').addEventListener('shown.bs.modal', function () {
+                if (!calendar) { // Only initialize if not already done
+                   fetchAndLoadEvents();
+                } else {
+                    calendar.render(); // Re-render if already initialized (e.g., window resize)
+                }
+            });
+
+            // Handle applying type filters
+            document.getElementById('applyTypeFiltersBtn').addEventListener('click', function() {
+                fetchAndLoadEvents(); // Refetch events with new filters
+                // Optionally close the offcanvas panel
+                var offcanvas = bootstrap.Offcanvas.getInstance(document.getElementById('offcanvasFilters'));
+                if (offcanvas) {
+                    offcanvas.hide();
+                }
+            });
+
+            // Print Calendar Button
+            document.getElementById('printCalendarBtn').addEventListener('click', function() {
+                window.print(); // Uses browser's print functionality
+            });
+
+            // Weather functionality
+            async function fetchWeather() {
+                const location = document.getElementById('weather_location').value;
+                const date = document.getElementById('weather_date').value;
+                if (!location || !date) {
+                    alert('Veuillez remplir la ville et la date.');
+                    return;
+                }
+                try {
+                    const response = await fetch('{{ path('app_conference_weather') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: JSON.stringify({ location: location, date: date })
+                    });
+
+                    const resultDiv = document.getElementById('weather_result');
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        resultDiv.innerHTML = `<div class="alert alert-danger">Erreur: ${errorData.error || response.statusText}</div>`;
+                        return;
+                    }
+
+                    const data = await response.json();
+                    if (data.error) {
+                         resultDiv.innerHTML = `<div class="alert alert-warning">${data.error}</div>`;
+                    } else {
+                        resultDiv.innerHTML = `
+                            <div class="alert alert-info">
+                                <strong>Météo pour ${location} le ${date}:</strong><br>
+                                Température: ${data.temperature}°C<br>
+                                Description: ${data.description}
+                            </div>
+                        `;
+                    }
+                } catch (error) {
+                    console.error('Fetch weather error:', error);
+                    document.getElementById('weather_result').innerHTML = '<div class="alert alert-danger">Impossible de récupérer la météo.</div>';
+                }
+            }
+            
+            // Make fetchWeather globally accessible
+            window.fetchWeather = fetchWeather;
+
+            // Statistics charts initialization
+            document.getElementById('statisticsModal').addEventListener('shown.bs.modal', function () {
+                // Show loading state
+                document.getElementById('statsLoading').style.display = 'block';
+                document.getElementById('statsContent').style.display = 'none';
+                
+                // Use the updated URL that avoids entity resolution
+                const url = '/conference/back/stats/data';
+                console.log("Fetching statistics from:", url);
+                
+                fetch(url)
+                    .then(response => {
+                        console.log("Response status:", response.status);
+                        if (!response.ok) {
+                            throw new Error(`Server responded with ${response.status}: ${response.statusText}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log("Statistics data received:", data);
+                        // Hide loading indicator and show content
+                        document.getElementById('statsLoading').style.display = 'none';
+                        document.getElementById('statsContent').style.display = 'block';
+                        
+                        // Render all charts with real data
+                        renderOverviewCharts(data);
+                        
+                        // Only pre-load the active tab's charts
+                        const activeTabId = document.querySelector('#statsTab .nav-link.active').getAttribute('data-bs-target').substring(1);
+                        if (activeTabId === 'participation') {
+                            renderParticipationCharts(data);
+                        } else if (activeTabId === 'themes') {
+                            renderThemeCharts(data);
+                        } else if (activeTabId === 'revenue') {
+                            renderRevenueCharts(data);
+                        }
+                        
+                        // Set up tab change event listeners
+                        document.querySelectorAll('#statsTab .nav-link').forEach(tab => {
+                            tab.addEventListener('shown.bs.tab', function (event) {
+                                const tabId = event.target.getAttribute('data-bs-target').substring(1);
+                                if (tabId === 'participation') {
+                                    renderParticipationCharts(data);
+                                } else if (tabId === 'themes') {
+                                    renderThemeCharts(data);
+                                } else if (tabId === 'revenue') {
+                                    renderRevenueCharts(data);
+                                }
+                            });
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error fetching statistics:', error);
+                        document.getElementById('statsLoading').innerHTML = `
+                            <div class="alert alert-danger text-center mx-4">
+                                <i class="bi bi-exclamation-triangle fs-1 d-block mb-2"></i>
+                                <h5>Error Loading Statistics</h5>
+                                <p>${error.message || 'There was a problem retrieving the data. Please try again later.'}</p>
+                                <div class="mt-3">
+                                    <button class="btn btn-outline-primary me-2" onclick="window.open('/conference/back/test', '_blank')">Test Controller</button>
+                                    <button class="btn btn-outline-danger" onclick="window.location.reload()">Refresh Page</button>
+                                </div>
+                            </div>
+                        `;
+                    });
+            });
+
+            // Render overview charts and metrics
+            function renderOverviewCharts(data) {
+                // Update key metrics
+                document.getElementById('totalConferences').textContent = data.overview.totalConferences;
+                document.getElementById('totalRevenue').textContent = data.overview.totalRevenue.toLocaleString() + ' TND';
+                document.getElementById('averagePrice').textContent = data.overview.averagePrice.toFixed(2) + ' TND';
+                document.getElementById('totalCapacity').textContent = data.overview.totalCapacity.toLocaleString();
+                
+                // Monthly summary chart - COMPLETELY REPLACE WITH A TABLE VISUALIZATION
+                const monthlySummaryCard = document.querySelector('#monthlySummaryChart').closest('.card-body');
+                
+                if (monthlySummaryCard) {
+                    // Remove the canvas element entirely
+                    document.getElementById('monthlySummaryChart').remove();
+                    
+                    // Create a table-based visualization
+                    let tableContent = `
+                        <div class="table-responsive">
+                            <table class="table table-bordered monthly-data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Month</th>
+                                        <th>Conferences</th>
+                                        <th>Visual</th>
+                                    </tr>
+                                </thead>
+                                <tbody>`;
+                    
+                    // Add a row for each month
+                    data.monthly.labels.forEach((month, index) => {
+                        const value = data.monthly.conferences[index];
+                        const barWidth = value > 0 ? Math.min(Math.max(value * 10, 20), 100) : 0; // Min 20px, max 100px if has value
+                        
+                        tableContent += `
+                            <tr>
+                                <td class="text-nowrap"><strong>${month}</strong></td>
+                                <td class="text-center">${value}</td>
+                                <td>
+                                    <div class="progress" style="height: 20px;">
+                                        <div class="progress-bar bg-success" role="progressbar" 
+                                            style="width: ${barWidth}%;" aria-valuenow="${value}" 
+                                            aria-valuemin="0" aria-valuemax="10">
+                                            ${value > 0 ? value : ''}
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>`;
+                    });
+                    
+                    tableContent += `
+                                </tbody>
+                            </table>
+                        </div>
+                        <style>
+                            .monthly-data-table { border-collapse: separate; }
+                            .monthly-data-table th, .monthly-data-table td {
+                                padding: 0.5rem;
+                                vertical-align: middle;
+                            }
+                            .monthly-data-table th:nth-child(1), .monthly-data-table td:nth-child(1) {
+                                width: 80px;
+                            }
+                            .monthly-data-table th:nth-child(2), .monthly-data-table td:nth-child(2) {
+                                width: 40px;
+                            }
+                            .monthly-data-table th:nth-child(3), .monthly-data-table td:nth-child(3) {
+                                width: auto;
+                            }
+                        </style>`;
+                    
+                    // Insert the table visualization
+                    monthlySummaryCard.innerHTML = tableContent;
+                }
+                
+                // Status pie chart - REPLACING WITH HTML VISUALIZATION
+                const statusPieContainer = document.querySelector('#statusPieChart').closest('.card-body');
+                
+                if (statusPieContainer) {
+                    // Remove the canvas element entirely
+                    document.getElementById('statusPieChart').remove();
+                    
+                    // Calculate total for percentages
+                    const statusTotal = data.status.counts.reduce((sum, count) => sum + count, 0) || 1;
+                    
+                    // Define colors for each status
+                    const statusColors = ['#66bb6a', '#ffc107', '#bdbdbd'];
+                    
+                    // Create HTML visualization with progress bars
+                    let statusContent = `
+                        <div class="status-distribution p-2">
+                            <table class="table table-bordered status-table">
+                                <thead>
+                                    <tr>
+                                        <th>Status</th>
+                                        <th>Count</th>
+                                        <th>Percentage</th>
+                                    </tr>
+                                </thead>
+                                <tbody>`;
+                                
+                    // Add each status as a row
+                    data.status.labels.forEach((label, i) => {
+                        const count = data.status.counts[i];
+                        const percent = ((count / statusTotal) * 100).toFixed(1);
+                        
+                        statusContent += `
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <span class="status-color-indicator me-2" style="background-color: ${statusColors[i]};"></span>
+                                        ${label}
+                                    </div>
+                                </td>
+                                <td class="text-center">${count}</td>
+                                <td>
+                                    <div class="progress" style="height: 20px;">
+                                        <div class="progress-bar" role="progressbar" 
+                                            style="width: ${percent}%; background-color: ${statusColors[i]};" 
+                                            aria-valuenow="${percent}" aria-valuemin="0" aria-valuemax="100">
+                                            ${percent}%
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>`;
+                    });
+                    
+                    statusContent += `
+                                </tbody>
+                            </table>
+                        </div>
+                        <style>
+                            .status-distribution { height: 220px; overflow-y: auto; }
+                            .status-table { border-collapse: separate; }
+                            .status-color-indicator {
+                                display: inline-block;
+                                width: 15px;
+                                height: 15px;
+                                border-radius: 50%;
+                            }
+                        </style>`;
+                    
+                    // Insert the HTML visualization
+                    statusPieContainer.innerHTML = statusContent;
+                }
+            }
+
+            // Render participation charts
+            function renderParticipationCharts(data) {
+                // Participation rate chart
+                const participationRateCtx = document.getElementById('participationRateChart');
+                if (participationRateCtx && !participationRateCtx.chart) {
+                    participationRateCtx.chart = new Chart(participationRateCtx, {
+                        type: 'line',
+                        data: {
+                            labels: data.participation.labels,
+                            datasets: [{
+                                label: 'Participation Rate (%)',
+                                data: data.participation.rates,
+                                borderColor: '#0d6efd',
+                                backgroundColor: 'rgba(13, 110, 253, 0.1)',
+                                fill: true,
+                                tension: 0.4
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { display: false }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    max: 100,
+                                    title: {
+                                        display: true,
+                                        text: 'Participation Rate (%)'
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+                
+                // Bi-monthly events chart
+                const biMonthlyEventsCtx = document.getElementById('biMonthlyEventsChart');
+                if (biMonthlyEventsCtx && !biMonthlyEventsCtx.chart) {
+                    biMonthlyEventsCtx.chart = new Chart(biMonthlyEventsCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: data.biMonthly.labels,
+                            datasets: [{
+                                label: 'Number of Events',
+                                data: data.biMonthly.counts,
+                                backgroundColor: 'rgba(255, 123, 37, 0.7)',
+                                borderColor: '#ff5722',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { display: false }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        precision: 0
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+                
+                // Attendance trend chart
+                const attendanceTrendCtx = document.getElementById('attendanceTrendChart');
+                if (attendanceTrendCtx && !attendanceTrendCtx.chart) {
+                    attendanceTrendCtx.chart = new Chart(attendanceTrendCtx, {
+                        type: 'line',
+                        data: {
+                            labels: data.attendance.labels,
+                            datasets: [{
+                                label: 'Attendance',
+                                data: data.attendance.trend,
+                                borderColor: '#20c997',
+                                backgroundColor: 'rgba(32, 201, 151, 0.1)',
+                                fill: true,
+                                tension: 0.4
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { display: false }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+
+            function renderThemeCharts(data) {
+                const themesBarCtx = document.getElementById('themesBarChart');
+                if (themesBarCtx && !themesBarCtx.chart) {
+                    themesBarCtx.chart = new Chart(themesBarCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: data.themes.labels,
+                            datasets: [{
+                                label: 'Number of Conferences',
+                                data: data.themes.counts,
+                                backgroundColor: [
+                                    '#0d6efd', '#20c997', '#0dcaf0', '#fd7e14', '#dc3545', '#198754', '#6c757d', '#6610f2'
+                                ],
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            indexAxis: 'y',
+                            plugins: { legend: { display: false } }
+                        }
+                    });
+                }
+                
+                const themesPieCtx = document.getElementById('themesPieChart');
+                if (themesPieCtx && !themesPieCtx.chart) {
+                    themesPieCtx.chart = new Chart(themesPieCtx, {
+                        type: 'pie',
+                        data: {
+                            labels: data.themes.labels,
+                            datasets: [{
+                                data: data.themes.counts,
+                                backgroundColor: [
+                                    '#0d6efd', '#20c997', '#0dcaf0', '#fd7e14', '#dc3545', '#198754', '#6c757d', '#6610f2'
+                                ],
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: { legend: { position: 'bottom' } }
+                        }
+                    });
+                }
+            }
+
+            function renderRevenueCharts(data) {
+                const revenueCtx = document.getElementById('revenueChart');
+                if (revenueCtx && !revenueCtx.chart) {
+                    revenueCtx.chart = new Chart(revenueCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: data.monthly.labels,
+                            datasets: [{
+                                label: 'Revenue (TND)',
+                                data: data.monthly.conferences.map((count, i) => count * (data.overview.averagePrice || 100)),
+                                backgroundColor: 'rgba(32, 201, 151, 0.7)',
+                                borderColor: '#20c997',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: { legend: { display: false } }
+                        }
+                    });
+                }
+                
+                const revenueByThemeCtx = document.getElementById('revenueByThemeChart');
+                if (revenueByThemeCtx && !revenueByThemeCtx.chart) {
+                    revenueByThemeCtx.chart = new Chart(revenueByThemeCtx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: data.themes.labels,
+                            datasets: [{
+                                data: data.themes.revenue,
+                                backgroundColor: [
+                                    '#0d6efd', '#20c997', '#0dcaf0', '#fd7e14', '#dc3545', '#6c757d', '#6610f2'
+                                ],
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: { legend: { position: 'bottom', display: true } }
+                        }
+                    });
+                }
+            }
+
+            // Init statisticsChart for the main page (not the modal)
+            if (document.getElementById('statisticsChart')) {
+                const ctx = document.getElementById('statisticsChart').getContext('2d');
+                const statisticsChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                        datasets: [{
+                            label: 'Conferences',
+                            data: [5, 8, 12, 10, 15, 20, 18, 22, 25, 28, 20, 15],
+                            borderColor: '#43a047',
+                            backgroundColor: 'rgba(67, 160, 71, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { 
+                                display: true,
+                                position: 'top'
+                            }
+                        }
+                    }
+                });
+                
+                // Add legend if needed (modern Chart.js doesn't use generateLegend)
+                if (document.getElementById('myChartLegend')) {
+                    document.getElementById('myChartLegend').innerHTML = statisticsChart.options.plugins.legend.generateLegend?.() || '';
+                }
+            }
+            
+            // Daily sales chart
+            if (document.getElementById('dailySalesChart')) {
+                const ctx = document.getElementById('dailySalesChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                        datasets: [{
+                            label: 'Sales (TND)',
+                            data: [12, 19, 3, 5, 2, 3, 7],
+                            backgroundColor: 'rgba(32, 201, 151, 0.7)',
+                            borderColor: '#20c997',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+{% endblock %}

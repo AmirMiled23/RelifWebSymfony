@@ -1,0 +1,241 @@
+{% extends 'backbase.html.twig' %}
+
+{% block title %}New Conference{% endblock %}
+
+{% block body %}
+    <h1>Create new Conference</h1>
+
+    {{ form_start(form, { 'attr': { 'id': 'conference-form' } }) }}
+        <div class="mb-3">
+            {{ form_label(form.titre) }}
+            {{ form_widget(form.titre) }}
+            {{ form_errors(form.titre) }}
+        </div>
+        <div class="lieu-map-container" style="position:relative; margin-bottom:1rem;">
+            {{ form_label(form.lieu) }}
+            <div style="display:flex;align-items:center;position:relative;">
+                {{ form_widget(form.lieu) }}
+                <button type="button" id="open-map" class="lieu-map-btn btn btn-outline-success ms-2" title="Choisir sur la carte" style="margin-left:8px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="#388e3c" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                </button>
+            </div>
+            {{ form_errors(form.lieu) }}
+        </div>
+        {{ form_widget(form, {'exclude_fields': ['lieu']}) }}
+        <button type="button" id="check-weather" class="btn btn-info mt-3">Check Weather</button>
+        <button type="submit" id="submit-conference" class="btn btn-primary mt-3" style="display: none;">Submit</button>
+    {{ form_end(form) }}
+
+    <!-- Map Modal -->
+    <div id="map-modal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:10000;background:rgba(0,0,0,0.3);align-items:center;justify-content:center;">
+        <div style="background:#fff;border-radius:12px;box-shadow:0 4px 24px #0002;padding:1.5rem;min-width:350px;max-width:95vw;position:relative;">
+            <button id="close-map" style="position:absolute;top:10px;right:10px;" class="btn btn-sm btn-danger">&times;</button>
+            <h5 class="mb-2">Sélectionnez un emplacement</h5>
+            <div id="leaflet-map" style="width:400px;height:300px;border-radius:8px;"></div>
+            <div id="map-address" class="mt-2 text-success"></div>
+        </div>
+    </div>
+
+    <div id="weather-dialog" class="weather-dialog-nature" style="display: none;">
+        <div class="weather-dialog-content">
+            <div class="weather-header">
+                <span class="weather-icon" id="weather-icon"></span>
+                <h3 id="weather-title">Weather Information</h3>
+            </div>
+            <div class="weather-body" id="weather-details"></div>
+            <div class="weather-footer">
+                <button id="confirm-add" class="btn btn-success">Confirm</button>
+                <button id="cancel-add" class="btn btn-danger">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .weather-dialog-nature {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(44, 62, 80, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+        .weather-dialog-content {
+            background: linear-gradient(135deg, #e8f5e9 0%, #b2dfdb 100%);
+            border-radius: 18px;
+            box-shadow: 0 8px 32px 0 rgba(44, 62, 80, 0.18);
+            padding: 2.5rem 2rem 2rem 2rem;
+            min-width: 350px;
+            max-width: 95vw;
+            color: #2e7d32;
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            animation: fadeInNature 0.4s;
+        }
+        @keyframes fadeInNature {
+            from { opacity: 0; transform: scale(0.95);}
+            to { opacity: 1; transform: scale(1);}
+        }
+        .weather-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .weather-icon img {
+            width: 56px;
+            height: 56px;
+            margin-right: 1rem;
+            border-radius: 50%;
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(44, 62, 80, 0.08);
+        }
+        .weather-body p {
+            margin: 0.5rem 0;
+            font-size: 1.1em;
+        }
+        .weather-footer {
+            margin-top: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+        .weather-detail-label {
+            font-weight: bold;
+            color: #388e3c;
+        }
+        .weather-advice {
+            background: #c8e6c9;
+            border-radius: 8px;
+            padding: 0.7em 1em;
+            margin-top: 1em;
+            color: #33691e;
+            font-style: italic;
+            font-size: 1.08em;
+        }
+    </style>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const checkWeatherButton = document.getElementById('check-weather');
+            const locationInput = document.getElementById('conference1_lieu');
+            const dateInput = document.getElementById('conference1_date_conference');
+
+            checkWeatherButton.addEventListener('click', function () {
+                const location = locationInput.value.trim();
+                const date = dateInput.value.trim();
+
+                if (!location || !date) {
+                    alert('Please fill in the location and date fields.');
+                    return;
+                }
+
+                fetch('{{ path('app_conference_weather') }}', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest' 
+                    },
+                    body: JSON.stringify({ location, date })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error);
+                        return;
+                    }
+
+                    // Example: add more details if available
+                    const weather = data.description || 'N/A';
+                    const temp = data.temperature !== undefined ? data.temperature + '°C' : 'N/A';
+                    const humidity = data.humidity !== undefined ? data.humidity + '%' : 'N/A';
+                    const wind = data.wind_speed !== undefined ? data.wind_speed + ' m/s' : 'N/A';
+                    const icon = data.icon ? `<img src="${data.icon}" alt="Weather Icon">` : '';
+                    const advice = data.advice || (
+                        weather.includes('rain') ? 'Bring an umbrella!' :
+                        weather.includes('clear') ? 'Wear sunglasses!' :
+                        weather.includes('cloud') ? 'It might be a bit cloudy, enjoy the fresh air!' :
+                        'Have a great day!'
+                    );
+
+                    document.getElementById('weather-icon').innerHTML = icon;
+                    document.getElementById('weather-title').innerText = `Weather in ${location} on ${date}`;
+                    document.getElementById('weather-details').innerHTML = `
+                        <p><span class="weather-detail-label">Weather:</span> ${weather}</p>
+                        <p><span class="weather-detail-label">Temperature:</span> ${temp}</p>
+                        <p><span class="weather-detail-label">Humidity:</span> ${humidity}</p>
+                        <p><span class="weather-detail-label">Wind Speed:</span> ${wind}</p>
+                        <div class="weather-advice">${advice}</div>
+                    `;
+                    document.getElementById('weather-dialog').style.display = 'flex';
+                })
+                .catch(error => {
+                    console.error('Error fetching weather data:', error);
+                    alert('Failed to fetch weather data. Please try again.');
+                });
+            });
+
+            document.getElementById('confirm-add').addEventListener('click', function () {
+                document.getElementById('weather-dialog').style.display = 'none';
+                document.getElementById('submit-conference').click();
+            });
+
+            document.getElementById('cancel-add').addEventListener('click', function () {
+                document.getElementById('weather-dialog').style.display = 'none';
+            });
+
+            // Map modal logic
+            const openMapBtn = document.getElementById('open-map');
+            const mapModal = document.getElementById('map-modal');
+            const closeMapBtn = document.getElementById('close-map');
+            const lieuInput = document.getElementById('conference1_lieu');
+            let map, marker;
+
+            openMapBtn.addEventListener('click', function () {
+                mapModal.style.display = 'flex';
+                setTimeout(() => {
+                    if (!map) {
+                        map = L.map('leaflet-map').setView([36.8, 10.18], 6); // Default Tunisia
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                            attribution: '&copy; OpenStreetMap contributors'
+                        }).addTo(map);
+
+                        map.on('click', async function(e) {
+                            const {lat, lng} = e.latlng;
+                            if (marker) marker.setLatLng([lat, lng]);
+                            else marker = L.marker([lat, lng]).addTo(map);
+
+                            document.getElementById('map-address').innerText = "Recherche de l'adresse...";
+                            try {
+                                // Use geocode.xyz API (replace with your API key if needed)
+                                const resp = await fetch(`https://geocode.xyz/${lat},${lng}?geoit=json&auth=516978462101196299454x78616`);
+                                const geo = await resp.json();
+                                let address = geo.city ? geo.city : '';
+                                if (geo.region) address += (address ? ', ' : '') + geo.region;
+                                if (geo.country) address += (address ? ', ' : '') + geo.country;
+                                document.getElementById('map-address').innerText = address || "Adresse non trouvée";
+                                if (address) {
+                                    lieuInput.value = address;
+                                }
+                            } catch (err) {
+                                document.getElementById('map-address').innerText = "Erreur lors de la récupération de l'adresse";
+                            }
+                        });
+                    } else {
+                        map.invalidateSize();
+                    }
+                }, 200);
+            });
+
+            closeMapBtn.addEventListener('click', function () {
+                mapModal.style.display = 'none';
+                document.getElementById('map-address').innerText = '';
+            });
+        });
+    </script>
+{% endblock %}
