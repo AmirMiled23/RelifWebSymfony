@@ -1,0 +1,178 @@
+{% extends 'base22.html.twig' %}
+
+{% block title %}Liste des Sponsors{% endblock %}
+
+{% block body %}
+
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-info text-white">
+            <h3 class="m-0 text-white">Liste des Sponsors</h3>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="py-3 px-4">ID</th>
+                            <th class="py-3 px-4">Nom</th>
+                            <th class="py-3 px-4">Email</th>
+                            <th class="py-3 px-4">Téléphone</th>
+                            <th class="py-3 px-4">Adresse</th>
+                            <th class="py-3 px-4">Secteur</th>
+                            <th class="py-3 px-4">Photo</th>
+                            <th class="py-3 px-4 text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sponsor in sponsors %}
+                            <tr class="bg-white">
+                                <td class="py-3 px-4 align-middle">{{ sponsor.id }}</td>
+                                <td class="py-3 px-4 align-middle font-weight-bold">{{ sponsor.nom }}</td>
+                                <td class="py-3 px-4 align-middle">{{ sponsor.email }}</td>
+                                <td class="py-3 px-4 align-middle">{{ sponsor.telephone }}</td>
+                                <td class="py-3 px-4 align-middle">{{ sponsor.adresse }}</td>
+                                <td class="py-3 px-4 align-middle">
+                                    <span class="badge badge-pill badge-info">
+                                        {{ sponsor.secteur ? sponsor.secteur.nom : 'Non défini' }}
+                                    </span>
+                                </td>
+                                <td class="py-3 px-4 align-middle">
+                                    {% if sponsor.photo %}
+                                        <img src="{{ asset('uploads/photos/' ~ sponsor.photo) }}" 
+                                             class="rounded-circle border"
+                                             alt="Photo de {{ sponsor.nom }}" 
+                                             width="50" 
+                                             height="50"
+                                             onerror="this.onerror=null; this.src='{{ asset('images/default-sponsor.png') }}'">
+                                    {% else %}
+                                        <span class="text-muted">Aucune photo</span>
+                                    {% endif %}
+                                </td>
+                                <td class="py-3 px-4 align-middle text-center">
+                                    <a href="{{ path('edit_sponsor', {'id': sponsor.id}) }}" class="btn btn-sm btn-outline-primary mr-2">
+                                        <i class="fas fa-edit"></i> Modifier
+                                    </a>
+                                    <a href="{{ path('deleteSponsor', {'id': sponsor.id}) }}" class="btn btn-sm btn-outline-danger">
+                                        <i class="ti ti-trash"></i> Supprimer
+                                    </a>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="8" class="py-4 text-center bg-light text-muted">
+                                    <i class="ti ti-info-circle mr-2"></i>Aucun sponsor trouvé
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer bg-light">
+            <div class="d-flex justify-content-end">
+                <a href="{{ path('add_sponsor') }}" class="btn btn-success">
+                    <i class="ti ti-plus mr-2"></i>Ajouter un sponsor
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Carte Google Map -->
+<div id="map" style="height: 400px; width: 100%;"></div>
+
+<!-- Chatbot -->
+<div class="card mt-4 shadow-lg">
+    <div class="card-header bg-primary text-white">
+        <h4 class="m-0">Chatbot</h4>
+    </div>
+    <div class="card-body">
+        <form id="chatbot-form">
+            <div class="input-group">
+                <input type="text" id="chatbot-input" name="prompt" class="form-control" placeholder="Posez une question..." required>
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-primary">Envoyer</button>
+                </div>
+            </div>
+        </form>
+        <div id="chatbot-response" class="mt-3 p-3 bg-light border rounded" style="display: none;"></div>
+    </div>
+</div>
+
+<script>
+    function initMap() {
+        const map = new google.maps.Map(document.getElementById("map"), {
+            center: { lat: 36.8065, lng: 10.1815 }, // Centre initial (ex: Tunis)
+            zoom: 8
+        });
+
+        const geocoder = new google.maps.Geocoder();
+
+        // Tableau de sponsors
+        const sponsors = {{ sponsors|json_encode|raw }};
+
+        sponsors.forEach(function(sponsor) {
+            const address = sponsor.adresse;
+
+            // Géocodage de l'adresse
+            geocoder.geocode({ 'address': address }, function(results, status) {
+                if (status === 'OK') {
+                    // Positionner la carte sur le premier sponsor trouvé
+                    map.setCenter(results[0].geometry.location);
+
+                    // Créer un marqueur personnalisé avec un SVG rouge
+                    const marker = new google.maps.Marker({
+                        map: map,
+                        position: results[0].geometry.location,
+                        title: sponsor.nom,  // Affiche le nom du sponsor au survol
+                        icon: {
+                            path: google.maps.SymbolPath.CIRCLE,
+                            scale: 8,
+                            fillColor: '#FF0000',  // Rouge
+                            fillOpacity: 1,
+                            strokeColor: '#FFFFFF',  // Contour blanc
+                            strokeWeight: 2
+                        }
+                    });
+                } else {
+                    console.error('Géocodage échoué pour l\'adresse ' + address + ': ' + status);
+                }
+            });
+        });
+    }
+
+  document.getElementById('chatbot-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const prompt = document.getElementById('chatbot-input').value;
+    const responseDiv = document.getElementById('chatbot-response');
+
+    fetch('{{ path('chatbot') }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json', // Définir le type de contenu en JSON
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': '{{ csrf_token('chatbot') }}' // Si nécessaire, ajouter le token CSRF
+        },
+        body: JSON.stringify({ prompt: prompt }) // Passer les données au format JSON
+    })
+    .then(response => response.json())
+    .then(data => {
+        responseDiv.innerHTML = '<p><strong>Vous et la Réflexion du Bot  :</strong> ' + data.prompt + '</p>' +
+                                '<p><strong>Bot :</strong> ' + data.response + '</p>';
+        responseDiv.style.display = 'block';
+    })
+    .catch(error => {
+        responseDiv.innerHTML = '<p class="text-danger">Erreur lors de la communication avec le chatbot.</p>';
+        responseDiv.style.display = 'block';
+        console.error('Erreur:', error);
+    });
+});
+
+</script>
+
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBPs01ZphPbB1zMDD9JQcK4vsvEmpjdMWo&callback=initMap">
+</script>
+
+{% endblock %}

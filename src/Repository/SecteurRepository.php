@@ -40,4 +40,14 @@ class SecteurRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+public function findByNom(string $nom): ?Secteur
+{
+    return $this->createQueryBuilder('s')
+        ->andWhere('LOWER(s.nom) = :nom')
+        ->setParameter('nom', $nom)
+        ->getQuery()
+        ->getOneOrNullResult(); // Renvoie un seul secteur ou null si aucun trouvé
 }
+}
+?>

@@ -1,0 +1,43 @@
+{% extends 'base22.html.twig' %}
+
+{% block body %}
+    <h1>Chatbot</h1>
+
+    <div id="chat">
+        <label for="prompt">Enter your message:</label>
+        <textarea id="prompt" rows="4" cols="50"></textarea><br><br>
+
+        <button id="sendPrompt">Send</button>
+    </div>
+
+    <div id="response">
+        <h3>Response:</h3>
+        <p id="responseText"></p>
+    </div>
+
+    <script>
+        document.getElementById('sendPrompt').addEventListener('click', function() {
+            let prompt = document.getElementById('prompt').value.trim();
+
+            if (prompt) {
+                fetch('{{ path('chatbot') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ prompt: prompt })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('responseText').innerText = data.response;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('responseText').innerText = 'An error occurred while processing the request.';
+                });
+            } else {
+                alert('Please enter a prompt');
+            }
+        });
+    </script>
+{% endblock %}

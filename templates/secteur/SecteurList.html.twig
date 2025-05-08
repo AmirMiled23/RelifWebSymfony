@@ -1,0 +1,108 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Secteurs{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white">
+            <h3 class="m-0">Liste des Secteurs</h3>
+        </div>
+        <div class="card-body p-0">
+            <div class="d-flex justify-content-end m-3">
+                <a href="{{ path('add_secteur') }}" class="btn btn-success btn-sm">
+                    <i class="ti ti-plus mr-1"></i> Ajouter un secteur
+                </a>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="py-3 px-4">ID</th>
+                            <th class="py-3 px-4">Nom</th>
+                            <th class="py-3 px-4">Description</th>
+                            <th class="py-3 px-4 text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for secteur in secteurs %}
+                            <tr class="bg-white">
+                                <td class="py-3 px-4 align-middle">{{ secteur.id }}</td>
+                                <td class="py-3 px-4 align-middle font-weight-bold">{{ secteur.nom }}</td>
+                                <td class="py-3 px-4 align-middle">{{ secteur.description }}</td>
+                                <td class="py-3 px-4 align-middle text-center">
+                                    <a href="{{ path('secteur_edit', {id: secteur.id}) }}" class="btn btn-sm btn-outline-primary mr-2">
+                                        <i class="ti ti-edit"></i> Modifier
+                                    </a>
+                                    <a href="{{ path('secteur_delete', {id: secteur.id}) }}"class="btn btn-sm btn-outline-danger">
+                                        <i class="ti ti-trash"></i> Supprimer
+                                    </a>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="4" class="py-4 text-center bg-light text-muted">
+                                    <i class="ti ti-info-circle mr-2"></i>Aucun secteur trouvé
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border-radius: 10px;
+        overflow: hidden;
+        border: none;
+    }
+    
+    .table {
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+    
+    .table thead th {
+        border-bottom: none;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 0.5px;
+    }
+    
+    .table tbody tr:hover {
+        background-color: #f8f9fa !important;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .btn-outline-primary {
+        border-color: #4e73df;
+        color: #4e73df;
+    }
+    
+    .btn-outline-primary:hover {
+        background-color: #4e73df;
+        color: white;
+    }
+    
+    .btn-outline-danger {
+        border-color: #e74a3b;
+        color: #e74a3b;
+    }
+    
+    .btn-outline-danger:hover {
+        background-color: #e74a3b;
+        color: white;
+    }
+    
+    .btn-success {
+        background-color: #1cc88a;
+        border-color: #1cc88a;
+    }
+</style>
+{% endblock %}

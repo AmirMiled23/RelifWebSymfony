@@ -1,0 +1,41 @@
+<div class="sidebar" data-background-color="dark">
+    <div class="sidebar-logo">
+        <!-- Logo Header -->
+        <div class="logo-header" data-background-color="dark">
+            <a href="index.html" class="logo">
+                <img src="{{ asset('assets/img1/logoproduct.svg') }}" alt="Logo" class="navbar-brand">
+            </a>
+            <div class="nav-toggle">
+                <button class="btn btn-toggle toggle-sidebar">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+        <!-- End Logo Header -->
+    </div>
+    <div class="sidebar-wrapper scrollbar scrollbar-inner">
+        <div class="sidebar-content">
+            <ul class="nav nav-secondary">
+                <li class="nav-item">
+                    <a href="#">
+                        <i class="fas fa-home"></i>
+                        <p>Dashboard</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ path('secteur_list') }}">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <p>Secteurs</p>
+                    </a>
+                </li>
+                 <li class="nav-item">
+                    <a href="{{ path('sponsor_list') }}">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <p>Sponsors</p>
+                    </a>
+                </li>
+                <!-- Ajoutez d'autres éléments de menu ici -->
+            </ul>
+        </div>
+    </div>
+</div>

@@ -2,66 +2,64 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 
 use App\Repository\SecteurRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+
 
 #[ORM\Entity(repositoryClass: SecteurRepository::class)]
-#[ORM\Table(name: 'secteur')]
 class Secteur
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column]
     private ?int $id = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $nom = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $description = null;
+
+    /**
+     * @var Collection<int, Sponsor>
+     */
+    #[ORM\OneToMany(targetEntity:Sponsor::class, mappedBy: 'secteur')]
+    private Collection $sponsors;
+
+    public function __construct()
+    {
+        // Initialise la collection de sponsors vide
+        $this->sponsors = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function setId(int $id): self
-    {
-        $this->id = $id;
-        return $this;
-    }
-
-    #[ORM\Column(type: 'string', nullable: true)]
-    private ?string $nom = null;
-
     public function getNom(): ?string
     {
         return $this->nom;
     }
 
-    public function setNom(?string $nom): self
+    public function setNom(string $nom): static
     {
         $this->nom = $nom;
         return $this;
     }
-
-    #[ORM\Column(type: 'string', nullable: true)]
-    private ?string $description = null;
 
     public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    public function setDescription(?string $description): self
+    public function setDescription(string $description): static
     {
         $this->description = $description;
         return $this;
-    }
-
-    #[ORM\OneToMany(targetEntity: Sponsor::class, mappedBy: 'secteur')]
-    private Collection $sponsors;
-
-    public function __construct()
-    {
-        $this->sponsors = new ArrayCollection();
     }
 
     /**
@@ -69,24 +67,29 @@ class Secteur
      */
     public function getSponsors(): Collection
     {
-        if (!$this->sponsors instanceof Collection) {
-            $this->sponsors = new ArrayCollection();
-        }
         return $this->sponsors;
     }
 
-    public function addSponsor(Sponsor $sponsor): self
+    public function addSponsor(Sponsor $sponsor): static
     {
-        if (!$this->getSponsors()->contains($sponsor)) {
-            $this->getSponsors()->add($sponsor);
+        if (!$this->sponsors->contains($sponsor)) {
+            $this->sponsors->add($sponsor);
+            $sponsor->setSecteur($this);
         }
+
         return $this;
     }
 
-    public function removeSponsor(Sponsor $sponsor): self
+    public function removeSponsor(Sponsor $sponsor): static
     {
-        $this->getSponsors()->removeElement($sponsor);
+        if ($this->sponsors->removeElement($sponsor)) {
+            // Assurez-vous que le côté propriétaire de la relation est mis à null
+            if ($sponsor->getSecteur() === $this) {
+                $sponsor->setSecteur(null);
+            }
+        }
+
         return $this;
     }
-
 }
+?>
