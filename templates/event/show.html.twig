@@ -38,7 +38,26 @@
             </tr>
         </tbody>
     </table>
+{% if currentTemp is defined %}
+            <div style="background-color: #f8f9fa; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); min-width: 250px; text-align: right;">
+                <p><strong>Température :</strong> {{ currentTemp }} °C</p>
+                <p><strong>Humidité :</strong> {{ currentHumidity }} %</p>
+                <p><strong>Vent :</strong> {{ currentWind }} km/h</p>
 
+                {% set canGoOut = (currentTemp >= 15 and currentTemp <= 28)
+                                and (currentHumidity >= 30 and currentHumidity <= 73)
+                                and (currentWind <= 30) %}
+                {% if canGoOut %}
+                    <p style="color: green; font-weight: bold;">✅ Bon temps pour sortir !</p>
+                {% else %}
+                    <p style="color: red; font-weight: bold;">❌ Pas conseillé de sortir !</p>
+                {% endif %}
+            </div>
+        {% else %}
+            <div style="text-align: right; min-width: 250px;">
+                <p>Aucune donnée météo disponible.</p>
+            </div>
+        {% endif %}
    <div class="d-flex gap-2 mt-3">
     <a href="{{ path('app_event_index') }}" class="btn btn-secondary">
         <i class="fas fa-arrow-left me-1"></i> Revenir à la liste

@@ -55,8 +55,42 @@ final class EventController extends AbstractController{
     #[Route('/{id}', name: 'app_event_show', methods: ['GET'])]
     public function show(Event $event): Response
     {
+        $ville = $event->getVilles();
+        $geoResponse = $this->client->request('GET', 'https://geocoding-api.open-meteo.com/v1/search', [
+            'query' => [
+                'name' => $ville,
+                'count' => 1, 
+            ]
+        ]);
+
+        $geoData = $geoResponse->toArray();
+        $lat = $geoData['results'][0]['latitude'];
+    $lng = $geoData['results'][0]['longitude'];
+       
+        $response = $this->client->request('GET', 'https://api.open-meteo.com/v1/forecast', [
+            'query' => [
+                'latitude' => $lat,
+                'longitude' => $lng,
+                'current_weather' => 'true',
+                'hourly' => 'relative_humidity_2m',
+                'timezone' => 'Europe/Paris',
+            ]
+        ]);
+        $weather = $response->toArray();
+
+      
+        $currentTemp = $weather['current_weather']['temperature'];
+        $currentWind = $weather['current_weather']['windspeed'];
+    
+        
+        $now = (new \DateTime())->format('Y-m-d\TH:00');
+        $hourIndex = array_search($now, $weather['hourly']['time']);
+        $currentHumidity = $hourIndex !== false ? $weather['hourly']['relative_humidity_2m'][$hourIndex] : null;
         return $this->render('event/show.html.twig', [
             'event' => $event,
+            'currentTemp' => $currentTemp,
+        'currentWind' => $currentWind,
+        'currentHumidity' => $currentHumidity,
         ]);
     }
 
