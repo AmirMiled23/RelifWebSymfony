@@ -1,0 +1,329 @@
+{% extends 'baseRR.html.twig' %}
+
+{% block stylesheets %}
+  {{ parent() }}
+  <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ asset('front/assets/css/flex-slider.css') }}">
+  <link rel="stylesheet" href="{{ asset('front/assets/css/fontawesome.css') }}">
+  <link rel="stylesheet" href="{{ asset('front/assets/css/owl.css') }}">
+  <link rel="stylesheet" href="{{ asset('front/assets/css/templatemo-finance-business.css') }}">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --main-green: #b6ce3f;
+    }
+
+    /* Sub-header styles */
+    .sub-header {
+      display: block;
+      background: var(--main-green);
+      color: #fff;
+      font-size: 16px;
+      padding: 10px 0;
+    }
+    [data-theme="dark"] .sub-header {
+      display: none !important;
+    }
+    .sub-header .left-info i,
+    .sub-header .right-icons i {
+      color: #fff;
+      margin-right: 5px;
+    }
+    .sub-header .right-icons a {
+      color: #fff;
+      margin-left: 10px;
+    }
+
+    /* Navbar styles */
+    header {
+      margin-bottom: 0;
+      z-index: 1030;
+    }
+    .navbar {
+      background: transparent !important;
+      box-shadow: none;
+      border-bottom: none;
+      transition: background 0.3s, box-shadow 0.3s, border-bottom 0.3s;
+      padding: 30px 0 30px 0;
+    }
+    .navbar .container {
+      background: transparent !important;
+      box-shadow: none !important;
+      margin: 0 !important;
+      padding: 0 15px !important;
+      width: 100% !important;
+      max-width: 100% !important;
+    }
+    .navbar .nav-link,
+    .navbar-brand h2 {
+      color: #222 !important;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 400;
+      font-size: 22px;
+      transition: color 0.2s;
+    }
+    .navbar .nav-link.active,
+    .navbar .nav-link:hover {
+      color: var(--main-green) !important;
+      border-bottom: 3px solid var(--main-green);
+      padding-bottom: 5px;
+    }
+    .navbar-brand h2 {
+      font-weight: 700;
+      font-size: 32px;
+      color: var(--main-green) !important;
+      margin-left: 10px;
+      letter-spacing: 1px;
+    }
+    .navbar-brand img {
+      width: 75px;
+      margin-right: 10px;
+    }
+    .navbar.scrolled {
+      background: #fff !important;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      border-bottom: 1px solid #eee;
+    }
+
+    /* Page heading styles */
+    .page-heading {
+      margin-top: 0;
+      background-image: url('{{ asset('front/assets/images/slide_03.jpg') }}');
+      background-size: cover;
+      background-position: center;
+      padding: 150px 0;
+      color: #fff;
+      text-align: center;
+    }
+    .page-heading h1,
+    .page-heading span {
+      color: white;
+      text-shadow: 1px 1px 4px rgba(0,0,0,0.7);
+    }
+
+    /* Table and button styles */
+    .table th, .table td {
+      vertical-align: middle;
+    }
+    .badge {
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    .btn i {
+      margin-right: 5px;
+    }
+    .btn-lg {
+      padding: 10px 20px;
+      font-size: 1.2rem;
+    }
+    .btn-sm {
+      padding: 5px 10px;
+      font-size: 0.9rem;
+    }
+
+    /* General */
+    body {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+html {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+    /* Dark mode overrides */
+    body.dark-mode .navbar {
+      background-color: #1e1e1e !important;
+      color: #fff !important;
+      border-bottom: none;
+      box-shadow: none;
+    }
+    body.dark-mode .navbar .nav-link,
+    body.dark-mode .navbar-brand h2 {
+      color: #fff !important;
+      border-bottom: none;
+    }
+    body.dark-mode .navbar .nav-link.active,
+    body.dark-mode .navbar .nav-link:hover {
+      color: #b6ce3f !important;
+      border-bottom: 3px solid #b6ce3f;
+    }
+    body,
+    .container,
+    .container.mt-5 {
+      background-color: var(--bg-color) !important;
+    }
+
+    /* Make the hero/heading area transparent so the background image shows through */
+    .page-heading.header-text .container {
+      background: transparent !important;
+    }
+    /* Ensure heading text is always visible */
+    .page-heading.header-text h1,
+    .page-heading.header-text span {
+      color: #fff !important;
+      text-shadow: 1px 1px 4px rgba(0,0,0,0.7);
+    }
+    .navbar {
+  background: transparent !important;
+}
+  header .navbar {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+[data-theme="dark"] .navbar {
+  background: transparent !important;
+}
+
+[data-theme="dark"] .navbar .nav-link,
+[data-theme="dark"] .navbar-brand h2 {
+  color: #fff !important;
+}
+
+[data-theme="dark"] .navbar .nav-link.active,
+[data-theme="dark"] .navbar .nav-link:hover {
+  color: #b6ce3f !important;
+  border-bottom: 3px solid #b6ce3f;
+}
+  </style>
+{% endblock %}
+
+{% block body %}
+<div class="sub-header">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 col-xs-12">
+        <ul class="left-info list-inline mb-0">
+          <li class="list-inline-item"><i class="fa fa-clock-o"></i> Mon-Fri 09:00-17:00</li>
+          <li class="list-inline-item"><i class="fa fa-phone"></i> 090-080-0760</li>
+        </ul>
+      </div>
+      <div class="col-md-4">
+        <ul class="right-icons list-inline mb-0 float-right">
+          <li class="list-inline-item"><a href="#"><i class="fa fa-facebook"></i></a></li>
+          <li class="list-inline-item"><a href="#"><i class="fa fa-twitter"></i></a></li>
+          <li class="list-inline-item"><a href="#"><i class="fa fa-linkedin"></i></a></li>
+          <li class="list-inline-item"><a href="#"><i class="fa fa-behance"></i></a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<header>
+  <nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="{{ path('app_reclamation_index') }}">
+        <img src="{{ asset('front/assets/images/logo.png') }}" alt="RELIF Logo">
+        <h2 class="mb-0">RELIF</h2>
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item"><a class="nav-link{% if app.request.get('_route') == 'app_reclamation_index' %} active{% endif %}" href="{{ path('app_reclamation_index') }}">Reclamations</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">About Us</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Services</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<div class="page-heading header-text">
+  <div class="container">
+    <h1>Liste des Réclamations</h1>
+    <span>Gérez vos réclamations efficacement.</span>
+  </div>
+</div>
+
+<div class="container mt-5">
+  <div class="text-right mb-4">
+    <a href="{{ path('app_reclamation_new') }}" class="btn btn-primary btn-lg shadow-sm">
+      <i class="fa fa-plus"></i> Ajouter une Réclamation
+    </a>
+  </div>
+
+  <form method="get" action="{{ path('app_reclamation_index') }}" class="mb-4">
+    <div class="input-group">
+      <input type="text" name="search" class="form-control" placeholder="Rechercher par Titre, Type ou Statut" value="{{ app.request.get('search') }}">
+      <div class="input-group-append">
+        <button type="submit" class="btn btn-primary">
+          <i class="fa fa-search"></i> Rechercher
+        </button>
+      </div>
+    </div>
+  </form>
+
+  <div class="table-responsive">
+    <table class="table table-hover table-striped align-middle">
+      <thead class="thead-light">
+        <tr>
+          <th scope="col">Titre</th>
+          <th scope="col">Type</th>
+          <th scope="col">Statut</th>
+          <th scope="col">Description</th>
+          <th scope="col" class="text-center">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for reclamation in reclamations %}
+          <tr>
+            <td><strong>{{ reclamation.titre }}</strong></td>
+            <td>{{ reclamation.type }}</td>
+            <td>
+              {% if reclamation.status == 'Resolved' %}
+                <span class="badge badge-success px-3 py-2">{{ reclamation.status }}</span>
+              {% elseif reclamation.status == 'Pending' %}
+                <span class="badge badge-warning px-3 py-2">{{ reclamation.status }}</span>
+              {% elseif reclamation.status == 'Rejected' %}
+                <span class="badge badge-danger px-3 py-2">{{ reclamation.status }}</span>
+              {% else %}
+                <span class="badge badge-secondary px-3 py-2">{{ reclamation.status }}</span>
+              {% endif %}
+            </td>
+            <td>{{ reclamation.description|length > 50 ? reclamation.description|slice(0, 50) ~ '...' : reclamation.description }}</td>
+            <td class="text-center">
+              <a href="{{ path('app_reclamation_show', {'id_reclamation': reclamation.id_reclamation}) }}" class="btn btn-info btn-sm shadow-sm">
+                <i class="fa fa-eye"></i> Voir
+              </a>
+              <a href="{{ path('app_reclamation_edit', {'id_reclamation': reclamation.id_reclamation}) }}" class="btn btn-warning btn-sm shadow-sm">
+                <i class="fa fa-edit"></i> Modifier
+              </a>
+              <form method="post" action="{{ path('app_reclamation_delete', {'id_reclamation': reclamation.id_reclamation}) }}" style="display:inline-block;" onsubmit="return confirm('Êtes-vous sûr ?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reclamation.id_reclamation) }}">
+                <button class="btn btn-danger btn-sm shadow-sm">
+                  <i class="fa fa-trash"></i> Supprimer
+                </button>
+              </form>
+            </td>
+          </tr>
+        {% else %}
+          <tr>
+            <td colspan="5" class="text-center">Aucune réclamation trouvée.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const navbar = document.querySelector('.navbar');
+    const hero = document.querySelector('.page-heading');
+    const heroHeight = hero ? hero.offsetHeight : 0;
+
+    window.addEventListener('scroll', function () {
+      if (window.scrollY > heroHeight - 80) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+  });
+</script>
+{% endblock %}

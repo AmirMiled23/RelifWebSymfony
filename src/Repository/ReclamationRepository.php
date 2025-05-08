@@ -8,6 +8,11 @@ use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<Reclamation>
+ *
+ * @method Reclamation|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Reclamation|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Reclamation[]    findAll()
+ * @method Reclamation[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class ReclamationRepository extends ServiceEntityRepository
 {
@@ -15,7 +20,23 @@ class ReclamationRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Reclamation::class);
     }
+    
+public function findBySearchQuery(?string $search): array
+{
+    $qb = $this->createQueryBuilder('r');
 
+    if ($search) {
+        $qb->andWhere('r.titre LIKE :search OR r.type LIKE :search OR r.status LIKE :search')
+           ->setParameter('search', '%' . $search . '%');
+    }
+
+    return $qb->getQuery()->getResult();
+}
+
+
+
+
+    
 //    /**
 //     * @return Reclamation[] Returns an array of Reclamation objects
 //     */

@@ -1,0 +1,81 @@
+{% extends 'baseRR.html.twig' %}
+
+{% block body %}
+<!-- Full-page background -->
+<div style="background: linear-gradient(135deg, #1e3c72, #2a5298); color: white; min-height: 100vh; padding-top: 50px; padding-bottom: 50px;">
+    <div class="container">
+        <h1 class="text-center mb-4">📊 <strong>Monthly Reclamation Trends</strong></h1>
+
+        <!-- Chart Section -->
+        <div class="mt-5">
+            <h3 class="text-center">📈 <strong>Reclamations Per Month</strong></h3>
+            <div class="d-flex justify-content-center">
+                <canvas id="monthlyTrendsChart" style="max-width: 800px; max-height: 500px;"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js Script -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('monthlyTrendsChart').getContext('2d');
+    const monthlyTrendsChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: {{ months|json_encode|raw }}, // Months from the backend
+            datasets: [{
+                label: 'Reclamations',
+                data: {{ counts|json_encode|raw }}, // Counts from the backend
+                backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1,
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false,
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            return tooltipItem.raw + ' Reclamations';
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Months',
+                        color: 'white',
+                        font: {
+                            size: 14,
+                        }
+                    },
+                    ticks: {
+                        color: 'white',
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Number of Reclamations',
+                        color: 'white',
+                        font: {
+                            size: 14,
+                        }
+                    },
+                    ticks: {
+                        color: 'white',
+                        beginAtZero: true,
+                    }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

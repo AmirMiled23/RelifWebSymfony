@@ -1,0 +1,98 @@
+{% extends 'baseRR.html.twig' %}
+
+{% block body %}
+<!-- Full-page background -->
+<div style="background: linear-gradient(135deg, #1e3c72, #2a5298); color: white; min-height: 100vh; padding-top: 50px; padding-bottom: 50px;">
+    <div class="container">
+        <h1 class="text-center mb-4">📊 <strong>Reclamation Statistics</strong></h1>
+
+        <!-- Statistics Cards -->
+        <div class="row text-center g-4">
+            <div class="col-md-3">
+                <div class="card shadow border-primary">
+                    <div class="card-body bg-primary text-white">
+                        <h5 class="card-title"><i class="fas fa-list-alt"></i> Total Reclamations</h5>
+                        <p class="card-text display-4">{{ total }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card shadow border-warning">
+                    <div class="card-body bg-warning text-dark">
+                        <h5 class="card-title"><i class="fas fa-hourglass-half"></i> Pending</h5>
+                        <p class="card-text display-4">{{ pendingPercentage|number_format(2) }}%</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card shadow border-success">
+                    <div class="card-body bg-success text-white">
+                        <h5 class="card-title"><i class="fas fa-check-circle"></i> Resolved</h5>
+                        <p class="card-text display-4">{{ resolvedPercentage|number_format(2) }}%</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card shadow border-danger">
+                    <div class="card-body bg-danger text-white">
+                        <h5 class="card-title"><i class="fas fa-times-circle"></i> Rejected</h5>
+                        <p class="card-text display-4">{{ rejectedPercentage|number_format(2) }}%</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+<div class="text-right mb-3">
+    <a href="{{ path('app_reclamation_monthly_statistics') }}" class="btn btn-info">
+        <i class="fa fa-chart-bar"></i> View Monthly Trends
+    </a>
+</div>
+        <!-- Chart Section -->
+        <div class="mt-5">
+            <h3 class="text-center">📈 <strong>Reclamation Status Distribution</strong></h3>
+            <div class="d-flex justify-content-center">
+                <canvas id="statusChart" style="max-width: 500px; max-height: 500px;"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js Script -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+<script>
+    const ctx = document.getElementById('statusChart').getContext('2d');
+    const statusChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Pending', 'Resolved', 'Rejected'],
+            datasets: [{
+                data: [{{ pendingPercentage }}, {{ resolvedPercentage }}, {{ rejectedPercentage }}],
+                backgroundColor: ['#ffc107', '#28a745', '#dc3545'],
+                hoverBackgroundColor: ['#e0a800', '#218838', '#c82333'],
+                borderWidth: 1,
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        font: {
+                            size: 14
+                        }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            return tooltipItem.label + ': ' + tooltipItem.raw + '%';
+                        }
+                    }
+                }
+            },
+            maintainAspectRatio: false,
+        }
+    });
+</script>
+{% endblock %}
