@@ -1,0 +1,17 @@
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .card {
+            /* ...existing code... */
+        }
+        
+        .card-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: none;
+            background-color: rgb(10, 113, 223) !important;
+            color: white;
+        }
+        
+        /* ...existing code... */
+    </style>
+{% endblock %}

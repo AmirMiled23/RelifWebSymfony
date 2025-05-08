@@ -1,0 +1,30 @@
+<form method="post" novalidate>
+    {{ form_start(form) }}
+    <div>
+        {{ form_label(form.date_debut) }}
+        {{ form_widget(form.date_debut) }}
+        <div class="error-message">
+            {{ form_errors(form.date_debut) }}
+        </div>
+    </div>
+    <div>
+        <label for="date_fin">End Date</label>
+        <input type="datetime-local" id="date_fin" name="date_fin" value="{{ reservation_materiel.dateFin ? reservation_materiel.dateFin|date('Y-m-d\TH:i') : '' }}" required>
+    </div>
+    <div>
+        {{ form_label(form.quantite_reservee) }}
+        {{ form_widget(form.quantite_reservee) }}
+        <div class="error-message">
+            {{ form_errors(form.quantite_reservee) }}
+        </div>
+    </div>
+    <div>
+        {{ form_label(form.materiel) }}
+        {{ form_widget(form.materiel) }}
+        <div class="error-message">
+            {{ form_errors(form.materiel) }}
+        </div>
+    </div>
+    <button class="btn">{{ button_label|default('Save') }}</button>
+    {{ form_end(form) }}
+</form>

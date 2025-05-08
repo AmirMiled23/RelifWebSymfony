@@ -1,0 +1,84 @@
+{% extends 'Baseback.html.twig' %}
+
+{% block title %}Modifier Réservation Matériel{% endblock %}
+
+{% block body %}
+<div class="page-inner">
+  <div class="page-header">
+    <h4 class="page-title">Modifier Réservation</h4>
+    <ul class="breadcrumbs">
+      <li class="nav-home">
+        <a href="{{ path('app_back_reservation_index') }}">
+          <i class="icon-home"></i>
+        </a>
+      </li>
+      <li class="separator">
+        <i class="icon-arrow-right"></i>
+      </li>
+      <li class="nav-item">
+        <a href="#">Réservations</a>
+      </li>
+      <li class="separator">
+        <i class="icon-arrow-right"></i>
+      </li>
+      <li class="nav-item">
+        <a href="#">Modifier</a>
+      </li>
+    </ul>
+  </div>
+
+  {% for message in app.flashes('error') %}
+    <div class="alert alert-danger">{{ message }}</div>
+  {% endfor %}
+
+  <div class="row">
+    <div class="col-md-8 mx-auto">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Formulaire de modification</h3>
+        </div>
+        <div class="card-body">
+
+          {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+
+            <div class="form-group">
+              {{ form_label(form.date_debut) }}
+              {{ form_widget(form.date_debut, {'attr': {'class': 'form-control'}}) }}
+              {{ form_errors(form.date_debut) }}
+            </div>
+
+            <div class="form-group">
+              {{ form_label(form.date_fin) }}
+              {{ form_widget(form.date_fin, {'attr': {'class': 'form-control'}}) }}
+              {{ form_errors(form.date_fin) }}
+            </div>
+
+            <div class="form-group">
+              {{ form_label(form.quantite_reservee) }}
+              {{ form_widget(form.quantite_reservee, {'attr': {'class': 'form-control'}}) }}
+              {{ form_errors(form.quantite_reservee) }}
+            </div>
+
+            <div class="form-group">
+              {{ form_label(form.materiel) }}
+              {{ form_widget(form.materiel, {'attr': {'class': 'form-select'}}) }}
+              {{ form_errors(form.materiel) }}
+            </div>
+
+            <div class="card-action text-end">
+              <button type="submit" class="btn btn-success">
+                <i class="fa fa-save"></i> Modifier
+              </button>
+              <a href="{{ path('app_back_reservation_index') }}" class="btn btn-secondary">
+                <i class="fa fa-arrow-left"></i> Retour
+              </a>
+            </div>
+
+          {{ form_end(form) }}
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

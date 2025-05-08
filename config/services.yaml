@@ -2,6 +2,8 @@ parameters:
   categorie_images_directory: "%kernel.project_dir%/public/uploads"
   pdf_directory: "%kernel.project_dir%/public/uploads/pdf"
   huggingface.api_token: '%env(HUGGINGFACE_API_TOKEN)%'
+  postmark_api_key: '%env(POSTMARK_API_KEY)%'
+  gemini_api_key: '%env(GEMINI_API_KEY)%'
 
 services:
   _defaults:
@@ -29,7 +31,30 @@ services:
 
   App\Service\OffensiveSpeechDetector:
     arguments:
-      $apiToken: '%huggingface.api_token%'        
+      $apiToken: '%huggingface.api_token%'
 
-  # add more service definitions when explicit configuration is needed
-  # please note that last definitions always *replace* previous ones
+  App\Service\SmsService:
+    arguments:
+      $messageBirdApiKey: '%env(MESSAGEBIRD_API_KEY)%'
+      $senderId: '%env(MESSAGEBIRD_SENDER_ID)%'
+
+  App\Service\PostmarkService:
+    arguments:
+      $postmarkClient: '@Postmark\PostmarkClient'
+      $fromEmail: '%env(POSTMARK_FROM_EMAIL)%'
+      $logger: '@logger'
+
+  Postmark\PostmarkClient:
+    arguments:
+      - '%env(POSTMARK_API_KEY)%'
+
+  App\Service\MailService:
+    arguments:
+      $mailer: '@mailer.mailer'
+      $logger: '@logger'
+
+  App\Service\CalendarLinkGenerator: ~
+
+  App\Service\ChatApiService:
+    arguments:
+      $geminiApiKey: '%gemini_api_key%'

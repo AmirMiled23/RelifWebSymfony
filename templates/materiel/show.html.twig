@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails du matériel{% endblock %}
+
+{% block body %}
+    <h1 class="mb-4 text-center">Détails du matériel</h1>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h5 class="card-title mb-0">Matériel</h5>
+        </div>
+        <div class="card-body">
+            <p><strong>Nom:</strong> {{ materiel.nomMateriel }}</p>
+            <p><strong>Description:</strong> {{ materiel.description }}</p>
+            <p><strong>Quantité disponible:</strong> {{ materiel.quantiteDispo }}</p>
+        </div>
+        <div class="card-footer d-flex justify-content-between">
+            <a href="{{ path('app_materiel_index') }}" class="btn btn-secondary">Retour à la liste</a>
+            <a href="{{ path('app_materiel_edit', {'id_materiel': materiel.idMateriel}) }}" class="btn btn-primary">Modifier</a>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        {{ include('materiel/_delete_form.html.twig', {'materiel': materiel}) }}
+    </div>
+{% endblock %}

@@ -1,0 +1,9 @@
+[2025-04-28 22:13:27] Erreur avec 'ggg' : Error setting certificate file: C:\Users\MSI\Desktop\PI\cacert.pem for "https://api.openai.com/v1/chat/completions".
+[2025-04-28 22:13:35] Erreur avec 'marteau' : Error setting certificate file: C:\Users\MSI\Desktop\PI\cacert.pem for "https://api.openai.com/v1/chat/completions".
+[2025-04-28 22:17:59] Erreur avec 'oioioddd' : Error setting certificate file: C:/Users/MSI/Desktop/PI/cacert.pem for "https://api.openai.com/v1/chat/completions".
+[2025-04-28 22:18:06] Erreur avec 'marteau' : Error setting certificate file: C:/Users/MSI/Desktop/PI/cacert.pem for "https://api.openai.com/v1/chat/completions".
+[2025-04-28 22:21:52] Erreur avec 'fgfgfg' : HTTP/2 429  returned for "https://api.openai.com/v1/chat/completions".
+[2025-04-28 22:21:59] Erreur avec 'marteau' : HTTP/2 429  returned for "https://api.openai.com/v1/chat/completions".
+[2025-04-28 22:28:14] Erreur avec 'looppp' : HTTP/2 429  returned for "https://api.openai.com/v1/chat/completions".
+[2025-04-29 02:20:13] Erreur avec 'looppp' : HTTP/2 429  returned for "https://api.openai.com/v1/chat/completions".
+[2025-04-29 02:20:22] Erreur avec 'Marteau' : HTTP/2 429  returned for "https://api.openai.com/v1/chat/completions".

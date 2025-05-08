@@ -6,6 +6,8 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 use App\Repository\ReservationMaterielRepository;
 
@@ -18,6 +20,11 @@ class ReservationMateriel
     #[ORM\Column(type: 'integer')]
     private ?int $id_reservation = null;
 
+    public function __construct()
+    {
+        $this->date_debut = new \DateTime(); // Initialise avec la date actuelle
+    }
+
     public function getId_reservation(): ?int
     {
         return $this->id_reservation;
@@ -29,7 +36,14 @@ class ReservationMateriel
         return $this;
     }
 
-    #[ORM\Column(type: 'date', nullable: false)]
+    #[ORM\Column(type: 'date', nullable: false, options: ['default' => 'CURRENT_DATE'])]
+    #[Assert\NotBlank(message: "La date de début est obligatoire.")]
+    #[Assert\GreaterThanOrEqual(
+        value: "today",
+        message: "La date de début doit être aujourd'hui ou dans le futur."
+    )]
+    #[Assert\NotBlank(message: "The start date cannot be blank.")]
+    #[Assert\Type("\DateTimeInterface")]
     private ?\DateTimeInterface $date_debut = null;
 
     public function getDate_debut(): ?\DateTimeInterface
@@ -44,6 +58,11 @@ class ReservationMateriel
     }
 
     #[ORM\Column(type: 'date', nullable: false)]
+    #[Assert\NotBlank(message: "La date de fin est obligatoire.")]
+    #[Assert\NotNull(message: "The end date cannot be null.")]
+    #[Assert\Type("\DateTimeInterface")]
+    #[Assert\GreaterThan(propertyPath: "date_debut", message: "La date de fin doit être après la date de début.")]
+    #[Assert\NotBlank(message: "The end date cannot be blank.")]
     private ?\DateTimeInterface $date_fin = null;
 
     public function getDate_fin(): ?\DateTimeInterface
@@ -58,6 +77,8 @@ class ReservationMateriel
     }
 
     #[ORM\Column(type: 'integer', nullable: false)]
+    #[Assert\NotBlank(message: "La quantité réservée est obligatoire.")]
+    #[Assert\Positive(message: "La quantité réservée doit être un nombre positif.")]
     private ?int $quantite_reservee = null;
 
     public function getQuantite_reservee(): ?int
@@ -71,17 +92,18 @@ class ReservationMateriel
         return $this;
     }
 
-    #[ORM\Column(type: 'integer', nullable: false)]
-    private ?int $id_materiel = null;
+    #[ORM\ManyToOne(targetEntity: Materiel::class, inversedBy: 'reservationMateriels')]
+    #[ORM\JoinColumn(name: 'id_materiel', referencedColumnName: 'id_materiel', nullable: true, onDelete: 'SET NULL')]
+    private ?Materiel $materiel = null;
 
-    public function getId_materiel(): ?int
+    public function getMateriel(): ?Materiel
     {
-        return $this->id_materiel;
+        return $this->materiel;
     }
 
-    public function setId_materiel(int $id_materiel): self
+    public function setMateriel(?Materiel $materiel): self
     {
-        $this->id_materiel = $id_materiel;
+        $this->materiel = $materiel;
         return $this;
     }
 
@@ -90,24 +112,24 @@ class ReservationMateriel
         return $this->id_reservation;
     }
 
-    public function getDateDebut(): ?\DateTime
+    public function getDateDebut(): ?\DateTimeInterface
     {
         return $this->date_debut;
     }
 
-    public function setDateDebut(\DateTime $date_debut): static
+    public function setDateDebut(\DateTimeInterface $date_debut): static
     {
         $this->date_debut = $date_debut;
 
         return $this;
     }
 
-    public function getDateFin(): ?\DateTime
+    public function getDateFin(): ?\DateTimeInterface
     {
         return $this->date_fin;
     }
 
-    public function setDateFin(\DateTime $date_fin): static
+    public function setDateFin(\DateTimeInterface $date_fin): static
     {
         $this->date_fin = $date_fin;
 
@@ -126,16 +148,10 @@ class ReservationMateriel
         return $this;
     }
 
-    public function getIdMateriel(): ?int
+    public function getQuantite(): ?int
     {
-        return $this->id_materiel;
+        return $this->quantite_reservee;
     }
-
-    public function setIdMateriel(int $id_materiel): static
-    {
-        $this->id_materiel = $id_materiel;
-
-        return $this;
-    }
+    
 
 }

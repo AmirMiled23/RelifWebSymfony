@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Confirmation de réservation</title>
+</head>
+<body>
+    <h1>Confirmation de votre réservation</h1>
+    <p>Bonjour,</p>
+    <p>Votre réservation pour le matériel <strong>{{ materiel.nom }}</strong> a bien été confirmée.</p>
+    <p>Quantité réservée : {{ reservation.quantite }}</p>
+    <p>Dates : du {{ reservation.dateDebut|date('d/m/Y') }} au {{ reservation.dateFin|date('d/m/Y') }}</p>
+    <p>Merci de votre confiance.</p>
+</body>
+</html>

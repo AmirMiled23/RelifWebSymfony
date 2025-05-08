@@ -1,0 +1,34 @@
+{% extends 'Baseback.html.twig' %}
+
+{% block title %}Materiel{% endblock %}
+
+{% block body %}
+    <h1>Materiel</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id_materiel</th>
+                <td>{{ materiel.id_materiel }}</td>
+            </tr>
+            <tr>
+                <th>Nom_materiel</th>
+                <td>{{ materiel.nomMateriel }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ materiel.description }}</td>
+            </tr>
+            <tr>
+                <th>Quantite_dispo</th>
+                <td>{{ materiel.quantiteDispo }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_backmateriel_index') }}">back to list</a>
+
+    <a href="{{ path('app_backmateriel_edit', {'id_materiel': materiel.id_materiel}) }}">edit</a>
+
+    {{ include('backmateriel/_delete_form.html.twig') }}
+{% endblock %}

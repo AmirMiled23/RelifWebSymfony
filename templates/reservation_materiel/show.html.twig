@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de la réservation{% endblock %}
+
+{% block body %}
+    <h1 class="mb-4 text-center">Détails de la réservation</h1>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h5 class="card-title mb-0">Réservation</h5>
+        </div>
+        <div class="card-body">
+            <p><strong>Date début:</strong> {{ reservation_materiel.dateDebut ? reservation_materiel.dateDebut|date('Y-m-d') : 'Non spécifiée' }}</p>
+            <p><strong>Date fin:</strong> {{ reservation_materiel.dateFin ? reservation_materiel.dateFin|date('Y-m-d') : 'Non spécifiée' }}</p>
+            <p><strong>Quantité réservée:</strong> {{ reservation_materiel.quantiteReservee }}</p>
+            <p><strong>Nom du matériel:</strong> {{ reservation_materiel.materiel ? reservation_materiel.materiel.nomMateriel : 'Non spécifié' }}</p>
+        </div>
+        <div class="card-footer d-flex justify-content-between">
+            <a href="{{ path('app_reservation_materiel_index') }}" class="btn btn-secondary">Retour à la liste</a>
+            <a href="{{ path('app_reservation_materiel_edit', {'id_reservation': reservation_materiel.idReservation}) }}" class="btn btn-primary">Modifier</a>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        {{ include('reservation_materiel/_delete_form.html.twig') }}
+    </div>
+{% endblock %}
