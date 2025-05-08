@@ -1,7 +1,10 @@
 controllers:
+
   resource: ../src/Controller/
   type: annotation
 
 payment_routes:
   resource: ../src/Controller/PaymentController.php
   type: annotation
+
+

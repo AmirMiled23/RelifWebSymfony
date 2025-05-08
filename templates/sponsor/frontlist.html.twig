@@ -1,0 +1,114 @@
+{% extends 'base22.html.twig' %}
+
+{% block title %}Liste des Sponsors{% endblock %}
+
+{% block body %}
+<style>
+  nav.navbar, footer {
+    background-color: #28a745 !important; /* vert */
+  }
+  .navbar .nav-link,
+  .navbar .navbar-brand {
+    color: white !important;
+  }
+</style>
+
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <!-- Logo + Nom Relif -->
+    <a class="navbar-brand d-flex align-items-center" href="#">
+      <img src="{{ asset('/assets/images/relif2.jpeg') }}" alt="Logo" style="height: 40px; margin-right: 10px;">
+      <strong>Relif</strong>
+    </a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarResponsive" aria-controls="navbarResponsive"
+            aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="#top">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ path('secteur_list2') }}">Tous les Secteurs</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container mt-5">
+  <h2 class="mb-4">Nos Sponsors</h2>
+
+  {% if sponsors is not empty %}
+    <table class="table table-bordered table-striped table-hover">
+      <thead class="table-success">
+        <tr>
+          <th>ID</th>
+          <th>Nom</th>
+          <th>Email</th>
+          <th>Adresse</th>
+          <th>Téléphone</th>
+          <th>Secteur</th>
+          <th>Photo</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for sponsor in sponsors %}
+          <tr>
+            <td>{{ sponsor.id }}</td>
+            <td>{{ sponsor.nom }}</td>
+            <td>{{ sponsor.email }}</td>
+            <td>{{ sponsor.adresse }}</td>
+            <td>{{ sponsor.telephone }}</td>
+            <td>{{ sponsor.secteur.nom }}</td>
+            <td>
+              {% if sponsor.photo %}
+                <img src="{{ asset('uploads/photos/' ~ sponsor.photo) }}" alt="Photo" width="100">
+              {% else %}
+                Aucune photo
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div class="alert alert-warning">Aucun sponsor trouvé.</div>
+  {% endif %}
+</div>
+
+<footer>
+  <div class="container text-white pt-4 pb-4">
+    <div class="row">
+      <div class="col-md-3 footer-item">
+        
+        <ul class="py-3 px-4 align-middle text-center">
+          <li><a rel="nofollow" href="https://fb.com/templatemo" target="_blank"><i class="fa fa-facebook"></i></a></li>
+          <li><a href="#"><i class="fas fa-edit"></i></a></li>
+          <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
+          <li><a href="#"><i class="fa fa-behance"></i></a></li>
+        </ul>
+      </div>
+      <div class="col-md-3 footer-item">
+        <h4>Useful Links</h4>
+        <ul class="menu-list">
+          <li><a href="#">Tous les Secteurs</a></li>
+        
+        </ul>
+      </div>
+      <div class="col-md-3 footer-item">
+        <h4>Additional Pages</h4>
+        <ul class="menu-list">
+          <li><a href="#">About Us</a></li>
+         
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</footer>
+{% endblock %}

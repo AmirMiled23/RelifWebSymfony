@@ -1,0 +1,45 @@
+{# templates/sponsor/statistics.html.twig #}
+
+{% extends 'base22.html.twig' %}
+
+{% block body %}
+<div class="wrapper">
+    <!-- Sidebar -->
+    {% include 'partials/sidebar.html.twig' %}
+    <!-- End Sidebar -->
+
+    <div class="main-panel">
+        <!-- Navbar Header -->
+        {% include 'partials/navbar.html.twig' %}
+  <div class="container py-5">
+    <h1 class="text-center mb-5">Sponsor Statistics</h1>
+
+    <div>
+        <canvas id="sponsorChart" width="400" height="200"></canvas>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('sponsorChart').getContext('2d');
+        const sponsorChart = new Chart(ctx, {
+            type: 'bar', // Vous pouvez changer le type de graphique ici (bar, line, pie, etc.)
+            data: {
+                labels: {{ secteurs|json_encode()|raw }}, // Labels : Secteurs
+                datasets: [{
+                    label: 'Number of Sponsors',  // Titre du graphique
+                    data: {{ counts|json_encode()|raw }}, // Données : Nombre de sponsors
+                    backgroundColor: 'rgba(120, 255, 99, 0.62)', // Couleur de fond des barres
+                    borderColor: 'rgb(99, 255, 182)', // Couleur des bords des barres
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true  // Commencer l'axe Y à zéro
+                    }
+                }
+            }
+        });
+    </script>
+{% endblock %}
