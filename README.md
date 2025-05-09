@@ -1,4 +1,4 @@
-#  EcoEvents - Application Web Environnementale
+#  Relif - Application Web Environnementale
 
 ##  Description
 
@@ -7,6 +7,14 @@
 - Assister à des conférences sur des thématiques écologiques.
 - S’impliquer activement dans des actions concrètes pour l’environnement.
 
+> Ce projet a été réalisé dans le cadre du module PIDEV 3A à Esprit School of Engineering.
+
+##  Technologies utilisées
+- Symfony 6.4
+- PHP 8.x
+- MySQL
+- HTML/CSS
+- WAMP/XAMPP
 ##  Table des Matières
 
 - [Installation](#installation)
