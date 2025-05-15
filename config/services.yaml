@@ -4,6 +4,7 @@ parameters:
   huggingface.api_token: '%env(HUGGINGFACE_API_TOKEN)%'
   postmark_api_key: '%env(POSTMARK_API_KEY)%'
   gemini_api_key: '%env(GEMINI_API_KEY)%'
+  photos_directory: '%kernel.project_dir%/public/uploads/photos'
 
 services:
   _defaults:

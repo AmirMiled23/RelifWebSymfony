@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>{% block title %}RELIF ENVIRONNEMENT{% endblock %}</title>
+  {% block css %}
+    <link rel="stylesheet" href="{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/fontawesome.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/templatemo-finance-business.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/owl.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/flex-slider.css') }}">
+
+  {% endblock %}
+</head>
+
+<body>
+  <!-- Sub Header -->
+  <div class="sub-header">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8">
+          <ul class="left-info">
+            <li><a href="#"><i class="fa fa-clock-o"></i>Mon - Fri 09:00-17:00</a></li>
+            <li><a href="#"><i class="fa fa-phone"></i>010-020-0340</a></li>
+          </ul>
+        </div>
+        <div class="col-md-4">
+          <ul class="right-icons">
+            <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+            <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+            <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
+            <li><a href="#"><i class="fa fa-behance"></i></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+      <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="/">
+          <img src="{{ asset('assets/back/img/logo.png') }}" alt="Logo" style="height: 50px; margin-right: 10px;">
+          <span style="font-size: 20px; color: #8bc34a; font-weight: bold;">RELIF pour l'environnement</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ path('app_materiel_index') }}">Nos Materiel</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ path('app_event_public') }}">Nos évènements</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ path('app_conference_index') }}">Nos Conference</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ path('app_reclamation_index') }}">reclamation</a></li>
+             <li class="nav-item"><a class="nav-link" href="{{ path('sponsor_list') }}">sponsor</a></li>
+
+
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Contenu spécifique à chaque page -->
+  <main class="container mt-5">
+    {% block body %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3">[...]</div>
+        <div class="col-md-3">[...]</div>
+        <div class="col-md-3">[...]</div>
+        <div class="col-md-3">[...]</div>
+      </div>
+    </div>
+  </footer>
+
+  {% block js %}
+    <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('assets/js/custom.js') }}"></script>
+    <script src="{{ asset('assets/js/owl.js') }}"></script>
+    <script src="{{ asset('assets/js/slick.js') }}"></script>
+    <script src="{{ asset('assets/js/accordions.js') }}"></script>
+  {% endblock %}
+</body>
+</html>

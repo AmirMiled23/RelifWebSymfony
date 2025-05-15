@@ -10,6 +10,11 @@
     <link rel="stylesheet" href="{{ asset('assets/css/templatemo-finance-business.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/owl.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/flex-slider.css') }}">
+  <style>
+  .navbar-nav .nav-link{ 
+    color: #000 !important;
+  }
+  </style>
   {% endblock %}
 </head>
 
@@ -50,9 +55,13 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
             <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">About Us</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ path('app_materiel_index') }}">Nos Materiel</a></li>
             <li class="nav-item"><a class="nav-link" href="{{ path('app_event_public') }}">Nos évènements</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">Contact Us</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ path('app_conference_index') }}">Nos Conference</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ path('app_reclamation_index') }}">reclamation</a></li>
+             <li class="nav-item"><a class="nav-link" href="{{ path('sponsor_list') }}">sponsor</a></li>
+
+
           </ul>
         </div>
       </div>
